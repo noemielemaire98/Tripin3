@@ -1,12 +1,10 @@
-package com.example.tripin.ui.Profil
+package com.example.tripin.ui.profil
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.tripin.R
 
@@ -22,10 +20,7 @@ class ProfilFragment : Fragment() {
         profilViewModel =
                 ViewModelProviders.of(this).get(ProfilViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_profil, container, false)
-        val textView: TextView = root.findViewById(R.id.text_notifications)
-        profilViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
+
         return root
     }
 }

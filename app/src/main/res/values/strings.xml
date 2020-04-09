@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">TripIN</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+
+
+    <string name="app_contact">Contactez-nous</string>
+    <string name="app_sharing">Partagez notre application</string>
+    <string name="app_stars">Notez notre application</string>
+    <string name="app_feedback">Donnez votre retour</string>
 </resources>

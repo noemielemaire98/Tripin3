@@ -1,13 +1,13 @@
-package com.example.tripin.ui.Profil
+package com.example.tripin.ui.trip
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class ProfilViewModel : ViewModel() {
+class TripViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is Profil Fragment"
+        value = "This is dashboard Fragment"
     }
     val text: LiveData<String> = _text
 }

@@ -1,4 +1,4 @@
-package com.example.tripin.ui.Home
+package com.example.tripin.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

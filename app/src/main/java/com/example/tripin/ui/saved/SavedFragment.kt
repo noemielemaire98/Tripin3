@@ -1,4 +1,4 @@
-package com.example.tripin.ui.Find
+package com.example.tripin.ui.saved
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.tripin.R
 
-class FindFragment : Fragment() {
+class SavedFragment : Fragment() {
 
-    private lateinit var findViewModel: FindViewModel
+    private lateinit var savedViewModel: SavedViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        findViewModel =
-                ViewModelProviders.of(this).get(FindViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_find, container, false)
-        val textView: TextView = root.findViewById(R.id.text_find)
-        findViewModel.text.observe(viewLifecycleOwner, Observer {
+        savedViewModel =
+                ViewModelProviders.of(this).get(SavedViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_saved, container, false)
+        val textView: TextView = root.findViewById(R.id.text_saved)
+        savedViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root

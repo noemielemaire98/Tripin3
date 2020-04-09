@@ -1,4 +1,4 @@
-package com.example.tripin.ui.Find
+package com.example.tripin.ui.find
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
