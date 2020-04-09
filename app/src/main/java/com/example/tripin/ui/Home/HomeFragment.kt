@@ -1,4 +1,4 @@
-package com.example.tripin.ui.home
+package com.example.tripin.ui.Home
 
 import android.os.Bundle
 import android.view.LayoutInflater
