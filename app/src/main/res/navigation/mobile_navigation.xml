@@ -12,10 +12,21 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/navigation_find"
+        android:name="com.example.tripin.ui.Find.FindFragment"
+        android:label="Rechercher"
+        tools:layout="@layout/fragment_find" />
+    <fragment
         android:id="@+id/navigation_trip"
         android:name="com.example.tripin.ui.Trip.TripFragment"
         android:label="Mes voyages"
         tools:layout="@layout/fragment_trip" />
+
+    <fragment
+        android:id="@+id/navigation_saved"
+        android:name="com.example.tripin.ui.Saved.SavedFragment"
+        android:label="Mes favoris"
+        tools:layout="@layout/fragment_saved" />
 
     <fragment
         android:id="@+id/navigation_profil"
