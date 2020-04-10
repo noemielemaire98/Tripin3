@@ -12,4 +12,5 @@ import com.example.tripin.model.Voyage
 abstract class AppDatabase : RoomDatabase(){
 
     abstract fun getVoyageDao() : VoyageDao
+
 }

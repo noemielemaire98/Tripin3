@@ -27,7 +27,7 @@ class VoyageAdapter(val voyages:List<Voyage>) : RecyclerView.Adapter<VoyageAdapt
     override fun onBindViewHolder(holder: VoyageViewHolder, position: Int) {
         val Voyage = voyages[position]
         holder.voyageView.voyage_title_textview.text = "${Voyage.titre}"
-        holder.voyageView.voyage_date_textview.text = "${Voyage.date}"
+        holder.voyageView.voyage_date_textview.text = "Du ${Voyage.date}"
         holder.voyageView.voyage_imageview.setImageResource(Voyage.photo)
         holder.voyageView.setOnClickListener {
             Log.d("EPF", "$Voyage")
