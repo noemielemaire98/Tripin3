@@ -9,13 +9,13 @@ import java.util.*
 data class Voyage (@PrimaryKey(autoGenerate = true) val id:Int,
                    val titre: String,
                    val date :String,
-
-                   val photo: Int) {
+                   val photo: Int,
+                   val nb_voyageur :Int) {
 
 
     companion object { /*  all: même chose que :ListClient<>*/
         val all = (1..20).map{
-            Voyage(it,"titre$it", "debut$it", R.drawable.destination1)
+            Voyage(it,"titre$it", "debut$it", R.drawable.destination1,it)
         }.toMutableList()
 
     }

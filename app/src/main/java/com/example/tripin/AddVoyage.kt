@@ -54,7 +54,7 @@ class AddVoyage : AppCompatActivity() {
             // finish dépile l'activité et revient à la page d'en dessous
 
 
-            val voyage = Voyage(0,titre.toString(),date.toString(),R.drawable.destination1)
+            val voyage = Voyage(0,titre.toString(),date.toString(),R.drawable.destination1,0)
 
             val database: AppDatabase =
                 Room.databaseBuilder(this,AppDatabase::class.java,"gestionvoyages").build()

@@ -34,6 +34,7 @@ class DetailVoyage : AppCompatActivity() {
             voyage = voyageDao!!.getVoyage(id) // Référence aux coroutines Kotlin
             voyage_title_textview.text = voyage?.titre
             voyage_date_textview.text = voyage?.date
+            voyage_nb_voyageurs_textview.text = "Nombre de voyageur :" +voyage?.nb_voyageur.toString()
         }
     }
 
