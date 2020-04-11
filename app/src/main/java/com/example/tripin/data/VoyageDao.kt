@@ -15,6 +15,12 @@ interface VoyageDao {
     @Insert
     suspend fun addVoyage(voyage: Voyage)
 
+    @Delete
+    suspend fun deleteVoyage(voyage: Voyage)
+
+    @Query("select * from myvoyages where id = :id")
+    suspend fun getVoyage(id: Int) : Voyage
+
 
 
 }

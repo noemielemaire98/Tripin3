@@ -1,9 +1,11 @@
 package com.example.tripin
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import androidx.appcompat.app.ActionBar
@@ -22,6 +24,26 @@ class AddVoyage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_voyage)
+
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        fun onOptionsItemSelected(item: MenuItem) : Boolean =
+
+            when (item.itemId) {
+                R.id.home -> {
+                finish()
+                true
+                }
+
+                else -> onOptionsItemSelected(item)
+
+
+            }
+
+
+
+
 
         addv_button.setOnClickListener {
             val titre = addv_titre_editText.text

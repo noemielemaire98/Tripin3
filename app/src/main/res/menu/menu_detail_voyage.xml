@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/ic_menu_add_voyage"
-        android:icon="@android:drawable/ic_menu_add"
+        android:id="@+id/ic_menu_delete_voyage"
+        android:icon="@android:drawable/ic_menu_delete"
         android:title="action_add_voyage"
         app:showAsAction="always" />
 </menu>

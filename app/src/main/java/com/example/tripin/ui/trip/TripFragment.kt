@@ -42,6 +42,8 @@ class TripFragment : Fragment() {
             val intent = Intent(this.context, AddVoyage::class.java)
             startActivity(intent)
             true
+
+
         }
         val database =
             Room.databaseBuilder(this.context!!, AppDatabase::class.java, "gestionvoyages")
