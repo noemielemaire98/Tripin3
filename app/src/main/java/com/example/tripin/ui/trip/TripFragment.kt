@@ -37,11 +37,15 @@ class TripFragment : Fragment() {
         val root : View = inflater.inflate(R.layout.fragment_trip, container, false)
         var voyage_recyclerview = root.findViewById<View>(R.id.voyage_recyclerview) as RecyclerView
         voyage_recyclerview.layoutManager = LinearLayoutManager(this.context)
+
         val fab: FloatingActionButton = root.findViewById(R.id.fab_add)
+
         fab.setOnClickListener { view ->
             val intent = Intent(this.context, AddVoyage::class.java)
             startActivity(intent)
             true
+
+
         }
         val database =
             Room.databaseBuilder(this.context!!, AppDatabase::class.java, "gestionvoyages")
@@ -56,9 +60,9 @@ class TripFragment : Fragment() {
         super.onResume()
 
         runBlocking {
-            val clients  = voyageDao?.getVoyage()
-            voyage_recyclerview.adapter = VoyageAdapter(clients ?: emptyList())
-            val voyage =Voyage(0,"titre","debut",R.drawable.destination1)
+            val voyages  = voyageDao?.getVoyage()
+            voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
+            val voyage =Voyage(0,"titre","debut",R.drawable.destination1,0)
 
         }
     }

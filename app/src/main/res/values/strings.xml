@@ -6,4 +6,8 @@
     <string name="app_sharing">Partagez notre application</string>
     <string name="app_stars">Notez notre application</string>
     <string name="app_feedback">Donnez votre retour</string>
+
+
+    <string name="voyage_delete_confirm_title">Confirmation Supression</string>
+    <string name="voyage_delete_confirm_message">Voulez-vous vraiment supprimer %1$s ?</string>
 </resources>

@@ -1,9 +1,11 @@
 package com.example.tripin
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import androidx.appcompat.app.ActionBar
@@ -23,6 +25,26 @@ class AddVoyage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_voyage)
 
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        fun onOptionsItemSelected(item: MenuItem) : Boolean =
+
+            when (item.itemId) {
+                R.id.home -> {
+                finish()
+                true
+                }
+
+                else -> onOptionsItemSelected(item)
+
+
+            }
+
+
+
+
+
         addv_button.setOnClickListener {
             val titre = addv_titre_editText.text
             val date = addv_date_editText.text
@@ -32,7 +54,7 @@ class AddVoyage : AppCompatActivity() {
             // finish dépile l'activité et revient à la page d'en dessous
 
 
-            val voyage = Voyage(0,titre.toString(),date.toString(),R.drawable.destination1)
+            val voyage = Voyage(0,titre.toString(),date.toString(),R.drawable.destination1,0)
 
             val database: AppDatabase =
                 Room.databaseBuilder(this,AppDatabase::class.java,"gestionvoyages").build()
