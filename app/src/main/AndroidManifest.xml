@@ -12,8 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashActivity"
-                  android:theme="@style/SlashTheme">
+        <activity android:name=".FindActivites" android:label="Rechercher des activites"></activity>
+        <activity android:name=".FindHotel" android:label="Rechercher des hotels"/>
+        <activity android:name=".FindFlight" android:label="Rechercher des vols"/>
+        <activity
+            android:name=".SplashActivity"
+            android:theme="@style/SlashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,12 +30,9 @@
         <activity android:name=".AddVoyage" />
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
-        </activity>
-        <activity
-            android:name=".RegistrationActivity"/>
-        <activity
-            android:name=".LoginActivity"/>
+            android:label="@string/app_name" />
+        <activity android:name=".RegistrationActivity" android:label="Registration"/>
+        <activity android:name=".LoginActivity" android:label="Login"/>
     </application>
 
 </manifest>
