@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.tripin.RegistrationActivity
 import com.example.tripin.R
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_profil.view.*
 
 class ProfilFragment : Fragment() {
@@ -27,9 +29,16 @@ class ProfilFragment : Fragment() {
 
         val button: Button = root.findViewById(R.id.auth_button_profil)
         button.setOnClickListener {view ->
-            val intent = Intent(this.context, RegistrationActivity::class.java)
-            startActivity(intent)
-            true
+            val uid = FirebaseAuth.getInstance().uid
+            if(uid != null){
+                Toast.makeText(this.context, "Vous êtes déjà connecté", Toast.LENGTH_SHORT).show()
+                //makeText(this, "Vous êtes déjà connecté", Toast.LENGTH_SHORT).show()
+            }
+            if(uid == null){
+                val intent = Intent(this.context, RegistrationActivity::class.java)
+                startActivity(intent)
+                true
+            }
         }
         return root
     }
