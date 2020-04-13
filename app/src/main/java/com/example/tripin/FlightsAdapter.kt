@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tripin.model.Flight
 import com.example.tripin.ui.find.ModelSkyScannerFlights
-import com.example.tripin.ui.find.toDirect
 import kotlinx.android.synthetic.main.flights_view.view.*
 import kotlinx.android.synthetic.main.voyage_view.view.*
 
@@ -33,5 +32,7 @@ class FlightsAdapter(val flights : List<Flight>) : RecyclerView.Adapter<FlightsA
             holder.flightsView.flights_imageview.setImageResource(R.drawable.ic_flight_black_24dp)
         }
     }
+
+    fun Boolean.toDirect() = if (this) "Vol direct" else "Vol avec escale(s)"
 
 }
