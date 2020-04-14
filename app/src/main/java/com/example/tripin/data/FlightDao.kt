@@ -4,6 +4,8 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import com.amadeus.resources.FlightOffer
+import com.amadeus.resources.FlightOfferSearch
 import com.example.tripin.model.Flight
 
 @Dao

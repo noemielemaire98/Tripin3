@@ -1,11 +1,12 @@
 package com.example.tripin.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "allflights")
-data class Flight (@PrimaryKey(autoGenerate = true) val QuoteId: Int,
-                   val MinPrice: Double, val DepartureDate: String, val Direct: Boolean) {
+data class Flight (@PrimaryKey(autoGenerate = true) val id: Int = 1,
+                   val grandTotal: Double, val dateDepart: String, val oneway: Boolean) {
 
 
     companion object { /*  all: même chose que :ListClient<>*/
