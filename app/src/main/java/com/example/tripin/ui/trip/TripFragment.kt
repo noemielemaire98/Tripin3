@@ -16,9 +16,6 @@ import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Voyage
 import kotlinx.android.synthetic.main.fragment_trip.*
 import kotlinx.coroutines.runBlocking
-import android.view.Menu
-import android.view.MenuItem
-import androidx.appcompat.widget.Toolbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class TripFragment : Fragment() {
@@ -62,7 +59,7 @@ class TripFragment : Fragment() {
         runBlocking {
             val voyages  = voyageDao?.getVoyage()
             voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
-            val voyage =Voyage(0,"titre","debut",R.drawable.destination1,0)
+            val voyage =Voyage(0,"titre","debut","fin",R.drawable.destination1,0)
 
         }
     }

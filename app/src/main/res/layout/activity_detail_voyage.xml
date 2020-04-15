@@ -12,7 +12,7 @@
         android:layout_height="150dp"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/addvoyage"
-         />
+        />
 
     <TextView
         android:id="@+id/voyage_title_textview"

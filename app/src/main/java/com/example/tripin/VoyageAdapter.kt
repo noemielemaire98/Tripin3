@@ -26,6 +26,7 @@ class VoyageAdapter(val voyages:List<Voyage>) : RecyclerView.Adapter<VoyageAdapt
         val voyage = voyages[position]
         holder.voyageView.voyage_title_textview.text = "${voyage.titre}"
         holder.voyageView.voyage_date_textview.text = "Du ${voyage.date}"
+        holder.voyageView.voyage_dateRetour_textview.text = "Au ${voyage.dateRetour}"
         holder.voyageView.voyage_nb_voyageur_textview.text = "Nombre de voyageurs : ${voyage.nb_voyageur}"
         holder.voyageView.voyage_imageview.setImageResource(voyage.photo)
 

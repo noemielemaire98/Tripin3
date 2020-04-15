@@ -29,15 +29,8 @@
             android:label="Detail" />
         <activity android:name=".AddVoyage" />
         <activity
-            android:name=".MainActivity"
-<<<<<<< Updated upstream
-            android:label="@string/app_name">
-        </activity>
-=======
-            android:label="@string/app_name" />
-        <activity android:name=".RegistrationActivity" />
-        <activity android:name=".LoginActivity" />
->>>>>>> Stashed changes
+            android:name=".MainActivity"/>
+
     </application>
 
 </manifest>
