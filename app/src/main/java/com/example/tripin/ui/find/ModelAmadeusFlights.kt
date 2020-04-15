@@ -1,22 +1,13 @@
 package com.example.tripin.ui.find
 
-import com.beust.klaxon.*
+import com.google.gson.annotations.SerializedName
 
 object ModelAmadeusFlights {
-
-    private val klaxon = Klaxon()
-
     data class Result(
         val meta: Meta,
         val data: List<Datum>,
         val dictionaries: Dictionaries
-    ) {
-        public fun toJson() = klaxon.toJsonString(this)
-
-        companion object {
-            public fun fromJson(json: String) = klaxon.parse<Result>(json)
-        }
-    }
+    )
 
     data class Datum(
         val type: String,
@@ -44,7 +35,7 @@ object ModelAmadeusFlights {
         val arrival: Arrival,
         val carrierCode: String,
         val number: String,
-        val aircraft: SegmentAircraft,
+        val aircraft: Aircraft,
         val operating: Operating,
         val duration: String,
         val id: String,
@@ -52,14 +43,14 @@ object ModelAmadeusFlights {
         val blacklistedInEU: Boolean
     )
 
-    data class SegmentAircraft(
+    data class Aircraft(
         val code: String
     )
 
     data class Arrival(
         val iataCode: String,
-        val at: String,
-        val terminal: String? = null
+        val terminal: String? = null,
+        val at: String
     )
 
     data class Operating(
@@ -85,9 +76,7 @@ object ModelAmadeusFlights {
     )
 
     data class TravelerPricing(
-        @Json(name = "travelerId")
         val travelerID: String,
-
         val fareOption: String,
         val travelerType: String,
         val price: TravelerPricingPrice,
@@ -95,22 +84,19 @@ object ModelAmadeusFlights {
     )
 
     data class FareDetailsBySegment(
-        @Json(name = "segmentId")
         val segmentID: String,
-
         val cabin: String,
         val fareBasis: String,
-
-        @Json(name = "class")
+        @SerializedName("class")
         val fareDetailsBySegmentClass: String,
-
         val includedCheckedBags: IncludedCheckedBags
     )
 
     data class IncludedCheckedBags(
         val weight: Long,
-        val weightUnit: String
+        val weightUnit: Float
     )
+
 
     data class TravelerPricingPrice(
         val currency: String,
@@ -120,23 +106,16 @@ object ModelAmadeusFlights {
 
     data class Dictionaries(
         val locations: Map<String, Location>,
-        val aircraft: DictionariesAircraft,
+        val aircraft: Map<String, String>,
         val currencies: Currencies,
         val carriers: Carriers
     )
 
-    data class DictionariesAircraft(
-        @Json(name = "747")
-        val the747: String
-    )
-
     data class Carriers(
-        @Json(name = "TG")
-        val tg: String
+        val pr: String
     )
 
     data class Currencies(
-        @Json(name = "EUR")
         val eur: String
     )
 

@@ -31,7 +31,7 @@
     </RadioGroup>
 
     <EditText
-        android:id="@+id/start_date"
+        android:id="@+id/heures_aller"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
@@ -46,6 +46,13 @@
         android:clickable="true"
         android:focusable="false"
         android:hint="Date de retour"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/origin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Lieu de départ"
         android:textAlignment="center" />
 
     <Button

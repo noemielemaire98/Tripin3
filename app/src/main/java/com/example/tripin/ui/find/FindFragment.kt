@@ -2,19 +2,21 @@ package com.example.tripin.ui.find
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.amadeus.Amadeus
 import com.amadeus.Params
+import com.amadeus.resources.FlightOfferSearch
 import com.example.tripin.FlightsAdapter
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
@@ -28,7 +30,9 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.anko.support.v4.alert
 import org.jetbrains.anko.yesButton
 import java.text.SimpleDateFormat
+import java.time.Duration
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -75,7 +79,7 @@ class FindFragment : Fragment() {
             }
 
         // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
-        view.start_date?.setOnClickListener {
+        view.heures_aller?.setOnClickListener {
             val dialogDepart = DatePickerDialog(
                 requireContext(),
                 startDateSetListener,
@@ -104,16 +108,16 @@ class FindFragment : Fragment() {
 
         view.btn_search.setOnClickListener {
 
-            if (start_date.text.toString() != "" && return_date.text.toString() != "") {
+            if (heures_aller.text.toString() != "" && return_date.text.toString() != "") {
                 val parsedDateDepart =
-                    SimpleDateFormat("yyyy-MM-dd").parse(start_date.text.toString())
+                    SimpleDateFormat("yyyy-MM-dd").parse(heures_aller.text.toString())
                 val parsedDateRetour =
                     SimpleDateFormat("yyyy-MM-dd").parse(return_date.text.toString())
                 if (parsedDateDepart!!.before(parsedDateRetour)) {
 
-                    dateDepart = start_date.text.toString()
+                    dateDepart = heures_aller.text.toString()
                     dateRetour = return_date.text.toString()
-                    flights_recyclerview.adapter = FlightsAdapter(emptyList())
+                    flights_recyclerview.adapter = FlightsAdapter(mutableListOf())
                     loadingPanel.visibility = View.VISIBLE;
                     beginSearch(dateDepart, dateRetour)
 
@@ -124,6 +128,12 @@ class FindFragment : Fragment() {
                     }.show()
                     return_date.setText("")
                 }
+            } else if (heures_aller.text.toString() != "" && return_date.visibility == View.GONE) {
+                dateDepart = heures_aller.text.toString()
+                dateRetour = ""
+                flights_recyclerview.adapter = FlightsAdapter(mutableListOf())
+                loadingPanel.visibility = View.VISIBLE;
+                beginSearch(dateDepart, dateRetour)
             } else {
                 alert("Veuillez remplir tous les champs.") {
                     title = "Alert"
@@ -134,14 +144,14 @@ class FindFragment : Fragment() {
 
         view.allerType_radiogroup.setOnCheckedChangeListener(
             RadioGroup.OnCheckedChangeListener
-            { group, checkedId ->
+            { _, checkedId ->
                 val radio: RadioButton = activity!!.findViewById(checkedId)
-                view.return_date.visibility =
-                    if (view.allerType_radiogroup.checkedRadioButtonId == view.simple_button.id) {
-                        View.GONE
-                    } else {
-                        View.VISIBLE
-                    }
+                if (view.allerType_radiogroup.checkedRadioButtonId == view.simple_button.id) {
+                    view.return_date.visibility = View.GONE
+                    view.return_date.setText("")
+                } else {
+                    view.return_date.visibility = View.VISIBLE
+                }
             })
 
 
@@ -160,67 +170,118 @@ class FindFragment : Fragment() {
 
         runBlocking {
             val flights = flightDao?.getFlights()
+            var flightslist: MutableList<MutableList<Flight>> = mutableListOf()
+            var testlist: MutableList<Flight> = mutableListOf()
+            var travelId = 1
+            var position = 0
+            flights?.map {
+                var Flight = flights[it.id - 1]
+                if (it.travelId != travelId) {
+                    flightslist.add(testlist)
+                    testlist = mutableListOf()
+                    travelId = it.travelId
+
+                }
+                testlist.add(Flight)
+                position += 1
+                if (flights.size == it.id) {
+                    flightslist.add(testlist)
+                }
+
+
+            }
+            //       Log.d("List", flightslist.toString())
             //     val flight = Flight(1, 20.toDouble(), "DepartureDate")
-            flights_recyclerview.adapter = FlightsAdapter(flights ?: emptyList())
+            flights_recyclerview.adapter = FlightsAdapter(flightslist)
             loadingPanel.visibility = View.GONE;
 
         }
     }
 
-    @SuppressLint("SetTextI18n")
+    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("SetTextI18n", "SimpleDateFormat")
     private fun beginSearch(dateDepart: String, dateRetour: String) {
         runBlocking {
             flightDao?.deleteFlights()
+        }
 
-            val amadeus = Amadeus
-                .builder("TGvUHAv2qE6aoqa2Gg44ZZGpvDIEGwYs", "a16JGxtWdWBPtTGB")
-                .build()
+        val amadeus = Amadeus
+            .builder("TGvUHAv2qE6aoqa2Gg44ZZGpvDIEGwYs", "a16JGxtWdWBPtTGB")
+            .build()
 
 // Your kotlin Coroutine scope
-            GlobalScope.launch {
-                val flightOffersSearches =
+        GlobalScope.launch {
+            var flightOffersSearches = emptyArray<FlightOfferSearch>()
+            if (dateRetour != "") {
+                flightOffersSearches =
                     amadeus.shopping.flightOffersSearch[Params.with("originLocationCode", "SYD")
                         .and("destinationLocationCode", "BKK")
                         .and("departureDate", dateDepart)
                         .and("returnDate", dateRetour)
                         .and("adults", 2)
-                        .and("max", 3)]
-
-                activity!!.runOnUiThread(java.lang.Runnable {
-
-                    //           Log.d("Flights", flightOffersSearches.contentToString())
-                    var id = 1
-                    flightOffersSearches.map { it ->
-
-                        it.itineraries.map { ot ->
-                            ot.segments.map { ut ->
-                                val flight = Flight(
-                                    id,
-                                    it.price.grandTotal,
-                                    ut.departure.at,
-                                    it.isOneWay
-                                )
-
-                                runBlocking {
-                                    flightDao?.addFlight(flight)
-                                }
-                                id += 1
-                            }
-                        }
-                    }
-                    onResume()
-                })
+                        .and("max", 10)]
+            } else {
+                flightOffersSearches =
+                    amadeus.shopping.flightOffersSearch[Params.with("originLocationCode", "SYD")
+                        .and("destinationLocationCode", "BKK")
+                        .and("departureDate", dateDepart)
+                        .and("adults", 2)
+                        .and("max", 10)]
             }
 
+            activity!!.runOnUiThread(java.lang.Runnable {
+
+                //           Log.d("Flights", flightOffersSearches.contentToString())
+                var id = 1
+                var retourValue = 1
+                flightOffersSearches.map { itFlight ->
+                    var retour = 0
+                    itFlight.itineraries.map { itItineraries ->
+                        var nbEscales = itItineraries.segments.size - 1
+                        itItineraries.segments.map { itSegments ->
+                            val sec = Duration.parse(itItineraries.duration).seconds
+                            val dureeFormat = String.format(
+                                "%02dh%02d", TimeUnit.SECONDS.toHours(sec),
+                                TimeUnit.SECONDS.toMinutes(sec) % TimeUnit.HOURS.toMinutes(1)
+                            )
+                            val test = itSegments.departure.at
+                            val parser =
+                                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                            val formatter =
+                                SimpleDateFormat("dd/MM/yyyy 'à' HH:mm")
+                            val output =
+                                formatter.format(parser.parse(itSegments.departure.at)!!)
+
+                            val flight = Flight(
+                                id,
+                                itFlight.id.toInt(),
+                                itSegments.id.toInt(),
+                                itFlight.price.grandTotal,
+                                output,
+                                dureeFormat,
+                                itFlight.isOneWay,
+                                nbEscales,
+                                retour
+                            )
+
+                            runBlocking {
+                                flightDao?.addFlight(flight)
+                            }
+                            id += 1
+                        }
+                        retour += 1
+                        retourValue = id
+                    }
+                }
+                onResume()
+            })
         }
-
-
     }
 
     private fun updateStartDateInView() {
         val myFormat = "yyyy-MM-dd" // mention the format you need
         val sdf = SimpleDateFormat(myFormat, Locale.US)
-        start_date.setText(sdf.format(cal.time))
+        heures_aller.setText(sdf.format(cal.time))
     }
 
     private fun updateReturnDateInView() {
