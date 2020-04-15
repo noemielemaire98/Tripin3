@@ -13,6 +13,10 @@ import androidx.room.Room
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.FlightDao
 import com.example.tripin.model.Flight
+<<<<<<< HEAD
+=======
+import com.example.tripin.ui.find.FindViewModel
+>>>>>>> d641792498f0cd9edb0aa2a75b8cc70ddfaf8e9b
 import com.example.tripin.ui.find.QuotesFlightsService
 import kotlinx.android.synthetic.main.activity_find_flight.*
 import kotlinx.coroutines.runBlocking
@@ -27,17 +31,30 @@ class FindFlight : AppCompatActivity() {
     var cal = Calendar.getInstance()
     private var flightDao: FlightDao? = null
 
+<<<<<<< HEAD
+=======
+    private lateinit var dashboardViewModel: FindViewModel
+>>>>>>> d641792498f0cd9edb0aa2a75b8cc70ddfaf8e9b
 
     val QuotesFlightsServe by lazy {
         QuotesFlightsService.create()
     }
 
+<<<<<<< HEAD
+=======
+    @SuppressLint("SimpleDateFormat")
+>>>>>>> d641792498f0cd9edb0aa2a75b8cc70ddfaf8e9b
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find_flight)
 
+<<<<<<< HEAD
 
         var flights_recyclerview = findViewById<View>(R.id.flights_recyclerview) as RecyclerView
+=======
+        var flights_recyclerview =
+            findViewById<View>(R.id.flights_recyclerview) as RecyclerView
+>>>>>>> d641792498f0cd9edb0aa2a75b8cc70ddfaf8e9b
         flights_recyclerview.layoutManager = LinearLayoutManager(this)
 
         val startDateSetListener =
@@ -113,6 +130,10 @@ class FindFlight : AppCompatActivity() {
                 .build()
 
         flightDao = database.getFlightDao()
+<<<<<<< HEAD
+=======
+
+>>>>>>> d641792498f0cd9edb0aa2a75b8cc70ddfaf8e9b
     }
 
     override fun onResume() {
@@ -126,7 +147,10 @@ class FindFlight : AppCompatActivity() {
         }
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> d641792498f0cd9edb0aa2a75b8cc70ddfaf8e9b
     @SuppressLint("SetTextI18n")
     private fun beginSearch(date: String) {
         runBlocking {
@@ -162,5 +186,12 @@ class FindFlight : AppCompatActivity() {
     }
 
 
+<<<<<<< HEAD
     fun Boolean.toDirect() = if (this) "Vol direct" else "Vol avec escale(s)"
+=======
+
+
+
+
+>>>>>>> d641792498f0cd9edb0aa2a75b8cc70ddfaf8e9b
 }

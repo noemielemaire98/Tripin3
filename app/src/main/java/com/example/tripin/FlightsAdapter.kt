@@ -32,7 +32,11 @@ class FlightsAdapter(val flights : List<Flight>) : RecyclerView.Adapter<FlightsA
             holder.flightsView.flights_imageview.setImageResource(R.drawable.ic_flight_black_24dp)
         }
     }
+<<<<<<< HEAD
 
     fun Boolean.toDirect() = if (this) "Vol direct" else "Vol avec escale(s)"
 
+=======
+    fun Boolean.toDirect() = if (this) "Vol direct" else "Vol avec escale(s)"
+>>>>>>> d641792498f0cd9edb0aa2a75b8cc70ddfaf8e9b
 }

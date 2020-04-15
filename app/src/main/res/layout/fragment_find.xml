@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context=".ui.find.FindFragment">
 
+<<<<<<< HEAD
     <Button
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -32,6 +33,23 @@
 
 
 
+=======
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="VOlS"
+        android:id="@+id/bt_flight"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="HOTELS"
+        android:id="@+id/bt_hotel"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ACTIVITES"
+        android:id="@+id/bt_activities"/>
+>>>>>>> d641792498f0cd9edb0aa2a75b8cc70ddfaf8e9b
 
 
 </LinearLayout>
