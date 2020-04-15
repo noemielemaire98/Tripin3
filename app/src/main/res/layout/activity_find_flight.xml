@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="10dp"
     android:orientation="vertical"
     tools:context=".FindFlight">
 
@@ -30,7 +31,7 @@
     </RadioGroup>
 
     <EditText
-        android:id="@+id/start_date"
+        android:id="@+id/heures_aller"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
@@ -47,6 +48,13 @@
         android:hint="Date de retour"
         android:textAlignment="center" />
 
+    <EditText
+        android:id="@+id/origin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Lieu de départ"
+        android:textAlignment="center" />
+
     <Button
         android:id="@+id/btn_search"
         android:layout_width="match_parent"
@@ -59,7 +67,7 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textSize="24sp"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/txt_search_direct"
@@ -70,6 +78,19 @@
         android:visibility="gone" />
 
     <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -77,7 +98,6 @@
             android:id="@+id/flights_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="?attr/actionBarSize"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -85,6 +105,5 @@
             tools:listitem="@layout/flights_view" />
 
     </RelativeLayout>
-
 
 </LinearLayout>
