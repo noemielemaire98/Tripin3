@@ -44,6 +44,7 @@ class AddVoyage : AppCompatActivity() {
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
                 updatDatedepartInView()
             }
+
         val dateRetourSetListener =
             DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                 cal.set(Calendar.YEAR, year)
@@ -91,7 +92,8 @@ class AddVoyage : AppCompatActivity() {
             // finish dépile l'activité et revient à la page d'en dessous
 
 
-            val voyage = Voyage(0,titre.toString(),date.toString(), dateRetour.toString() ,R.drawable.destination1, 2)
+            val voyage = Voyage(0,titre.toString(),date.toString(), dateRetour.toString() ,R.drawable.destination1, 0)
+            Log.d(voyage.toString(),"voyage")
 
             val database: AppDatabase =
                 Room.databaseBuilder(this,AppDatabase::class.java,"gestionvoyages").build()
@@ -120,3 +122,4 @@ class AddVoyage : AppCompatActivity() {
 
 
 }
+

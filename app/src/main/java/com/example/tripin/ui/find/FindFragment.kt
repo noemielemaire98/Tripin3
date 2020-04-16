@@ -34,13 +34,6 @@ import java.util.*
 class FindFragment : Fragment() {
 
 
-<<<<<<< HEAD
-    private lateinit var dashboardViewModel: FindViewModel
-
-
-    @SuppressLint("SimpleDateFormat")
-=======
->>>>>>> d641792498f0cd9edb0aa2a75b8cc70ddfaf8e9b
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,48 +43,22 @@ class FindFragment : Fragment() {
         val view: View = inflater.inflate(R.layout.fragment_find, container, false)
 
 
-<<<<<<< HEAD
-        val bt_flight: Button = view.findViewById(R.id.bt_find_fight)
-=======
         val bt_flight: Button = view.findViewById(R.id.bt_flight)
->>>>>>> d641792498f0cd9edb0aa2a75b8cc70ddfaf8e9b
 
         bt_flight.setOnClickListener { view ->
             val intent = Intent(this.context, FindFlight::class.java)
             startActivity(intent)
             true
         }
-        val bt_hotel: Button = view.findViewById(R.id.bt_find_hotel)
 
-<<<<<<< HEAD
-=======
         val bt_hotel: Button = view.findViewById(R.id.bt_hotel)
 
->>>>>>> d641792498f0cd9edb0aa2a75b8cc70ddfaf8e9b
         bt_hotel.setOnClickListener { view ->
             val intent = Intent(this.context, FindHotel::class.java)
             startActivity(intent)
             true
         }
-        val bt_activities: Button = view.findViewById(R.id.bt_find_activity)
 
-<<<<<<< HEAD
-        bt_activities.setOnClickListener { view ->
-            val intent = Intent(this.context, FindActivities::class.java)
-            startActivity(intent)
-            true
-        }
-
-        return view
-
-
-    }
-}
-
-
-
-
-=======
         val bt_activites: Button = view.findViewById(R.id.bt_activities)
 
         bt_activites.setOnClickListener { view ->
@@ -105,4 +72,3 @@ class FindFragment : Fragment() {
     }
 }
 
->>>>>>> d641792498f0cd9edb0aa2a75b8cc70ddfaf8e9b
