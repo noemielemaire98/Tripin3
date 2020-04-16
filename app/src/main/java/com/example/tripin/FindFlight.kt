@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.RadioButton
@@ -224,7 +225,7 @@ class FindFlight : AppCompatActivity() {
 
             runOnUiThread(java.lang.Runnable {
 
-                //           Log.d("Flights", flightOffersSearches.contentToString())
+                         //Log.d("Flights", flightOffersSearches.contentToString())
                 var id = 1
                 var retourValue = 1
                 flightOffersSearches.map { itFlight ->
