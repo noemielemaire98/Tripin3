@@ -9,29 +9,20 @@
     tools:context=".ui.find.FindFragment">
 
     <Button
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Vols"
-        android:id="@+id/bt_find_fight">
-
-    </Button>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="VOlS"
+        android:id="@+id/bt_flight"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hotels"
-        android:id="@+id/bt_find_hotel">
-
-    </Button>
+        android:text="HOTELS"
+        android:id="@+id/bt_hotel"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Activités"
-        android:id="@+id/bt_find_activity">
-
-    </Button>
-
-
-
+        android:text="ACTIVITES"
+        android:id="@+id/bt_activities"/>
 
 
 </LinearLayout>

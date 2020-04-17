@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="270dp"
+    android:layout_margin="8dp"
+    tools:context=".ui.find.FindFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/activity_imageview"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_margin="8dp" />
+
+
+        <TextView
+            android:id="@+id/activity_title_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="10dp"
+            android:textSize="15dp"
+            tools:text="Titre" />
+
+
+        <TextView
+            android:id="@+id/activity_price_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="15dp"
+            android:textSize="12dp"
+            tools:text="Prix : " />
+
+        <TextView
+            android:id="@+id/activity_days_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="15dp"
+            android:textSize="12dp"
+            tools:text="Dispo : " />
+
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

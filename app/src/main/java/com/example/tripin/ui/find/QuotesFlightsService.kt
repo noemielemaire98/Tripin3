@@ -14,14 +14,14 @@ interface QuotesFlightsService {
         @Path("date") date: String,
         @Header("x-rapidapi-host") apiHost: String,
         @Header("x-rapidapi-key") apiKey: String
-    ): ModelSkyScannerFlights.Result
+    ): ModelAmadeusFlights.Result
 
 
     companion object {
         fun create(): QuotesFlightsService {
 
             val retrofit = Retrofit.Builder()
-                .baseUrl("https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/")
+                .baseUrl("https://test.api.amadeus.com/v2/shopping/flight-offers")
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
