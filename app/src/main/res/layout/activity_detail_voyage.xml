@@ -25,11 +25,18 @@
         android:textSize="20dp"
         tools:text="Mon voyage" />
 
+    <LinearLayout
+        android:id="@+id/voyage_datett_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints"
+        app:layout_constraintTop_toBottomOf="@+id/voyage_title_textview">
     <TextView
         android:layout_marginLeft="8dp"
         android:layout_marginTop="40dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/voyage_title_textview"
+
         tools:text="Date"
         android:id="@+id/voyage_date_textview"
         android:layout_width="wrap_content"
@@ -40,7 +47,20 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="40dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/voyage_date_textview"
+
+        tools:text="Date"
+        android:id="@+id/voyage_dateRetour_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/voyage_datett_textview"
         tools:text="Date"
         android:id="@+id/voyage_nb_voyageurs_textview"
         android:layout_width="wrap_content"

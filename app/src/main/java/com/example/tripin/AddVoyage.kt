@@ -25,16 +25,7 @@ class AddVoyage : AppCompatActivity() {
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        fun onOptionsItemSelected(item: MenuItem)  =
-            when (item.itemId) {
-                R.id.home -> {
-                    finish()
-                    true
-                }
 
-                else -> super.onOptionsItemSelected(item)
-
-            }
 
 
         val dateDepartSetListener =
@@ -92,7 +83,7 @@ class AddVoyage : AppCompatActivity() {
             // finish dépile l'activité et revient à la page d'en dessous
 
 
-            val voyage = Voyage(0,titre.toString(),date.toString(), dateRetour.toString() ,R.drawable.destination1, 0)
+            val voyage = Voyage(0,titre.toString(),date.toString(), dateRetour.toString() ,R.drawable.destination1, nb_voyageur.toString().toInt())
             Log.d(voyage.toString(),"voyage")
 
             val database: AppDatabase =
@@ -109,17 +100,26 @@ class AddVoyage : AppCompatActivity() {
     }
 
     private fun updatDatedepartInView() {
-        val myFormat = "yyyy-MM-dd" // mention the format you need
+        val myFormat = "dd/MM/yyyy" // mention the format you need
         val sdf = SimpleDateFormat(myFormat, Locale.US)
         addv_date_editText!!.setText(sdf.format(cal.getTime()))
     }
 
     private fun updatDateretourInView() {
-        val myFormat = "yyyy-MM-dd" // mention the format you need
+        val myFormat = "dd/MM/yyyy" // mention the format you need
         val sdf = SimpleDateFormat(myFormat, Locale.US)
         addv_dateRetour_editText!!.setText(sdf.format(cal.getTime()))
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
 }
 
