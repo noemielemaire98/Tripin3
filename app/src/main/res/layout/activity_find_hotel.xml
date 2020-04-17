@@ -8,15 +8,13 @@
     tools:context=".FindHotel">
 
 
-  <!--  <EditText
-        android:id="@+id/city"
+   <androidx.appcompat.widget.SearchView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="false"
-        android:hint="Ville"
-        android:textAlignment="center" />
--->
+        android:background="#E1E1E1"
+        app:queryHint="Choisissez une ville"
+        android:id="@+id/search_activity_bar"/>
+
     <Button
         android:id="@+id/btn_search"
         android:layout_width="match_parent"

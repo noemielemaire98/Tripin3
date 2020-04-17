@@ -24,6 +24,7 @@ class HotelsAdapter (val hotels : List<Hotel>): RecyclerView.Adapter<HotelsAdapt
     override fun onBindViewHolder(holder: HotelViewHolder, position: Int) {
         val hotel = hotels[position]
             holder.hotelView.hotels_name_textview.text= "${hotel.hotelName}"
+      //  holder.hotelView.hotels_description_textview.text="${hotel.hotelDescription}"
             holder.hotelView.hotels_rate_textview.text="${hotel.rate}"
             holder.hotelView.hotels_imageview.setImageResource(R.drawable.ic_flight_black_24dp)
         Log.d("hotels", hotels.toString())

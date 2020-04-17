@@ -6,14 +6,15 @@ import androidx.room.PrimaryKey
 
 @Entity (tableName = "allhotels")
 data class Hotel (
-    @PrimaryKey(autoGenerate = true) val id: Int = 1,
-    val hotelId: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int,
+    val hotelId: String,
     val hotelName: String,
-    val rate: Int)
+    val hotelDescription: String?,
+    val rate: Int?)
 
 { companion object {
         val all = (1..20).map {
-            Hotel(it, it, "Name$it", it) }.toMutableList()
+            Hotel(it, "Id$it", "Name$it", "Description$it",it) }.toMutableList()
     }
 }
 
