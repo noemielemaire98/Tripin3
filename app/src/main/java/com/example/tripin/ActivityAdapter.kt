@@ -44,7 +44,12 @@ class ActivityAdapter(val activities:List<Activity>) : RecyclerView.Adapter<Acti
         holder.activtyView.activity_price_textview.text = "Prix : ${activity.formatted_iso_value}"
         holder.activtyView.activity_days_textview.text = "Dispo : ${activity.operational_days}"
 
-
+        holder.activtyView.setOnClickListener {
+            Log.d("CCC", "$activity")
+            val intent= Intent(it.context,DetailActivites::class.java)
+            intent.putExtra("id",activity.id)
+            it.context.startActivity(intent)
+        }
 
 
 

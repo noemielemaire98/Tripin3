@@ -45,7 +45,7 @@ class FindActivites : AppCompatActivity() {
                 // le map permet d'appeler la fonction sur chacun des éléments d'une collection (== boucle for)
                 result.data.map {
 
-                    val activity = Activity(0, it.title, it.cover_image_url,it.retail_price.formatted_iso_value,it.operational_days)
+                    val activity = Activity(0, it.title, it.cover_image_url,it.retail_price.formatted_iso_value,it.operational_days,false,it.about)
                     Log.d("CCC", "$activity")
                     activityDao?.addActivity(activity)
 
