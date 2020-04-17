@@ -16,7 +16,7 @@
     <string name="signout_button">Déconnexion</string>
     <string name="signup_button">S\'inscrire</string>
     <string name="create_account_button">Créer un compte ?</string>
-    <string name="photo_profil_button">Photo de profil</string>
+    <string name="photo_profil_button">Photo</string>
     <string name="voyage_delete_confirm_title">Confirmation Supression</string>
     <string name="voyage_delete_confirm_message">Voulez-vous vraiment supprimer %1$s ?</string>
 </resources>

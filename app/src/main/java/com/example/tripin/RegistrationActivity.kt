@@ -48,8 +48,10 @@ class RegistrationActivity : AppCompatActivity() {
             selectedPhotoUri = data.data
             val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedPhotoUri)
 
-            val bitmapDrawable = BitmapDrawable(bitmap)
-            photo_profil_button.setBackgroundDrawable(bitmapDrawable)
+            select_photo_circleview.setImageBitmap(bitmap)
+            photo_profil_button.alpha = 0f
+//            val bitmapDrawable = BitmapDrawable(bitmap)
+//            photo_profil_button.setBackgroundDrawable(bitmapDrawable)
         }
     }
 
