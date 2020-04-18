@@ -12,7 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DetailActivites" android:label="Detail activité"></activity>
+        <activity android:name=".SavedActivites"></activity>
+        <activity android:name=".SavedHotel" />
+        <activity android:name=".SavedFlight" />
+        <activity
+            android:name=".DetailActivites"
+            android:label="Detail activité" />
         <activity
             android:name=".FindActivites"
             android:label="Rechercher des activites" />

@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.voyage_view.view.*
 import java.io.InputStream
 import java.net.URL
 
-class ActivityAdapter(val activities:List<Activity>) : RecyclerView.Adapter<ActivityAdapter.ActivityViewHolder>() {
+class ActivityAdapter(val list_activity: List<Activity>) : RecyclerView.Adapter<ActivityAdapter.ActivityViewHolder>() {
 
     class ActivityViewHolder(val activtyView : View) : RecyclerView.ViewHolder(activtyView)
 
@@ -28,12 +28,12 @@ class ActivityAdapter(val activities:List<Activity>) : RecyclerView.Adapter<Acti
         return ActivityViewHolder(view)
     }
 
-    override fun getItemCount(): Int = activities.size
+    override fun getItemCount(): Int = list_activity.size
 
 
 
     override fun onBindViewHolder(holder:ActivityViewHolder, position: Int) {
-        val activity = activities[position]
+        val activity =list_activity[position]
         holder.activtyView.activity_title_textview.text = "${activity.title}"
         val url = activity.cover_image_url
         Glide.with(holder.activtyView)
@@ -45,9 +45,9 @@ class ActivityAdapter(val activities:List<Activity>) : RecyclerView.Adapter<Acti
         holder.activtyView.activity_days_textview.text = "Dispo : ${activity.operational_days}"
 
         holder.activtyView.setOnClickListener {
-            Log.d("CCC", "$activity")
+            //Log.d("CCC", "$activity")
             val intent= Intent(it.context,DetailActivites::class.java)
-            intent.putExtra("id",activity.id)
+            intent.putExtra("a",activity)
             it.context.startActivity(intent)
         }
 
