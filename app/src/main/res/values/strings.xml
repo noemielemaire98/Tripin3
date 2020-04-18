@@ -19,4 +19,17 @@
     <string name="photo_profil_button">Photo de profil</string>
     <string name="voyage_delete_confirm_title">Confirmation Supression</string>
     <string name="voyage_delete_confirm_message">Voulez-vous vraiment supprimer %1$s ?</string>
+
+
+    <string-array name="adultsNumber">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+    </string-array>
 </resources>

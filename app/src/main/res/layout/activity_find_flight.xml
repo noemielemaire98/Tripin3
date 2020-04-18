@@ -8,80 +8,113 @@
     android:orientation="vertical"
     tools:context=".FindFlight">
 
-    <RadioGroup
-        android:id="@+id/allerType_radiogroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:checkedButton="@+id/retour_button"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/retour_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Aller-retour" />
-
-        <RadioButton
-            android:id="@+id/simple_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Aller simple" />
-    </RadioGroup>
-
-    <EditText
-        android:id="@+id/heures_aller"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="false"
-        android:hint="Date de départ"
-        android:textAlignment="center" />
-
-    <EditText
-        android:id="@+id/return_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="false"
-        android:hint="Date de retour"
-        android:textAlignment="center" />
-
-    <EditText
-        android:id="@+id/origin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Lieu de départ"
-        android:textAlignment="center" />
-
     <Button
-        android:id="@+id/btn_search"
+        android:id="@+id/button_newSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Rechercher" />
-
-    <TextView
-        android:id="@+id/txt_search_price"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/txt_search_direct"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="24sp"
+        android:text="Nouvelle Recherche"
         android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/layout_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <RadioGroup
+            android:id="@+id/allerType_radiogroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checkedButton="@+id/retour_button"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/retour_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Aller-retour" />
+
+            <RadioButton
+                android:id="@+id/simple_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Aller simple" />
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/heures_aller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false"
+            android:hint="Date de départ"
+            android:textAlignment="center" />
+
+        <EditText
+            android:id="@+id/return_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:hint="Date de retour"
+            android:textAlignment="center" />
+
+        <AutoCompleteTextView
+            android:id="@+id/autoTextViewDepart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:hint="Lieu de départ"
+            android:textAlignment="center" />
+
+        <AutoCompleteTextView
+            android:id="@+id/autoTextViewRetour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Lieu d'arrivée"
+            android:textAlignment="center" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewAdults"
+                android:text="Nombre d'adultes : "
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:layout_weight="1"/>
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/adultsNumber"
+                android:layout_weight="1"
+                android:textAlignment="center">
+            </Spinner>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Rechercher" />
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/loadingPanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center" >
+        android:gravity="center">
 
         <ProgressBar
             android:layout_width="wrap_content"
