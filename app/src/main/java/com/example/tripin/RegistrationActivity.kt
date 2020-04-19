@@ -111,4 +111,6 @@ class RegistrationActivity : AppCompatActivity() {
     }
 }
 
-class User (val uid : String, val username : String, val profilImageUrl : String)
+class User (val uid : String, val username : String, val profilImageUrl : String){
+    constructor() : this("", "", "")
+}

@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DetailActivites" android:label="Detail activité"></activity>
+        <activity android:name=".DetailActivites" android:label="Detail activité"/>
         <activity
             android:name=".FindActivites"
             android:label="Rechercher des activites" />
@@ -39,11 +39,14 @@
             android:name=".MainActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".RegistrationActivity"
-            android:label="Registration" />
-        <activity
             android:name=".LoginActivity"
-            android:label="Login" />
+            android:label="Se connecter" />
+        <activity
+            android:name=".RegistrationActivity"
+            android:label="S'inscrire">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LoginActivity"/>
+        </activity>
     </application>
 
 </manifest>
