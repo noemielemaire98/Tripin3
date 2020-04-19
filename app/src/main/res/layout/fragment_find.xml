@@ -25,4 +25,5 @@
         android:text="ACTIVITES"
         android:id="@+id/bt_activities"/>
 
+
 </LinearLayout>

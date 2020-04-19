@@ -82,6 +82,14 @@ class AddVoyage : AppCompatActivity() {
 
 
             val voyage = Voyage(0,titre.toString(),dateDepart.toString(), dateRetour.toString() ,R.drawable.destination1, nb_voyageur.toString().toInt())
+            val database: AppDatabase =
+                Room.databaseBuilder(this, AppDatabase::class.java, "gestionvoyages").build()
+            val voyageDao: VoyageDao = database.getVoyageDao()
+
+            runBlocking {
+                voyageDao.addVoyage(voyage)// Reference aux co-routines Kotlin
+            }
+            finish()
 
             }
 
