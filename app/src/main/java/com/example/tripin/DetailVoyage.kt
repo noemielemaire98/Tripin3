@@ -1,5 +1,6 @@
 package com.example.tripin
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -33,7 +34,7 @@ class DetailVoyage : AppCompatActivity() {
         runBlocking {
             voyage = voyageDao!!.getVoyage(id) // Référence aux coroutines Kotlin
             voyage_title_textview.text = voyage?.titre
-            voyage_date_textview.text = "Du "+voyage?.date
+            voyage_dateDepart_textview.text = "Du "+voyage?.date
             voyage_dateRetour_textview.text = "Au "+voyage?.dateRetour
             voyage_nb_voyageurs_textview.text = "Nombre de voyageur :" +voyage?.nb_voyageur.toString()
         }
@@ -44,7 +45,7 @@ class DetailVoyage : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem)=
+    override fun onOptionsItemSelected(item: MenuItem) : Boolean=
 
         when (item.itemId) {
             R.id.ic_menu_delete_voyage -> {
@@ -52,7 +53,7 @@ class DetailVoyage : AppCompatActivity() {
                     setTitle(getString(R.string.voyage_delete_confirm_title))
                     setMessage(getString(R.string.voyage_delete_confirm_message,voyage?.titre))
                     setNegativeButton(android.R.string.no){_,_ ->
-                        Log.d("gege","non supprimé")
+
                     }
                     setPositiveButton(android.R.string.yes){_,_ ->
 
@@ -65,12 +66,18 @@ class DetailVoyage : AppCompatActivity() {
                     show()
 
                 }
-
-
-
                 true
             }
-            else -> true
+            R.id.ic_menu_edit_voyage -> {
+                val intent = Intent(this, EditVoyage::class.java)
+                startActivity(intent)
+                true
+            }
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> onOptionsItemSelected(item)
 
         }
 

@@ -16,7 +16,7 @@ import java.util.*
 
 class AddVoyage : AppCompatActivity() {
 
-    var cal = Calendar.getInstance()
+    var cal: Calendar = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +44,7 @@ class AddVoyage : AppCompatActivity() {
                 updatDateretourInView()
             }
 
-        addv_date_editText?.setOnClickListener {
+        addv_dateDepart_editText?.setOnClickListener {
             var dialog = DatePickerDialog(
                 this,
                 dateDepartSetListener,
@@ -73,36 +73,24 @@ class AddVoyage : AppCompatActivity() {
 
         addv_valider.setOnClickListener {
             val titre = addv_titre_editText.text
-            val date = addv_date_editText.text
+            val dateDepart = addv_dateDepart_editText.text
             val dateRetour = addv_dateRetour_editText.text
             val nb_voyageur= addv_nbvoyageur_editText.text
 
 
-
-            Log.d("Custumers","Bonjour ${titre} ${date}")
             // finish dépile l'activité et revient à la page d'en dessous
 
 
-            val voyage = Voyage(0,titre.toString(),date.toString(), dateRetour.toString() ,R.drawable.destination1, nb_voyageur.toString().toInt())
-            Log.d(voyage.toString(),"voyage")
+            val voyage = Voyage(0,titre.toString(),dateDepart.toString(), dateRetour.toString() ,R.drawable.destination1, nb_voyageur.toString().toInt())
 
-            val database: AppDatabase =
-                Room.databaseBuilder(this,AppDatabase::class.java,"gestionvoyages").build()
-            val voyageDao :VoyageDao = database.getVoyageDao()
-
-            runBlocking {
-                voyageDao.addVoyage(voyage)// Reference aux co-routines Kotlin
             }
-            finish()
-
-        }
 
     }
 
     private fun updatDatedepartInView() {
         val myFormat = "dd/MM/yyyy" // mention the format you need
         val sdf = SimpleDateFormat(myFormat, Locale.US)
-        addv_date_editText!!.setText(sdf.format(cal.getTime()))
+        addv_dateDepart_editText!!.setText(sdf.format(cal.getTime()))
     }
 
     private fun updatDateretourInView() {
@@ -111,15 +99,17 @@ class AddVoyage : AppCompatActivity() {
         addv_dateRetour_editText!!.setText(sdf.format(cal.getTime()))
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
             android.R.id.home -> {
                 finish()
                 true
             }
-            else -> super.onOptionsItemSelected(item)
+            else -> onOptionsItemSelected(item)
         }
-    }
+
 
 }
 
