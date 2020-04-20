@@ -19,4 +19,6 @@
     <string name="photo_profil_button">Photo</string>
     <string name="voyage_delete_confirm_title">Confirmation Supression</string>
     <string name="voyage_delete_confirm_message">Voulez-vous vraiment supprimer %1$s ?</string>
+    <string name="connexion_facebook">Connectez-vous à facebook</string>
+    <string name="connexion_twitter">Connectez-vous à twitter</string>
 </resources>

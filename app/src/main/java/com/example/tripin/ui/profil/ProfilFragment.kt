@@ -2,6 +2,9 @@ package com.example.tripin.ui.profil
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,13 +14,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import com.example.tripin.LoginActivity
-import com.example.tripin.R
+import com.example.tripin.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import org.w3c.dom.Text
 
 
 class ProfilFragment : Fragment() {
@@ -72,6 +75,30 @@ class ProfilFragment : Fragment() {
             }
         }
 
+        val contact: TextView = root.findViewById(R.id.textview_app_contact)
+        val feedback: TextView = root.findViewById(R.id.textview_app_feedback)
+        val sharing: TextView = root.findViewById(R.id.textview_app_sharing)
+        val stars: TextView = root.findViewById(R.id.textview_app_stars)
+
+        contact.setOnClickListener {
+            val intent = Intent(this.context, ContactActivity::class.java)
+            startActivity(intent)
+        }
+
+        feedback.setOnClickListener {
+            val intent = Intent(this.context, FeedbackActivity::class.java)
+            startActivity(intent)
+        }
+
+        sharing.setOnClickListener {
+            val intent = Intent(this.context, SharingActivity::class.java)
+            startActivity(intent)
+        }
+
+        stars.setOnClickListener {
+            val intent = Intent(this.context, StarsActivity::class.java)
+            startActivity(intent)
+        }
         return root
     }
 }
