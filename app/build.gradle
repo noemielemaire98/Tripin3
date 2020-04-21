@@ -76,7 +76,7 @@ dependencies {
 
     implementation "org.jetbrains.anko:anko:0.10.8"
 
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation "com.amadeus:amadeus-java:4.1.0"
 
     //  debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'

@@ -12,13 +12,18 @@ import com.example.tripin.model.Activity
 import com.example.tripin.ui.find.ActivitybyCity
 import com.example.tripin.ui.find.retrofit
 import kotlinx.android.synthetic.main.activity_find_activites.*
+
+
 import kotlinx.coroutines.runBlocking
+import java.util.ArrayList
 
 class FindActivites : AppCompatActivity() {
 
     private var activityDao : ActivityDao? = null
     val lang : String = "fr-FR"
     val monnaie :String = "EUR"
+    val list_activity : MutableList<Activity> = mutableListOf()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,41 +36,47 @@ class FindActivites : AppCompatActivity() {
         val database =
             Room.databaseBuilder(this, AppDatabase::class.java, "allactivity")
                 .build()
-        runBlocking {
-            activityDao?.deleteActivity()
-        }
+
+        activityDao = database.getActivityDao()
+
+
 
         bt_recherche_activity.setOnClickListener {
 
             val query = search_activity_bar.query
             runBlocking {
-                activityDao?.deleteActivity()
                 val service = retrofit().create(ActivitybyCity::class.java)
                 val result = service.listActivity("$query", lang, monnaie)
+                val list_activities_bdd = activityDao?.getActivity()
                 // le map permet d'appeler la fonction sur chacun des éléments d'une collection (== boucle for)
                 result.data.map {
+                    var favoris = false
+                    val titre = it.title
+                    list_activities_bdd?.forEach {
+                        if(it.title == titre){
+                            favoris = true
 
-                    val activity = Activity(0, it.title, it.cover_image_url,it.retail_price.formatted_iso_value,it.operational_days)
-                    Log.d("CCC", "$activity")
-                    activityDao?.addActivity(activity)
+                        }
+                    }
+
+                    val activity = Activity(it.uuid, it.title, it.cover_image_url,it.retail_price.formatted_iso_value,it.operational_days,favoris,it.about)
+                    //Log.d("CCC", "$activity")
+                    list_activity.add(activity)
+                    //Log.d("CIC","$list_activity")
 
                 }
-                activityDao = database.getActivityDao()
-                val activities = activityDao?.getActivity()
-                activities_recyclerview.adapter = ActivityAdapter(activities  ?: emptyList())
-                Log.d("CCC","get")
-            }
 
+
+                activities_recyclerview.adapter = ActivityAdapter(list_activity ?: emptyList())
+
+            }
         }
     }
 
     override fun onResume() {
         super.onResume()
 
-        runBlocking {
-            val activities  = activityDao?.getActivity()
-            activities_recyclerview.adapter = ActivityAdapter(activities ?: emptyList())
-        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

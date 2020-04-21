@@ -19,7 +19,7 @@ class LoginActivity : AppCompatActivity(){
         }
 
         back_account_text_login.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, RegistrationActivity::class.java)
             startActivity(intent)
         }
     }

@@ -15,6 +15,12 @@
         <activity
             android:name=".DetailFlights"
             android:label="Détail du vol" />
+        <activity android:name=".SavedActivites"/>
+        <activity android:name=".SavedHotel" />
+        <activity android:name=".SavedFlight" />
+        <activity
+            android:name=".DetailActivites"
+            android:label="Detail activité" />
         <activity
             android:name=".FindActivites"
             android:label="Rechercher des activites" />

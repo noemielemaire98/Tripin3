@@ -1,6 +1,7 @@
 package com.example.tripin.ui.find
 
 object ModelMusement {
+
     data class Welcome (
         val meta: Meta,
         val data: List<Datum>

@@ -8,12 +8,17 @@
     <EditText
         android:id="@+id/pseudo_edit_registration"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="32dp"
         android:autofillHints="@string/pseudo_edit"
         android:ems="10"
         android:hint="@string/pseudo_edit"
         android:inputType="textPersonName"
+        android:background="@drawable/rounded_edit"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,36 +27,50 @@
     <EditText
         android:id="@+id/mail_edit_registration"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:autofillHints="@string/mail_edit"
         android:ems="10"
         android:hint="@string/mail_edit"
         android:inputType="textEmailAddress"
+        android:background="@drawable/rounded_edit"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         app:layout_constraintStart_toStartOf="@+id/pseudo_edit_registration"
         app:layout_constraintTop_toBottomOf="@+id/pseudo_edit_registration" />
 
     <EditText
         android:id="@+id/password_edit_registration"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:autofillHints="@string/password_edit"
         android:ems="10"
         android:hint="@string/password_edit"
         android:inputType="textPassword"
+        android:background="@drawable/rounded_edit"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         app:layout_constraintStart_toStartOf="@+id/mail_edit_registration"
         app:layout_constraintTop_toBottomOf="@+id/mail_edit_registration" />
 
     <Button
         android:id="@+id/register_button_registration"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginTop="20dp"
-        android:text="@string/signup_button"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/signin_button"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:background="@drawable/rounded_button"
+        app:layout_constraintEnd_toEndOf="@+id/password_edit_registration"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/password_edit_registration"
         app:layout_constraintTop_toBottomOf="@+id/password_edit_registration" />
 
     <TextView
@@ -66,12 +85,26 @@
 
     <Button
         android:id="@+id/photo_profil_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginTop="32dp"
         android:text="@string/photo_profil_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/rounded_edit_photo"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/select_photo_circleview"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:civ_border_width="4dp"
+        app:civ_border_color="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/photo_profil_button"
+        app:layout_constraintEnd_toEndOf="@+id/photo_profil_button"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/photo_profil_button"
+        app:layout_constraintTop_toTopOf="@+id/photo_profil_button"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
