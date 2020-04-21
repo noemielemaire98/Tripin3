@@ -1,35 +1,36 @@
 package com.example.tripin
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ArrayAdapter
+import android.view.View.OnFocusChangeListener
+import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
+import android.widget.ListAdapter
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.amadeus.Amadeus
 import com.amadeus.Params
-import com.amadeus.referenceData.Locations
 import com.amadeus.resources.FlightOfferSearch
-import com.amadeus.resources.Location
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.FlightDao
 import com.example.tripin.data.LocationDao
 import com.example.tripin.model.Flight
-import com.example.tripin.model.LocationList
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import kotlinx.android.synthetic.main.activity_find_flight.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -53,6 +54,7 @@ class FindFlight : AppCompatActivity() {
     private var flightDao: FlightDao? = null
     private var locationDao: LocationDao? = null
     private var listFlights = mutableListOf<Flight>()
+    private var activityCreate = true
     private val amadeus: Amadeus = Amadeus
         .builder("TGvUHAv2qE6aoqa2Gg44ZZGpvDIEGwYs", "a16JGxtWdWBPtTGB")
         .build()
@@ -65,7 +67,6 @@ class FindFlight : AppCompatActivity() {
         setContentView(R.layout.activity_find_flight)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
 
         val flightsRecyclerview =
             findViewById<View>(R.id.flights_recyclerview) as RecyclerView
@@ -88,7 +89,7 @@ class FindFlight : AppCompatActivity() {
             }
 
         // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
-        heures_aller?.setOnClickListener {
+        aller_date?.setOnClickListener {
             val dialogDepart = DatePickerDialog(
                 this,
                 startDateSetListener,
@@ -113,67 +114,92 @@ class FindFlight : AppCompatActivity() {
             dialogRetour.datePicker.minDate = Calendar.getInstance().timeInMillis
             dialogRetour.show()
         }
-
         runBlocking {
-            locationDao?.deleteLocation()
-        }
-        val autotextView = findViewById<AutoCompleteTextView>(R.id.autoTextViewDepart)
+            val test = resources.openRawResource(R.raw.iata_airport_list)
+            val rows: List<Map<String, String>> = csvReader().readAllWithHeader(test)
 
 
-        var locations = emptyArray<Location?>()
-        var testo = true
-        autotextView.afterTextChanged { it ->
-            if (testo && it.length == 1) {
-                GlobalScope.launch {
-                    locations = amadeus.referenceData.locations[Params
-                        .with("keyword", it)
-                        .and("subType", Locations.AIRPORT)
-                        .and("view", "LIGHT")
-                        .and("page[limit]", 10000)]
+            val listS = mutableListOf<String>()
 
-                    runOnUiThread(java.lang.Runnable {
-                        val listville = mutableListOf<String>()
-
-                        runBlocking {
-                            locationDao?.deleteLocation()
-                        }
-                        var id = 1
-                        locations.map { itLoc ->
-                            val test = itLoc?.iataCode
-                            listville.add(test.toString())
-                            val loc = LocationList(id, test.toString())
-
-                            runBlocking {
-                                locationDao?.addLocation(loc)
-                            }
-                            id += 1
-                        }
-
-                        runBlocking {
-                            val loco = locationDao?.getLocation()
-                            val listString = mutableListOf<String>()
-                            loco?.map { itLou ->
-                                listString.add(itLou.name)
-                            }
-                            runOnUiThread(java.lang.Runnable {
-                                val adapter = ArrayAdapter(
-                                    this@FindFlight,
-                                    android.R.layout.simple_list_item_1, listString
-                                )
-                                autotextView.setAdapter(adapter)
-                            })
-                        }
-                    })
-                    testo = false
-                }
-            } else if (!testo && it.length < 2) {
-                runBlocking {
-                    locationDao?.deleteLocation()
-                }
-                testo = true
+            rows.map { itMap ->
+                listS.add(
+                    itMap["city_name"].toString().toUpperCase() + " " + itMap["por_name"].toString()
+                        .toUpperCase() + " (" + itMap["por_code"].toString().toUpperCase() + ")"
+                )
             }
 
+            val adapter = IgnoreAccentsArrayAdapter(
+                this@FindFlight,
+                android.R.layout.simple_list_item_1, listS.toTypedArray()
+            )
+            autoTextViewDepart.setAdapter(adapter)
+            autoTextViewRetour.setAdapter(adapter)
         }
+
+        clearFocusAutoTextView(autoTextViewDepart)
+        clearFocusAutoTextView(autoTextViewRetour)
+
+
+//        runBlocking {
+//            locationDao?.deleteLocation()
+//        }
+//        val autotextViewDepart = findViewById<AutoCompleteTextView>(R.id.autoTextViewDepart)
+//
+//
+//        var locations: Array<Location?>
+//        var testo = true
+//        autotextViewDepart.afterTextChanged { it ->
+//            if (testo && it.length == 1) {
+//                GlobalScope.launch {
+//                    locations = amadeus.referenceData.locations[Params
+//                        .with("keyword", it)
+//                        .and("subType", Locations.AIRPORT)
+//                        .and("view", "LIGHT")
+//                        .and("page[limit]", 10000)]
+//
+//                    runOnUiThread(java.lang.Runnable {
+//                        val listville = mutableListOf<String>()
+//
+//                        runBlocking {
+//                            locationDao?.deleteLocation()
+//                        }
+//                        var id = 1
+//                        locations.map { itLoc ->
+//                            val test = itLoc?.iataCode
+//                            listville.add(test.toString())
+//                            val loc = LocationList(id, test.toString())
+//
+//                            runBlocking {
+//                                locationDao?.addLocation(loc)
+//                            }
+//                            id += 1
+//                        }
+//
+//                        runBlocking {
+//                            val loco = locationDao?.getLocation()
+//                            val listString = mutableListOf<String>()
+//                            loco?.map { itLou ->
+//                                listString.add(itLou.name)
+//                            }
+//                            runOnUiThread(java.lang.Runnable {
+//                                val adapter = ArrayAdapter(
+//                                    this@FindFlight,
+//                                    android.R.layout.simple_list_item_1, listString
+//                                )
+//                                autotextViewDepart.setAdapter(adapter)
+//                            })
+//                        }
+//                    })
+//                    testo = false
+//                }
+//            } else if (!testo && it.length < 2) {
+//                runBlocking {
+//                    locationDao?.deleteLocation()
+//                }
+//                testo = true
+//            }
+//
+//        }
 
 
 //        button_newSearch.setOnClickListener {
@@ -184,25 +210,43 @@ class FindFlight : AppCompatActivity() {
 //                button_newSearch.visibility = View.GONE
 //            }
 //        }
+        layoutNoFlight.visibility = View.GONE
 
 
         btn_search.setOnClickListener {
+            hideKeyboard()
+            topLevel_layout.requestFocus()
+            if (autoTextViewDepart.text.toString() == "" || autoTextViewRetour.text.toString() == "") {
+                return@setOnClickListener
+            }
 
-            if (heures_aller.text.toString() != "" && return_date.text.toString() != "") {
+            val strDepart = autoTextViewDepart.text.toString()
+            val keptDepart: String = strDepart.substring(strDepart.indexOf("(") + 1)
+            val lieuDepart = keptDepart.substring(0, keptDepart.indexOf(")"))
+            val strRetour = autoTextViewRetour.text.toString()
+            val keptRetour: String = strRetour.substring(strRetour.indexOf("(") + 1)
+            val lieuRetour = keptRetour.substring(0, keptRetour.indexOf(")"))
+
+            if (aller_date.text.toString() != "" && return_date.text.toString() != ""
+                && autoTextViewDepart.text.toString() != "" && autoTextViewRetour.text.toString() != ""
+            ) {
                 val parsedDateDepart =
-                    SimpleDateFormat("yyyy-MM-dd").parse(heures_aller.text.toString())
+                    SimpleDateFormat("yyyy-MM-dd").parse(aller_date.text.toString())
                 val parsedDateRetour =
                     SimpleDateFormat("yyyy-MM-dd").parse(return_date.text.toString())
+
                 if (parsedDateDepart!!.before(parsedDateRetour)) {
 
-                    dateDepart = heures_aller.text.toString()
+                    dateDepart = aller_date.text.toString()
                     dateRetour = return_date.text.toString()
-                    val lieuDepart = autotextView.text.toString()
+
                     val nbAdults = spinner.selectedItem.toString().toInt()
                     flights_recyclerview.adapter = FlightsAdapter(mutableListOf())
-                    loadingPanel.visibility = View.VISIBLE
-                    beginSearch(dateDepart, dateRetour, lieuDepart, "BKK", nbAdults)
                     layout_search.visibility = View.GONE
+                    loadingPanel.visibility = View.VISIBLE
+                    beginSearch(dateDepart, dateRetour, lieuDepart, lieuRetour, nbAdults)
+                    activityCreate = false
+
                     //             button_newSearch.visibility = View.VISIBLE
 
                 } else {
@@ -212,15 +256,18 @@ class FindFlight : AppCompatActivity() {
                     }.show()
                     return_date.setText("")
                 }
-            } else if (heures_aller.text.toString() != "" && return_date.visibility == View.GONE) {
-                dateDepart = heures_aller.text.toString()
+            } else if (aller_date.text.toString() != "" && return_date.visibility == View.GONE
+                && autoTextViewDepart.text.toString() != "" && autoTextViewRetour.text.toString() != ""
+            ) {
+                dateDepart = aller_date.text.toString()
                 dateRetour = ""
-                val lieuDepart = autotextView.text.toString()
                 val nbAdults = spinner.selectedItem.toString().toInt()
                 flights_recyclerview.adapter = FlightsAdapter(mutableListOf())
-                loadingPanel.visibility = View.VISIBLE
-                beginSearch(dateDepart, dateRetour, lieuDepart, "BKK", nbAdults)
                 layout_search.visibility = View.GONE
+                loadingPanel.visibility = View.VISIBLE
+                beginSearch(dateDepart, dateRetour, lieuDepart, lieuRetour, nbAdults)
+                activityCreate = false
+
                 //           button_newSearch.visibility = View.VISIBLE
             } else {
                 alert("Veuillez remplir tous les champs.") {
@@ -256,32 +303,39 @@ class FindFlight : AppCompatActivity() {
         super.onResume()
 
         runBlocking {
-  val flights = flightDao?.getFlights()
-//            val flights = listFlights
-            var flightslist: MutableList<MutableList<Flight>> = mutableListOf()
-            var testlist: MutableList<Flight> = mutableListOf()
-            var travelId = 1
-            var position = 0
-            flights?.map {
-                var Flight = flights[it.id - 1]
-                if (it.travelId != travelId) {
-                    flightslist.add(testlist)
-                    testlist = mutableListOf()
-                    travelId = it.travelId
+            //       val flights = listFlights
+            val flights = flightDao?.getFlights()
+                if (!flights.isNullOrEmpty()) {
+                    layoutNoFlight.visibility = View.GONE
+                    //            val flights = listFlights
+                    val flightsList: MutableList<MutableList<Flight>> = mutableListOf()
+                    var testlist: MutableList<Flight> = mutableListOf()
+                    var travelId = 1
+                    var position = 0
+                    flights.map {
+                        val flight = flights[it.id - 1]
+                        if (it.travelId != travelId) {
+                            flightsList.add(testlist)
+                            testlist = mutableListOf()
+                            travelId = it.travelId
 
+                        }
+                        testlist.add(flight)
+                        position += 1
+                        if (flights.size == it.id) {
+                            flightsList.add(testlist)
+                        }
+
+
+                    }
+                    flights_recyclerview.adapter = FlightsAdapter(flightsList)
+
+
+                } else if (!activityCreate){
+                    layoutNoFlight.visibility = View.VISIBLE
                 }
-                testlist.add(Flight)
-                position += 1
-                if (flights.size == it.id) {
-                    flightslist.add(testlist)
-                }
 
-
-            }
-            Log.d("List", flightslist.toString())
-            //     val flight = Flight(1, 20.toDouble(), "DepartureDate")
-            flights_recyclerview.adapter = FlightsAdapter(flightslist)
-            loadingPanel.visibility = View.GONE;
+            loadingPanel.visibility = View.GONE
 
         }
     }
@@ -302,19 +356,21 @@ class FindFlight : AppCompatActivity() {
 
 // Your kotlin Coroutine scope
         GlobalScope.launch {
-            var flightOffersSearches: Array<FlightOfferSearch>
+            val flightOffersSearches: Array<FlightOfferSearch>
             if (dateRetour != "") {
                 flightOffersSearches =
-                    amadeus.shopping.flightOffersSearch[Params.with("originLocationCode", "SYD")
-                        .and("destinationLocationCode", "BKK")
+                    amadeus.shopping.flightOffersSearch[Params
+                        .with("originLocationCode", lieuDepart)
+                        .and("destinationLocationCode", lieuRetour)
                         .and("departureDate", dateDepart)
                         .and("returnDate", dateRetour)
                         .and("adults", nbAdults)
                         .and("max", 10)]
             } else {
                 flightOffersSearches =
-                    amadeus.shopping.flightOffersSearch[Params.with("originLocationCode", "PAR")
-                        .and("destinationLocationCode", "BKK")
+                    amadeus.shopping.flightOffersSearch[Params
+                        .with("originLocationCode", lieuDepart)
+                        .and("destinationLocationCode", lieuRetour)
                         .and("departureDate", dateDepart)
                         .and("adults", nbAdults)
                         .and("max", 10)]
@@ -322,8 +378,17 @@ class FindFlight : AppCompatActivity() {
 
             runOnUiThread(java.lang.Runnable {
 
+                val test = resources.openRawResource(R.raw.optd_airline)
+                val rows: List<Map<String, String>> = csvReader().readAllWithHeader(test)
+
+                val testLogo = resources.openRawResource(R.raw.optd_airlines_websites_wkdt)
+                val rowsLogo: List<Map<String, String>> = csvReader().readAllWithHeader(testLogo)
+
                 //           Log.d("Flights", flightOffersSearches.contentToString())
                 var id = 1
+                var valueCa: String = ""
+                var valueLogo: String = ""
+
                 flightOffersSearches.map { itFlight ->
                     var retour = 0
                     itFlight.itineraries.map { itItineraries ->
@@ -336,30 +401,59 @@ class FindFlight : AppCompatActivity() {
                             )
                             val parser =
                                 SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-                            val formatter =
-                                SimpleDateFormat("dd/MM/yyyy 'à' HH:mm")
-                            val dateDepart =
-                                formatter.format(parser.parse(itSegments.departure.at)!!)
-                            val dateArrivee =
-                                formatter.format(parser.parse(itSegments.arrival.at)!!)
+                            val formatterHour =
+                                SimpleDateFormat("HH:mm")
+                            val formatterDate =
+                                SimpleDateFormat("dd/MM/yyyy")
+                            val dateDepartFormat =
+                                formatterDate.format(parser.parse(itSegments.departure.at)!!)
+                            val dateArriveeFormat =
+                                formatterDate.format(parser.parse(itSegments.arrival.at)!!)
+                            val heureDepartFormat =
+                                formatterHour.format(parser.parse(itSegments.departure.at)!!)
+                            val heureArriveeFormat =
+                                formatterHour.format(parser.parse(itSegments.arrival.at)!!)
+
+
+
+                            rows.map { itMap ->
+                                itMap.map { it ->
+                                    if (it.value == itSegments.carrierCode) {
+                                        valueCa = itMap["name"].toString()
+                                    }
+                                }
+                            }
+                            rowsLogo.map { itMap ->
+                                itMap.map { it ->
+                                    if (it.value == itSegments.carrierCode) {
+                                        valueLogo = itMap["2char_code"].toString()
+                                    }
+                                }
+                            }
 
                             val flight = Flight(
                                 id,
                                 itFlight.id.toInt(),
                                 itSegments.id.toInt(),
                                 itFlight.price.grandTotal,
-                                itFlight.price.grandTotal/nbAdults,
-                                dateDepart,
-                                dateArrivee,
+                                itFlight.travelerPricings[0].price.total,
+                                dateDepartFormat,
+                                heureDepartFormat,
+                                dateArriveeFormat,
+                                heureArriveeFormat,
                                 dureeFormat,
-                                itFlight.isOneWay,
+                                itSegments.departure.iataCode,
+                                itSegments.arrival.iataCode,
+                                itSegments.carrierCode,
+                                valueLogo,
+                                valueCa,
                                 nbEscales,
                                 retour
                             )
 
                             runBlocking {
-                                  flightDao?.addFlight(flight)
-                              //  listFlights.add(flight)
+                                flightDao?.addFlight(flight)
+                                // listFlights.add(flight)
                             }
                             id += 1
                         }
@@ -374,7 +468,7 @@ class FindFlight : AppCompatActivity() {
     private fun updateStartDateInView() {
         val myFormat = "yyyy-MM-dd" // mention the format you need
         val sdf = SimpleDateFormat(myFormat, Locale.US)
-        heures_aller.setText(sdf.format(cal.time))
+        aller_date.setText(sdf.format(cal.time))
     }
 
     private fun updateReturnDateInView() {
@@ -395,6 +489,23 @@ class FindFlight : AppCompatActivity() {
                 afterTextChanged.invoke(editable.toString())
             }
         })
+    }
+
+    private fun clearFocusAutoTextView(autoCompleteTextView: AutoCompleteTextView) {
+        autoCompleteTextView.onFocusChangeListener = OnFocusChangeListener { _, b ->
+            if (!b) {
+                // on focus off
+                val str: String = autoCompleteTextView.text.toString()
+                val listAdapter: ListAdapter = autoCompleteTextView.adapter
+                for (i in 0 until listAdapter.count) {
+                    val temp: String = listAdapter.getItem(i).toString()
+                    if (str.compareTo(temp) == 0) {
+                        return@OnFocusChangeListener
+                    }
+                }
+                autoCompleteTextView.setText("")
+            }
+        }
     }
 
 
@@ -423,8 +534,18 @@ class FindFlight : AppCompatActivity() {
         }
     }
 
+    private fun Fragment.hideKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
+    }
+
+    private fun Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
 
 }
-
-
-fun Boolean.toDirect() = if (this) "Vol direct" else "Vol avec escale(s)"

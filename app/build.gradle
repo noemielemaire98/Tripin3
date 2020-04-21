@@ -92,5 +92,5 @@ dependencies {
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
-
+    implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:0.7.3'
 }

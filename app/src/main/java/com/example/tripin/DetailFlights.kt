@@ -3,6 +3,7 @@ package com.example.tripin
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tripin.model.Flight
 import kotlinx.android.synthetic.main.activity_detail_flights.*
@@ -25,7 +26,7 @@ class DetailFlights : AppCompatActivity() {
 
         priceTotal.text = "${flights[0].prixTotal} €"
         dateDepart.text = flights[0].dateDepart
-        priceAdult.text = flights[0].prixParAdult.toString()
+        priceAdult.text = "${flights[0].prixParAdult} €"
 
         var retourDone = false
         flights.map {
@@ -33,6 +34,10 @@ class DetailFlights : AppCompatActivity() {
                 dateDepartRetour.text = it.dateDepart
                 retourDone = true
             }
+        }
+        if(!retourDone) {
+            cardRetour.visibility = View.GONE
+            title_Aller.text = "Vol"
         }
 
 

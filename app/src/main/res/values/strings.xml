@@ -19,6 +19,7 @@
     <string name="photo_profil_button">Photo de profil</string>
     <string name="voyage_delete_confirm_title">Confirmation Supression</string>
     <string name="voyage_delete_confirm_message">Voulez-vous vraiment supprimer %1$s ?</string>
+    <string name="noFlightsAvailaible">Aucun vol disponible entre ces 2 destinations, veuillez modifier votre recherche.</string>
 
 
     <string-array name="adultsNumber">

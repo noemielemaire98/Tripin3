@@ -6,7 +6,10 @@
     android:layout_height="match_parent"
     android:layout_margin="10dp"
     android:orientation="vertical"
-    tools:context=".FindFlight">
+    tools:context=".FindFlight"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:id="@+id/topLevel_layout">
 
     <Button
         android:id="@+id/button_newSearch"
@@ -45,10 +48,9 @@
         </RadioGroup>
 
         <EditText
-            android:id="@+id/heures_aller"
+            android:id="@+id/aller_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
             android:focusable="false"
             android:hint="Date de départ"
             android:textAlignment="center" />
@@ -68,6 +70,7 @@
             android:clickable="true"
             android:focusable="true"
             android:hint="Lieu de départ"
+            android:inputType="textCapCharacters"
             android:textAlignment="center" />
 
         <AutoCompleteTextView
@@ -75,6 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Lieu d'arrivée"
+            android:inputType="textCapCharacters"
             android:textAlignment="center" />
 
         <LinearLayout
@@ -84,23 +88,22 @@
             android:padding="8dp">
 
             <TextView
+                android:id="@+id/textViewAdults"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textViewAdults"
-                android:text="Nombre d'adultes : "
-                android:textSize="18sp"
                 android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="Nombre d'adultes : "
                 android:textAlignment="center"
-                android:layout_weight="1"/>
+                android:textSize="18sp" />
 
             <Spinner
                 android:id="@+id/spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/adultsNumber"
                 android:layout_weight="1"
-                android:textAlignment="center">
-            </Spinner>
+                android:entries="@array/adultsNumber"
+                android:textAlignment="center" />
         </LinearLayout>
 
         <Button
@@ -109,6 +112,23 @@
             android:layout_height="wrap_content"
             android:text="Rechercher" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutNoFlight"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/noFlightAvailable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:text="@string/noFlightsAvailaible" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/loadingPanel"

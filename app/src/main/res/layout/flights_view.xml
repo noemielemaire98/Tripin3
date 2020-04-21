@@ -20,8 +20,8 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
-            android:textSize="20sp"
-            android:textColor="@color/colorAccent"
+            android:layout_weight="3"
+            android:textSize="24sp"
             tools:text="Prix" />
 
         <LinearLayout
@@ -34,7 +34,8 @@
                 android:id="@+id/flights_imageView"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:layout_marginEnd="6dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -47,11 +48,27 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/heures_aller"
+                        android:id="@+id/aller_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        tools:text="Heure" />
+
+                    <TextView
+                        android:id="@+id/heureArrivee_aller"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        tools:text="Heure" />
+
+                    <TextView
+                        android:id="@+id/heureArriveeAdd_aller"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
                         android:layout_weight="3"
-                        tools:text="Heures" />
+                        android:textSize="12sp"
+                        tools:text="+1" />
 
                     <TextView
                         android:id="@+id/duree"
@@ -60,6 +77,7 @@
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
                         android:gravity="end"
+                        android:textSize="18sp"
                         tools:text="Duree" />
 
                 </LinearLayout>
@@ -85,8 +103,43 @@
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
                         android:gravity="end"
+                        android:textColor="#A9A9A9"
                         tools:text="Direct" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/lieuDepart_aller"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#A9A9A9"
+                        android:textSize="12sp"
+                        tools:text="LieuDepart" />
+
+
+                    <TextView
+                        android:id="@+id/lieuArrivee_aller"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#A9A9A9"
+                        android:textSize="12sp"
+                        tools:text="LieuArrivee" />
+
+                    <TextView
+                        android:id="@+id/compagnie_aller"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#A9A9A9"
+                        android:textSize="12sp"
+                        tools:text="Compagnie" />
+
+                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
 
@@ -101,7 +154,8 @@
                 android:id="@+id/flights_imageView_return"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:layout_marginEnd="6dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -114,11 +168,27 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/heures_retour"
+                        android:id="@+id/heureDepart_retour"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        tools:text="Heure Retour" />
+
+                    <TextView
+                        android:id="@+id/heureArrivee_retour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        tools:text="Heure Retour" />
+
+                    <TextView
+                        android:id="@+id/heureArriveeAdd_retour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
                         android:layout_weight="3"
-                        tools:text="Heures Retour" />
+                        android:textSize="12sp"
+                        tools:text="+1" />
 
                     <TextView
                         android:id="@+id/duree_retour"
@@ -127,6 +197,7 @@
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
                         android:gravity="end"
+                        android:textSize="18sp"
                         tools:text="Duree retour" />
 
                 </LinearLayout>
@@ -152,7 +223,41 @@
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
                         android:gravity="end"
+                        android:textColor="#A9A9A9"
                         tools:text="Direct Retour" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/lieuDepart_retour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#A9A9A9"
+                        android:textSize="12sp"
+                        tools:text="LieuDepart" />
+
+
+                    <TextView
+                        android:id="@+id/lieuArrivee_retour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#A9A9A9"
+                        android:textSize="12sp"
+                        tools:text="LieuArrivee" />
+
+                    <TextView
+                        android:id="@+id/compagnie_retour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#A9A9A9"
+                        android:textSize="12sp"
+                        tools:text="Compagnie" />
+
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
