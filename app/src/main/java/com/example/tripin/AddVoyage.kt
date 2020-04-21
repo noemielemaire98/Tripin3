@@ -20,7 +20,6 @@ import kotlinx.coroutines.runBlocking
 class AddVoyage : AppCompatActivity() {
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_voyage)
@@ -28,44 +27,37 @@ class AddVoyage : AppCompatActivity() {
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        fun onOptionsItemSelected(item: MenuItem) : Boolean =
-
-            when (item.itemId) {
-                R.id.home -> {
-                finish()
-                true
-                }
-
-                else -> onOptionsItemSelected(item)
-
-
-            }
-
-
-
-
-
         addv_button.setOnClickListener {
             val titre = addv_titre_editText.text
             val date = addv_date_editText.text
 
 
-            Log.d("Custumers","Bonjour ${titre} $date}")
+            Log.d("Custumers", "Bonjour ${titre} $date}")
             // finish dépile l'activité et revient à la page d'en dessous
 
 
-            val voyage = Voyage(0,titre.toString(),date.toString(),R.drawable.destination1,0)
+            val voyage = Voyage(0, titre.toString(), date.toString(), R.drawable.destination1, 0)
 
             val database: AppDatabase =
-                Room.databaseBuilder(this,AppDatabase::class.java,"gestionvoyages").build()
-            val voyageDao :VoyageDao = database.getVoyageDao()
+                Room.databaseBuilder(this, AppDatabase::class.java, "gestionvoyages").build()
+            val voyageDao: VoyageDao = database.getVoyageDao()
 
             runBlocking {
-               voyageDao.addVoyage(voyage)// Reference aux co-routines Kotlin
+                voyageDao.addVoyage(voyage)// Reference aux co-routines Kotlin
             }
             finish()
 
         }
 
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

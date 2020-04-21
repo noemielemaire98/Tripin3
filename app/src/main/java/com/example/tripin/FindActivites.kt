@@ -1,9 +1,12 @@
 package com.example.tripin
 
-import androidx.appcompat.app.AppCompatActivity
+
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.example.tripin.data.ActivityDao
@@ -12,10 +15,7 @@ import com.example.tripin.model.Activity
 import com.example.tripin.ui.find.ActivitybyCity
 import com.example.tripin.ui.find.retrofit
 import kotlinx.android.synthetic.main.activity_find_activites.*
-
-
 import kotlinx.coroutines.runBlocking
-import java.util.ArrayList
 
 class FindActivites : AppCompatActivity() {
 
@@ -40,8 +40,13 @@ class FindActivites : AppCompatActivity() {
         activityDao = database.getActivityDao()
 
 
+        search_activity_bar.setOnClickListener { search_activity_bar.isIconified = false }
+
 
         bt_recherche_activity.setOnClickListener {
+            hideKeyboard()
+            search_activity_bar.clearFocus()
+            list_activity.clear()
 
             val query = search_activity_bar.query
             runBlocking {
@@ -87,5 +92,14 @@ class FindActivites : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun android.app.Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(android.app.Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

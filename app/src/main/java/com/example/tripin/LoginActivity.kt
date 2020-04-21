@@ -2,6 +2,7 @@ package com.example.tripin
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -13,6 +14,8 @@ class LoginActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_login)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         signin_button_login.setOnClickListener {
             performLogin()
@@ -45,5 +48,15 @@ class LoginActivity : AppCompatActivity(){
             .addOnFailureListener {
                 Toast.makeText(this, "Votre mot de passe ou mail est incorrect", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

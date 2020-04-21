@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -25,6 +26,8 @@ class RegistrationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         Log.d("erreur", "ca marche bien")
 
@@ -108,6 +111,16 @@ class RegistrationActivity : AppCompatActivity() {
             .addOnFailureListener {
                 Toast.makeText(this, "Le compte n'a pu être crée", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
 
