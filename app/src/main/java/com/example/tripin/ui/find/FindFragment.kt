@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.tripin.*
 
 
@@ -20,6 +21,7 @@ class FindFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        val viewModel = ViewModelProvider(this).get(FindViewModel::class.java)
 
         val view: View = inflater.inflate(R.layout.fragment_find, container, false)
 

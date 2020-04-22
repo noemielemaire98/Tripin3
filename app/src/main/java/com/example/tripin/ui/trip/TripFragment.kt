@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
@@ -16,9 +15,7 @@ import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Voyage
 import kotlinx.android.synthetic.main.fragment_trip.*
 import kotlinx.coroutines.runBlocking
-import android.view.Menu
-import android.view.MenuItem
-import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class TripFragment : Fragment() {
@@ -32,8 +29,8 @@ class TripFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =
-            ViewModelProviders.of(this).get(TripViewModel::class.java)
+        dashboardViewModel = ViewModelProvider(this).get(TripViewModel::class.java)
+
         val root : View = inflater.inflate(R.layout.fragment_trip, container, false)
         var voyage_recyclerview = root.findViewById<View>(R.id.voyage_recyclerview) as RecyclerView
         voyage_recyclerview.layoutManager = LinearLayoutManager(this.context)

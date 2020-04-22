@@ -2,21 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/savedTopLevel_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="10dp"
-    android:orientation="vertical"
-    tools:context=".FindFlight"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:id="@+id/topLevel_layout">
-
-    <Button
-        android:id="@+id/button_newSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Nouvelle Recherche"
-        android:visibility="gone" />
+    android:orientation="vertical"
+    tools:context=".FindFlight">
 
     <LinearLayout
         android:id="@+id/layout_search"
@@ -37,14 +30,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Aller-retour" />
+                android:text="@string/radioButton_aller_retour" />
 
             <RadioButton
                 android:id="@+id/simple_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Aller simple" />
+                android:text="@string/radioButton_aller_simple" />
         </RadioGroup>
 
         <EditText
@@ -52,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:hint="Date de départ"
+            android:hint="@string/editText_date_depart"
             android:textAlignment="center" />
 
         <EditText
@@ -60,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:hint="Date de retour"
+            android:hint="@string/editText_date_retour"
             android:textAlignment="center" />
 
         <AutoCompleteTextView
@@ -69,7 +62,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
-            android:hint="Lieu de départ"
+            android:hint="@string/autoCompleteTextView_lieu_depart"
             android:inputType="textCapCharacters"
             android:textAlignment="center" />
 
@@ -77,7 +70,7 @@
             android:id="@+id/autoTextViewRetour"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Lieu d'arrivée"
+            android:hint="@string/autoCompleteTextView_lieu_arrivee"
             android:inputType="textCapCharacters"
             android:textAlignment="center" />
 
@@ -93,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="Nombre d'adultes : "
+                android:text="@string/textView_nombre_adultes"
                 android:textAlignment="center"
                 android:textSize="18sp" />
 
@@ -110,11 +103,11 @@
             android:id="@+id/btn_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Rechercher" />
+            android:text="@string/button_searchFlight" />
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/layoutNoFlight"
+        android:id="@+id/layoutNoSavedFlight"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -125,9 +118,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginTop="10dp"
             android:gravity="center"
-            android:textSize="18sp"
-            android:text="@string/noFlightsAvailaible" />
+            android:text="@string/textView_aucun_vol_disponible"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/noFlightDetail"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/noFlightAvailable"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/noFlightsAvailable"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/noFlightsImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/noFlightDetail"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/imageDescription_no_flights"
+            android:gravity="center"
+            android:src="@drawable/noflightsavalaible" />
     </RelativeLayout>
 
     <RelativeLayout

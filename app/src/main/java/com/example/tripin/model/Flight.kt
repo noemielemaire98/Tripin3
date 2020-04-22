@@ -1,13 +1,12 @@
 package com.example.tripin.model
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
-@Entity(tableName = "allflights")
+@Entity(tableName = "allFlights")
 data class Flight(
-    @PrimaryKey(autoGenerate = true) val id: Int = 1,
+    @PrimaryKey(autoGenerate = false) val id: Int = 1,
     val travelId: Int,
     val SegmentId: Int,
     val prixTotal: Double,
@@ -23,7 +22,10 @@ data class Flight(
     val carrierCodeLogo: String,
     val carrierName: String,
     val nbEscales: Int,
-    val retour: Int
+    val retour: Int,
+    val logo: String,
+    var favoris: Boolean,
+    var uuid: String
 ) : Serializable {
 
 
@@ -46,7 +48,10 @@ data class Flight(
                 "AF",
                 "Air France",
                 2,
-                0
+                0,
+                "optd/pic.png",
+                false,
+                "DY7000"
             )
         }.toMutableList()
 

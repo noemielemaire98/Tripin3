@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-@Entity(tableName = "allactivity")
+@Entity(tableName = "allActivities")
 data class Activity (@PrimaryKey val uuid:String,
                      val title: String,
                      val cover_image_url:String?,

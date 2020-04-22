@@ -8,12 +8,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.example.tripin.LoginActivity
-import com.example.tripin.RegistrationActivity
 import com.example.tripin.R
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.fragment_profil.view.*
 
 class ProfilFragment : Fragment() {
 
@@ -24,8 +22,8 @@ class ProfilFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        profilViewModel =
-                ViewModelProviders.of(this).get(ProfilViewModel::class.java)
+        profilViewModel = ViewModelProvider(this).get(ProfilViewModel::class.java)
+
         val root = inflater.inflate(R.layout.fragment_profil, container, false)
 
         var uid = FirebaseAuth.getInstance().uid    //not the appropriate way to switch value
@@ -40,7 +38,6 @@ class ProfilFragment : Fragment() {
             if(uid == null){
                 val intent = Intent(this.context, LoginActivity::class.java)
                 startActivity(intent)
-                true
             }
         }
 
