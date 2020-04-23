@@ -91,8 +91,15 @@ class ProfilFragment : Fragment() {
         }
 
         sharing.setOnClickListener {
-            val intent = Intent(this.context, SharingActivity::class.java)
-            startActivity(intent)
+            //val intent = Intent(this.context, SharingActivity::class.java)
+            //startActivity(intent)
+            val message = ""
+            val intent = Intent()
+            intent.action =  Intent.ACTION_SEND
+            intent.putExtra(Intent.EXTRA_TEXT, message)
+            intent.type = "text/plain"
+
+            startActivity(Intent.createChooser(intent, "Partagez avec :"))
         }
 
         stars.setOnClickListener {

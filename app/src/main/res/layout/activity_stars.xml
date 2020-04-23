@@ -1,16 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StarsActivity">
+    tools:context=".StarsActivity"
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textView3"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/notez_notre_application"
+        android:textStyle="bold"/>
+
+    <RatingBar
+        android:id="@+id/rating_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Notez l'application"
-        tools:layout_editor_absoluteX="146dp"
-        tools:layout_editor_absoluteY="356dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:stepSize="0.25"
+        android:numStars="5"
+        android:rating="4.5"
+        />
+
+    <Button
+        android:id="@+id/rating_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/valider"
+        android:onClick="click"
+        android:layout_gravity="center"
+        android:background="@drawable/rounded_button"
+        />
+</LinearLayout>

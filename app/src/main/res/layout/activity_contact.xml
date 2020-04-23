@@ -1,16 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ContactActivity">
+    tools:context=".ContactActivity"
+    android:orientation="vertical"
+    >
 
     <TextView
-        android:id="@+id/textView"
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/contact_entete_textview"
+        android:textSize="15sp"
+        android:textStyle="bold"
+    />
+    <EditText
+        android:id="@+id/destinataire_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/adresses_destinataires"
+        android:autofillHints="@string/adresses_destinataires"
+        android:inputType="textEmailAddress"/>
+    <EditText
+        android:id="@+id/objet_edit_text"
+        android:hint="@string/objet"
+        android:autofillHints="@string/objet"
+        android:inputType="text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/message_edit_text"
+        android:hint="@string/message"
+        android:autofillHints="@string/message"
+        android:inputType="text"
+        android:minHeight="150dp"
+        android:gravity="start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/envoyer_button"
+        android:text="@string/envoyer_le_mail"
+        android:layout_gravity="end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Contactez-nous"
-        tools:layout_editor_absoluteX="155dp"
-        tools:layout_editor_absoluteY="356dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:background="@drawable/rounded_button"/>
+
+</LinearLayout>
