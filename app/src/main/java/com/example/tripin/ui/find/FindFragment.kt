@@ -36,7 +36,6 @@ class FindFragment : Fragment() {
 
         btHotel.setOnClickListener {
             val intent = Intent(this.context, FindHotel::class.java)
-            Log.d("attention", "Je crée l'activité")
             startActivity(intent)
         }
 

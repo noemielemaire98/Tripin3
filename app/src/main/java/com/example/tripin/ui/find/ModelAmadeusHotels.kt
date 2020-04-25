@@ -23,10 +23,10 @@ data class Hotel(
     val longitude: Double,
     val hotelDistance: HotelDistance,
     val address: Address,
-    val contact: Contact,
+    val contact: Contact? = null,
     val description: Description? = null,
     val amenities: ArrayList<String>,
-    val media: ArrayList<Media>
+    val media: ArrayList<Media?>
 
     )
 
@@ -35,21 +35,30 @@ data class HotelDistance(
     val distanceUnit: String)
 
 data class Address(
-    val lines: ArrayList<String>, //"lines": [ "LEFISTON STREET" ],
+    val lines: ArrayList<String>,
+    val postalCode: String?,
     val cityName: String,
-    val countryCode: String)
+    val countryCode: String,
+    val stateCode: String? )
 
 data class Contact(
-    val phone: String,
-    val fax: String)
+    val phone: String? = null,
+    val fax: String? = null,
+    val email : String? = null )
 
 data class Media(
-    val uri: String,
-    val category: String)
+    val uri: String? = null,
+    val category: String?)
 
 data class Offer(
     val id: String,
+    val checkInDate: String?,
+    val checkOutDate: String?,
+    val roomQuantity: Int?,
     val rateCode: String,
+    val category : String,
+    val description: Description?,
+    val boardType : String,
     val room: Room,
     val guest: Guest,
     val price: Price)

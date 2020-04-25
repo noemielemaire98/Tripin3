@@ -15,6 +15,7 @@
         <activity android:name=".FindActivites" android:label="Rechercher des activites"></activity>
         <activity android:name=".FindHotel" android:label="Rechercher des hotels"/>
         <activity android:name=".FindFlight" android:label="Rechercher des vols"/>
+        <activity android:name=".DetailsHotel" android:label="Détail d'un hôtel"></activity>
         <activity
             android:name=".SplashActivity"
             android:theme="@style/SlashTheme">
@@ -27,6 +28,9 @@
         <activity
             android:name=".DetailVoyage"
             android:label="Detail" />
+        <activity android:name=".SavedActivites"/>
+        <activity android:name=".SavedHotel" />
+        <activity android:name=".SavedFlight" />
         <activity android:name=".AddVoyage" />
         <activity
             android:name=".MainActivity"

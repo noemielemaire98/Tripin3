@@ -10,11 +10,16 @@ data class Hotel (
     val hotelId: String,
     val hotelName: String,
     val hotelDescription: String?,
-    val rate: Int?)
+    val rate: Int?,
+    val image_url: String?,
+    val adresse : String?,
+    val email: String,
+    val telephone: String,
+    var favoris : Boolean)
 
 { companion object {
         val all = (1..20).map {
-            Hotel(it, "Id$it", "Name$it", "Description$it",it) }.toMutableList()
+            Hotel(it, "Id$it", "Name$it", "Description$it",it, "R.drawable.activite1","adresse$it","email$it", "telephone$it", false) }.toMutableList()
     }
 }
 

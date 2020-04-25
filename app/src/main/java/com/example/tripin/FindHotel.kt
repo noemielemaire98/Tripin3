@@ -38,7 +38,7 @@ class FindHotel : AppCompatActivity() {
 
 
         val database =
-            Room.databaseBuilder(this, AppDatabase::class.java, "gestionhotels").build()
+            Room.databaseBuilder(this, AppDatabase::class.java, "allhotels").build()
 
                  hotelDao=database.getHotelDao()
 
@@ -51,10 +51,10 @@ class FindHotel : AppCompatActivity() {
                 .build()
 
             runBlocking{
-                //Faire la fonction dao
-               // hotelDao?.deleteHotel()
+
+                hotelDao?.deleteHotels()
                 GlobalScope.launch{
-                    val hotelOffersSearches = amadeus.shopping.hotelOffers[Params.with("cityCode", "MAD")]
+                    val hotelOffersSearches = amadeus.shopping.hotelOffers[Params.with("cityCode", "LON")]
 
 
                     //le map permet d'appeler la fonction sur chacun des éléments d'une collection (== boucle for)
@@ -62,22 +62,41 @@ class FindHotel : AppCompatActivity() {
 
                             hotelOffersSearches.map { itHotelOffer ->
                                 var description: String
+                                var email : String
+                                var tel : String
+                                var uri: String
                                 if (itHotelOffer.hotel.description == null){
-                                    description = "Pas de description"
+                                    description = "Description non disponible"
                                 }else{
                                     description = itHotelOffer.hotel.description.text
                                 }
+                                if (itHotelOffer.hotel.contact == null){
+                                    email = "Email non disponible"
+                                    tel = "Téléphone non disponible"
+                                }else{
+                                    //TODO : Resoudre problème récupération email
+                                    email = "email"
+                                    tel = itHotelOffer.hotel.contact.phone
+                                }
+                                if (itHotelOffer.hotel.media == null){
+                                    uri = "0"
+                                }else{
+                                    uri = itHotelOffer.hotel.media[0].uri }
+
 
                                 val hotel = Hotel(
                                     0,
                                     itHotelOffer.hotel.hotelId,
                                     itHotelOffer.hotel.name,
                                     description,
-                                    itHotelOffer.hotel.rating)
-
+                                    itHotelOffer.hotel.rating,
+                                    uri,
+                                    itHotelOffer.hotel.address.lines.joinToString(),
+                                    email,
+                                    tel,
+                                false)
                                 runBlocking {
                                     hotelDao?.addHotel(hotel)
-                                    Log.d("Hotel ajouté", hotel.toString())
                                 }
                             }
 
@@ -88,15 +107,6 @@ class FindHotel : AppCompatActivity() {
   }
 
         }
-
-
-
-
-
-
-
-
-
 
     }
 
