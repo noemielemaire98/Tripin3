@@ -22,25 +22,25 @@ import kotlinx.coroutines.runBlocking
 
 class FindHotel : AppCompatActivity() {
 
-    private val apiKey = "y1hhd5lSOG9Yl28ThuIYBHeyTgq3eLSJ"
-    private val secretKey= "rA1zEyvaTD2H7MV4"
+
     private var hotelDao: HotelDao? = null
+    val list_hotels : MutableList<Hotel> = mutableListOf()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find_hotel)
-
-      hotels_recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-
+        hotels_recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
 
         val database =
             Room.databaseBuilder(this, AppDatabase::class.java, "allhotels").build()
+        hotelDao=database.getHotelDao()
 
-                 hotelDao=database.getHotelDao()
+
+        // TODO : faire apparaitre le clavier
 
 
        btn_search.setOnClickListener {
@@ -52,15 +52,23 @@ class FindHotel : AppCompatActivity() {
 
             runBlocking{
 
-                hotelDao?.deleteHotels()
+                list_hotels.clear()
+                val bdd_hotels = hotelDao?.getHotels()
+
                 GlobalScope.launch{
                     val hotelOffersSearches = amadeus.shopping.hotelOffers[Params.with("cityCode", "LON")]
 
-
-                    //le map permet d'appeler la fonction sur chacun des éléments d'une collection (== boucle for)
                         runOnUiThread(java.lang.Runnable {
-
+                            //permet d'appeler le block sur chacun des éléments d'une collection (== boucle for)
                             hotelOffersSearches.map { itHotelOffer ->
+                                var favoris = false
+                                var idHotel = itHotelOffer.hotel.hotelId
+                                bdd_hotels?.forEach {
+                                    if (it.hotelId == idHotel) {
+                                        favoris = true
+                                    }
+                                }
+
                                 var description: String
                                 var email : String
                                 var tel : String
@@ -94,14 +102,14 @@ class FindHotel : AppCompatActivity() {
                                     itHotelOffer.hotel.address.lines.joinToString(),
                                     email,
                                     tel,
-                                false)
+                                favoris)
                                 runBlocking {
-                                    hotelDao?.addHotel(hotel)
+                                    list_hotels.add(hotel)
                                 }
                             }
 
 
-                            onResume()
+                            hotels_recyclerview.adapter=HotelsAdapter(list_hotels ?: emptyList())
         })
         }
   }
@@ -112,11 +120,6 @@ class FindHotel : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
-        runBlocking{
-            val hotels = hotelDao?.getHotels()
-            hotels_recyclerview.adapter=HotelsAdapter(hotels ?: emptyList())
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -20,6 +20,7 @@ class DetailsHotel : AppCompatActivity() {
     private var id: Int = 0
     private var hotelDao: HotelDao? = null
     private var favoris: Boolean = false
+    private var bdd_hotels = emptyList<Hotel>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,16 +28,35 @@ class DetailsHotel : AppCompatActivity() {
         setContentView(R.layout.activity_details_hotel)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        id = intent.getIntExtra("id", 0)
+        hotel = intent.getParcelableExtra("hotel")
 
         val database =
             Room.databaseBuilder(this, AppDatabase::class.java, "allhotels")
                 .build()
 
         hotelDao = database.getHotelDao()
+
+
         runBlocking {
-            hotel = hotelDao!!.getHotel(id)
-           // Log.d("image uri", hotel?.image_url)
+            bdd_hotels = hotelDao!!.getHotels()
+            bdd_hotels?.forEach{
+                if(it.hotelId==hotel!!.hotelId){
+                    favoris = true
+                }
+            }
+            if(hotel?.favoris == true || favoris == true){
+                favoris = true
+                fab_fav.setImageResource(R.drawable.ic_favorite_black_24dp)
+
+
+            }else if(hotel?.favoris == false || favoris == false) {
+                favoris=false
+                fab_fav.setImageResource(R.drawable.ic_favorite_border_black_24dp)
+
+            }
+
+
+            // Log.d("image uri", hotel?.image_url)
   //          if ((hotel?.image_url==null) || (hotel?.image_url== " http://uat.multimediarepository.testing.amadeus.com/cmr/retrieve/hotel/EB874AAD4E0C410EB6D3C6841C85522B")){
                 detail_hotel_imageview.setImageResource(R.drawable.hotel)
 
@@ -56,31 +76,23 @@ class DetailsHotel : AppCompatActivity() {
             detail_hotel_telephone_texview.text = hotel?.telephone
 
 
-            if(hotel?.favoris == true){
-                favoris = true
-                fab_fav.setImageResource(R.drawable.ic_favorite_black_24dp)
-
-
-            }else {
-                favoris=false
-                fab_fav.setImageResource(R.drawable.ic_favorite_border_black_24dp)
-
-            }
 
 
             // 3 - AU CLIC SUR LE BOUTON
             fab_fav.setOnClickListener {
                 if (favoris == false) {
+                    hotel?.favoris=true
                     runBlocking {
-                        hotelDao?.updateHotelFavoris(true, hotel!!.id)
+                        hotelDao?.addHotel(hotel!!)
                     }
                     favoris = true
                     fab_fav.setImageResource(R.drawable.ic_favorite_black_24dp)
                     Toast.makeText(this@DetailsHotel, "L'activité a bien été ajoutée aux favoris", Toast.LENGTH_SHORT).show()
 
                 } else if (favoris == true) {
+                    hotel?.favoris = false
                     runBlocking {
-                        hotelDao?.updateHotelFavoris(false, hotel!!.id)
+                        hotelDao?.deleteHotel(hotel!!.id)
 
                     }
                     favoris = false

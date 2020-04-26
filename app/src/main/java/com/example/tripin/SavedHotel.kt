@@ -13,7 +13,6 @@ import kotlinx.coroutines.runBlocking
 
 class SavedHotel : AppCompatActivity() {
     private var hotelDao : HotelDao? = null
-    private var list_hotels_fav:List<Hotel>? =null
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
