@@ -70,8 +70,16 @@ class DetailVoyage : AppCompatActivity() {
             }
             R.id.ic_menu_edit_voyage -> {
                 val intent = Intent(this, EditVoyage::class.java)
+                intent.putExtra("id",voyage?.id)
+                intent.putExtra("titre",voyage?.titre)
+                intent.putExtra("dateDepart",voyage?.date)
+                intent.putExtra("dateRetour",voyage?.dateRetour)
+                intent.putExtra("nbvoyager",voyage?.nb_voyageur)
+
                 startActivity(intent)
+                finish()
                 true
+
             }
             android.R.id.home -> {
                 finish()

@@ -75,13 +75,13 @@ class AddVoyage : AppCompatActivity() {
             val titre = addv_titre_editText.text
             val dateDepart = addv_dateDepart_editText.text
             val dateRetour = addv_dateRetour_editText.text
-            val nb_voyageur= addv_nbvoyageur_editText.text
+            val nombrevoyageur= addv_nbvoyageur_editText.text
 
 
             // finish dépile l'activité et revient à la page d'en dessous
 
 
-            val voyage = Voyage(0,titre.toString(),dateDepart.toString(), dateRetour.toString() ,R.drawable.destination1, nb_voyageur.toString().toInt())
+            val voyage = Voyage(0,titre.toString(),dateDepart.toString(), dateRetour.toString() ,R.drawable.destination1, nombrevoyageur.toString().toInt())
             val database: AppDatabase =
                 Room.databaseBuilder(this, AppDatabase::class.java, "gestionvoyages").build()
             val voyageDao: VoyageDao = database.getVoyageDao()
