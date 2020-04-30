@@ -44,17 +44,38 @@
             android:id="@+id/detail_activity_prix_textview"
             android:layout_marginLeft="10dp"/>
 
-        <TextView
-            android:layout_width="match_parent"
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Description : "
+                android:textSize="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
+
+        <ScrollView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Description"
-            android:textSize="10dp"
-            android:layout_marginTop="10dp"
-            android:id="@+id/detail_activity_about_textview"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="blablalbla"
+                android:textSize="15dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/detail_activity_about_textview"
+                android:layout_marginLeft="10dp"
+                android:paddingBottom="10dp"/>
+        </ScrollView>
 
 
-    </LinearLayout>
+        </LinearLayout>
+
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_fav"

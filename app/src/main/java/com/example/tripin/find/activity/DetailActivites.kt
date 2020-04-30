@@ -19,7 +19,7 @@ class DetailActivites : AppCompatActivity() {
 
     private var activite: Activity? = null
     private var id: Int = 0
-    private var activityDao: ActivityDao? = null
+    private var activityDaoSaved: ActivityDao? = null
     private var favoris : Boolean = false
     private var list_activities_bdd = emptyList<Activity>()
 
@@ -34,13 +34,15 @@ class DetailActivites : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // ON RECUPERE L'ACTIVITE CHOISIT DANS LA RECYCLERVIEW
-       activite = intent.getParcelableExtra("a")
+       activite = intent.getParcelableExtra("activity")
+       favoris = intent.getBooleanExtra("attribut_fav",false)
+
 
         // ON APPELLE LA BDD
-        val database =
-            Room.databaseBuilder(this, AppDatabase::class.java, "allactivity")
+        val databasesaved =
+            Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
                 .build()
-        activityDao = database.getActivityDao()
+        activityDaoSaved = databasesaved.getActivityDao()
 
 
         // ON SET LES ATTRIBUTS
@@ -49,7 +51,7 @@ class DetailActivites : AppCompatActivity() {
                 .load(url)
                 .into(detail_activity_imageview)
         runBlocking {
-            list_activities_bdd = activityDao!!.getActivity()
+            list_activities_bdd = activityDaoSaved!!.getActivity()
         }
         list_activities_bdd?.forEach {
             if (it.title == activite!!.title) {
@@ -57,29 +59,25 @@ class DetailActivites : AppCompatActivity() {
             }
         }
 
-        if(activite?.favoris == true || favoris == true){
+        if(favoris == true){
             fab_fav.setImageResource(R.drawable.ic_favorite_black_24dp)
-            favoris = true
 
-        }else if (activite?.favoris == false || favoris == false){
+        }else if (favoris == false){
             fab_fav.setImageResource(R.drawable.ic_favorite_border_black_24dp)
-            favoris = false
 
         }
 
             detail_activity_titre_textview.text = activite?.title
             detail_activity_dispo_textview.text = "Dispo : " + activite?.operational_days
             detail_activity_prix_textview.text = "Prix : " + activite?.formatted_iso_value
-            detail_activity_about_textview.text = "Description : " + activite?.about
+            detail_activity_about_textview.text = activite?.about
 
 
         // 3 - AU CLIC SUR LE BOUTON
         fab_fav.setOnClickListener {
             if (favoris == false) {
-                activite?.favoris = true
                 runBlocking {
-                        activityDao?.addActivity(activite!!)
-
+                        activityDaoSaved?.addActivity(activite!!)
                 }
                 favoris = true
                 fab_fav.setImageResource(R.drawable.ic_favorite_black_24dp)
@@ -88,11 +86,9 @@ class DetailActivites : AppCompatActivity() {
             } else if (favoris == true) {
 
                 runBlocking {
-                activityDao?.deleteActivity(activite!!.uuid)
-
+                activityDaoSaved?.deleteActivity(activite!!.uuid)
                 }
                 favoris = false
-                Log.d("CIC","${activite!!.uuid}")
                 fab_fav.setImageResource(R.drawable.ic_favorite_border_black_24dp)
                 Toast.makeText(this, "L'activité a bien été supprimé des favoris", Toast.LENGTH_SHORT).show()
             }

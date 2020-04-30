@@ -1,6 +1,7 @@
 package com.example.tripin.find.activity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -24,10 +25,12 @@ import kotlinx.coroutines.runBlocking
  */
 class FindActivityFragment : Fragment() {
 
-    private var activityDao : ActivityDao? = null
+    private var activityDaoSearch : ActivityDao? = null
+    private var activityDaoSaved : ActivityDao? = null
     val lang : String = "fr-FR"
     val monnaie :String = "EUR"
-    val list_activity : MutableList<Activity> = mutableListOf()
+    var list_favoris  = arrayListOf<Boolean>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,56 +44,51 @@ class FindActivityFragment : Fragment() {
 
         rv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 
-        val database =
-            Room.databaseBuilder(requireActivity().baseContext, AppDatabase::class.java, "allactivity")
+        val databasesearch =
+            Room.databaseBuilder(requireActivity().baseContext, AppDatabase::class.java, "searchDatabase")
+                .build()
+        val databasesaved =
+            Room.databaseBuilder(requireActivity().baseContext, AppDatabase::class.java, "savedDatabase")
                 .build()
 
-        activityDao = database.getActivityDao()
+        activityDaoSearch = databasesearch.getActivityDao()
+        activityDaoSaved = databasesaved.getActivityDao()
 
 
       bt.setOnClickListener {
 
-            list_activity.clear()
+          runBlocking {
+              activityDaoSearch?.deleteActivity()
+          }
+          list_favoris.clear()
 
             val query = editText.text.toString()
             runBlocking {
                 val service = retrofit().create(ActivitybyCity::class.java)
                 val result = service.listActivity("$query", lang, monnaie)
-                val list_activities_bdd = activityDao?.getActivity()
+                val list_activities_bdd = activityDaoSaved?.getActivity()
                 // le map permet d'appeler la fonction sur chacun des éléments d'une collection (== boucle for)
                 result.data.map {
-                    var favoris = false
                     val titre = it.title
+                    var match_bdd = false
                     list_activities_bdd?.forEach {
                         if(it.title == titre){
-                            favoris = true
-
+                            list_favoris.add(true)
+                            match_bdd = true
                         }
                     }
+                    if (match_bdd == false ){list_favoris.add(false)}
 
-                    val activity = Activity(it.uuid, it.title, it.cover_image_url,it.retail_price.formatted_iso_value,it.operational_days,favoris,it.about)
-                    //Log.d("CCC", "$activity")
-                    list_activity.add(activity)
-                    //Log.d("CIC","$list_activity")
+
+                    val activity = Activity(it.uuid, it.title, it.cover_image_url,it.retail_price.formatted_iso_value,it.operational_days,it.about)
+                    activityDaoSearch?.addActivity(activity)
 
                 }
-
-
-                activities_recyclerview.adapter =
-                    ActivityAdapter(
-                        list_activity ?: emptyList()
-                    )
+                val activities = activityDaoSearch?.getActivity()
+                activities_recyclerview.adapter = ActivityAdapter(activities ?: emptyList(),list_favoris)
 
             }
         }
-
-
-
-
-
-
-
-
 
         return view
     }

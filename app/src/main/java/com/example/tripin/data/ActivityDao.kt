@@ -22,8 +22,8 @@ interface ActivityDao {
     @Query("select * from allActivities where uuid = :id")
     suspend fun getActivity(id: String) : Activity
 
-    @Query("update allActivities set favoris= :fav where uuid = :id")
-    suspend fun updateActivity(fav: Boolean,id: String)
+    //@Query("update allActivities set favoris= :fav where uuid = :id")
+    //suspend fun updateActivity(fav: Boolean,id: String)
 
     @Query("delete from allActivities where uuid = :id")
     suspend fun deleteActivity(id : String)

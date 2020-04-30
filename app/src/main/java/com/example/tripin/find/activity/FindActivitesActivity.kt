@@ -3,6 +3,7 @@ package com.example.tripin.find.activity
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -19,10 +20,11 @@ import kotlinx.coroutines.runBlocking
 
 class FindActivitesActivity : AppCompatActivity() {
 
-    private var activityDao : ActivityDao? = null
+    private var activityDaoSearch : ActivityDao? = null
+    private var activityDaoSaved : ActivityDao? = null
     val lang : String = "fr-FR"
     val monnaie :String = "EUR"
-    val list_activity : MutableList<Activity> = mutableListOf()
+    var list_favoris  = arrayListOf<Boolean>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,11 +35,16 @@ class FindActivitesActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val database =
-            Room.databaseBuilder(this, AppDatabase::class.java, "allactivity")
+        val databasesearch =
+            Room.databaseBuilder(this, AppDatabase::class.java, "searchDatabase")
+                .build()
+        val databasesaved =
+            Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
                 .build()
 
-        activityDao = database.getActivityDao()
+        activityDaoSearch = databasesearch.getActivityDao()
+        activityDaoSaved = databasesaved.getActivityDao()
+
 
 
         search_activity_bar.setOnClickListener { search_activity_bar.isIconified = false }
@@ -46,36 +53,34 @@ class FindActivitesActivity : AppCompatActivity() {
         bt_recherche_activity.setOnClickListener {
             hideKeyboard()
             search_activity_bar.clearFocus()
-            list_activity.clear()
+            runBlocking {
+                activityDaoSearch?.deleteActivity()
+            }
+            list_favoris.clear()
 
             val query = search_activity_bar.query
             runBlocking {
                 val service = retrofit().create(ActivitybyCity::class.java)
                 val result = service.listActivity("$query", lang, monnaie)
-                val list_activities_bdd = activityDao?.getActivity()
+                val list_activities_bdd = activityDaoSaved?.getActivity()
                 // le map permet d'appeler la fonction sur chacun des éléments d'une collection (== boucle for)
                 result.data.map {
-                    var favoris = false
                     val titre = it.title
+                    var match_bdd = false
                     list_activities_bdd?.forEach {
                         if(it.title == titre){
-                            favoris = true
-
+                            list_favoris.add(true)
+                            match_bdd = true
                         }
                     }
+                    if (match_bdd == false ){list_favoris.add(false)}
 
-                    val activity = Activity(it.uuid, it.title, it.cover_image_url,it.retail_price.formatted_iso_value,it.operational_days,favoris,it.about)
-                    //Log.d("CCC", "$activity")
-                    list_activity.add(activity)
-                    //Log.d("CIC","$list_activity")
+                    val activity = Activity(it.uuid, it.title, it.cover_image_url,it.retail_price.formatted_iso_value,it.operational_days,it.about)
+                    activityDaoSearch?.addActivity(activity)
 
                 }
-
-
-                activities_recyclerview.adapter =
-                    ActivityAdapter(
-                        list_activity ?: emptyList()
-                    )
+                val activities = activityDaoSearch?.getActivity()
+               activities_recyclerview.adapter = ActivityAdapter(activities ?: emptyList(),list_favoris)
 
             }
         }
@@ -83,7 +88,6 @@ class FindActivitesActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
 
     }
 
