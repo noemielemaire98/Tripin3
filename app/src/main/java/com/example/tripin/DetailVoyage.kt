@@ -23,6 +23,7 @@ class DetailVoyage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_voyage)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         id = intent.getIntExtra("id",0)
 
@@ -82,7 +83,7 @@ class DetailVoyage : AppCompatActivity() {
 
             }
             android.R.id.home -> {
-                finish()
+//                finish()
                 true
             }
             else -> onOptionsItemSelected(item)

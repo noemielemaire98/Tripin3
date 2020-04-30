@@ -29,6 +29,7 @@ class EditVoyage() : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_voyage)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
         id = intent.getIntExtra("id", 0)
@@ -103,7 +104,7 @@ class EditVoyage() : AppCompatActivity() {
 
 
         editv_modifier.setOnClickListener {
-           
+
 
             if (editv_titre_editText.text.isNotEmpty()) {
                 titre = editv_titre_editText.text.toString()
