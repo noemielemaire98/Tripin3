@@ -9,7 +9,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context=".FindFlight">
+    tools:context=".find.flight.FindFlightActivity">
 
     <LinearLayout
         android:id="@+id/layout_search"

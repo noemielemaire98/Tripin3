@@ -1,15 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/savedTopLevel_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.find.FindFlight2">
+    android:layout_margin="10dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context=".find.flight.FindFlightActivity">
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/layout_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <RadioGroup
+            android:id="@+id/allerType_radiogroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checkedButton="@+id/retour_button"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/retour_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/radioButton_aller_retour" />
+
+            <RadioButton
+                android:id="@+id/simple_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/radioButton_aller_simple" />
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/aller_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:hint="@string/editText_date_depart"
+            android:textAlignment="center" />
+
+        <EditText
+            android:id="@+id/return_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:hint="@string/editText_date_retour"
+            android:textAlignment="center" />
+
+        <AutoCompleteTextView
+            android:id="@+id/autoTextViewDepart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:hint="@string/autoCompleteTextView_lieu_depart"
+            android:inputType="textCapCharacters"
+            android:textAlignment="center" />
+
+        <AutoCompleteTextView
+            android:id="@+id/autoTextViewRetour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/autoCompleteTextView_lieu_arrivee"
+            android:inputType="textCapCharacters"
+            android:textAlignment="center" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/textViewAdults"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="@string/textView_nombre_adultes"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:entries="@array/adultsNumber"
+                android:textAlignment="center" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_searchFlight" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutNoSavedFlight"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="FLIGHT"
-        android:textSize="30dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:visibility="gone">
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/noFlightAvailable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/textView_aucun_vol_disponible"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/noFlightDetail"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/noFlightAvailable"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/noFlightsAvailable"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/noFlightsImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/noFlightDetail"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/imageDescription_no_flights"
+            android:gravity="center"
+            android:src="@drawable/noflightsavalaible" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/flights_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/flights_view" />
+
+    </RelativeLayout>
+
+</LinearLayout>
