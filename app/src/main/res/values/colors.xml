@@ -5,4 +5,6 @@
     <color name="colorAccent">#FFBA52</color>
     <color name="white">#FFFFFF</color>
     <color name="contrast_blue">#396482</color>
+    <color name ="greyCard">#8888</color>
+
 </resources>

@@ -1,0 +1,35 @@
+﻿amenity_code,amenity_name,amenity_icon
+SWIMMING_POOL,Piscine,R.drawable.swimming_pool
+SPA,SPA,R.drawable.spa
+FITNESS_CENTER,Centre sportif,R.drawable.fitness
+AIR_CONDITIONING,Air conditionné,R.drawable.air_conditionne
+RESTAURANT,Restaurant,R.drawable.restaurant
+PARKING,Parking,R.drawable.parking
+PETS_ALLOWED,Animaux acceptés,R.drawable.animal
+AIRPORT_SHUTTLE,Navette aéroport,R.drawable.aeroport_shuttle
+BUSINESS_CENTER,Business Center,R.drawable.wifi
+DISABLED_FACILITIES,Adapté aux handicapés,R.drawable.handicape
+WIFI,WIFI,R.drawable.wifi
+MEETING_ROOMS,Meeting Room,R.drawable.wifi
+NO_KID_ALLOWED,Pas d'enfant,R.drawable.wifi
+TENNIS,Cours de tennis,R.drawable.wifi
+GOLF,Parcours de golf,R.drawable.wifi
+KITCHEN,Cuisine,R.drawable.wifi
+ANIMAL_WATCHING ,Garde d'animaux,R.drawable.wifi
+BABY-SITTING ,Garde d'enfants,R.drawable.wifi
+BEACH,Plage,R.drawable.wifi
+CASINO,Casino,R.drawable.wifi
+JACUZZI,Jacuzzi,R.drawable.wifi
+SAUNA,Sauna,R.drawable.wifi
+SOLARIUM,Solarium,R.drawable.wifi
+MASSAGE,Massage,R.drawable.wifi
+VALET_PARKING,Valet de parking,R.drawable.wifi
+BAR,Bar,R.drawable.wifi
+KIDS_WELCOME,Enfants autorisés,R.drawable.wifi
+NO_PORN_FILMS,Pas de film pornographique,R.drawable.wifi
+MINIBAR,Minibar,R.drawable.wifi
+TELEVISION,Télévision,R.drawable.wifi
+WI-FI_IN_ROOM,Chambre avec Wifi,R.drawable.wifi
+ROOM_SERVICE,Room service,R.drawable.wifi
+GUARDED_PARKG,Parking surveillé,R.drawable.wifi
+SERV_SPEC_MENU,Service menu spécial,R.drawable.wifi

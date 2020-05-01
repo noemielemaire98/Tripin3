@@ -12,6 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".FindActivites" android:label="Rechercher des activites"></activity>
+        <activity android:name=".FindHotel" android:label="Recherche d'hôtels"/>
+        <activity android:name=".FindFlight" android:label="Rechercher des vols"/>
+        <activity android:name=".DetailsHotel" android:label="Détail d'un hôtel"></activity>
         <activity
             android:name=".find.flight.DetailFlights"
             android:label="Détail du vol" />
@@ -42,7 +46,9 @@
         <activity
             android:name=".trip.DetailVoyage"
             android:label="Detail" />
-        <activity android:name=".trip.AddVoyage" />
+
+        <activity android:name=".AddVoyage" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" />
