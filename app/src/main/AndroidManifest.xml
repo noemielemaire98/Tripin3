@@ -16,6 +16,13 @@
         <activity android:name=".FindHotel" android:label="Recherche d'hôtels"/>
         <activity android:name=".FindFlight" android:label="Rechercher des vols"/>
         <activity android:name=".DetailsHotel" android:label="Détail d'un hôtel"></activity>
+        <activity android:name=".StarsActivity"></activity>
+        <activity android:name=".SharingActivity" />
+        <activity android:name=".FeedbackActivity" />
+        <activity android:name=".ContactActivity" />
+        <activity
+            android:name=".DetailActivites"
+            android:label="Detail activité" />
         <activity
             android:name=".find.flight.DetailFlights"
             android:label="Détail du vol" />
@@ -58,11 +65,15 @@
 
             android:label="@string/app_name" />
         <activity
-            android:name=".profil.RegistrationActivity"
-            android:label="Registration" />
+            android:name=".LoginActivity"
+            android:label="Se connecter" />
         <activity
-            android:name=".profil.LoginActivity"
-            android:label="Login" />
+            android:name=".RegistrationActivity"
+            android:label="S&apos;inscrire">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LoginActivity" />
+        </activity>
     </application>
 
 </manifest>
