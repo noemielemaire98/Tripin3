@@ -23,6 +23,7 @@ import com.aminography.primecalendar.civil.CivilCalendar
 import com.aminography.primedatepicker.picker.PrimeDatePickerBottomSheet
 import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
 import com.aminography.primedatepicker.picker.callback.SingleDayPickCallback
+import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.FlightDao
 import com.example.tripin.model.Flight
@@ -131,7 +132,7 @@ class FindFlightActivity : AppCompatActivity() {
         // Initialise la liste déroulante du nombre de passagers
         val passengersNumber = resources.getStringArray(R.array.passengersNumber)
         val adapterPassengers = IgnoreAccentsArrayAdapter(
-            this@FindFlight,
+            this@FindFlightActivity,
             android.R.layout.simple_list_item_1, passengersNumber
         )
         passengers_number.setAdapter(adapterPassengers)
@@ -146,7 +147,7 @@ class FindFlightActivity : AppCompatActivity() {
         // Initialise la liste déroulante des classes de vol
         val travelClassList = resources.getStringArray(R.array.travelClass)
         val adapterTravelClass = IgnoreAccentsArrayAdapter(
-            this@FindFlight,
+            this@FindFlightActivity,
             android.R.layout.simple_list_item_1, travelClassList
         )
         travelClassEdit.setAdapter(adapterTravelClass)
