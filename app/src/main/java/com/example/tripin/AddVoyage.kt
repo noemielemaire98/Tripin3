@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import androidx.room.Room
 import com.example.tripin.data.AppDatabase
@@ -70,29 +71,6 @@ class AddVoyage : AppCompatActivity() {
             dialog.show()
         }
 
-
-        addv_valider.setOnClickListener {
-            val titre = addv_titre_editText.text
-            val dateDepart = addv_dateDepart_editText.text
-            val dateRetour = addv_dateRetour_editText.text
-            val nombrevoyageur= addv_nbvoyageur_editText.text
-
-
-            // finish dépile l'activité et revient à la page d'en dessous
-
-
-            val voyage = Voyage(0,titre.toString(),dateDepart.toString(), dateRetour.toString() ,R.drawable.destination1, nombrevoyageur.toString().toInt())
-            val database: AppDatabase =
-                Room.databaseBuilder(this, AppDatabase::class.java, "gestionvoyages").build()
-            val voyageDao: VoyageDao = database.getVoyageDao()
-
-            runBlocking {
-                voyageDao.addVoyage(voyage)// Reference aux co-routines Kotlin
-            }
-            finish()
-
-            }
-
     }
 
     private fun updatDatedepartInView() {
@@ -108,9 +86,32 @@ class AddVoyage : AppCompatActivity() {
     }
 
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_add_voyage,menu)
+        return true
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
+            R.id.ic_menu_add_voyage ->{
+                val titre = addv_titre_editText.text
+                val dateDepart = addv_dateDepart_editText.text
+                val dateRetour = addv_dateRetour_editText.text
+                val nombrevoyageur= addv_nbvoyageur_editText.text
+
+                // finish dépile l'activité et revient à la page d'en dessous
+                val voyage = Voyage(0,titre.toString(),dateDepart.toString(), dateRetour.toString() ,R.drawable.destination1, nombrevoyageur.toString().toInt())
+                val database: AppDatabase =
+                    Room.databaseBuilder(this, AppDatabase::class.java, "gestionvoyages").build()
+                val voyageDao: VoyageDao = database.getVoyageDao()
+
+                runBlocking {
+                    voyageDao.addVoyage(voyage)// Reference aux co-routines Kotlin
+                }
+                finish()
+
+                true
+            }
             android.R.id.home -> {
                 finish()
                 true

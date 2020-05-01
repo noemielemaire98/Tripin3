@@ -83,7 +83,7 @@ class DetailVoyage : AppCompatActivity() {
 
             }
             android.R.id.home -> {
-//                finish()
+                finish()
                 true
             }
             else -> onOptionsItemSelected(item)

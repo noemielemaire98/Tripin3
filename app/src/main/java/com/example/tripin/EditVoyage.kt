@@ -1,9 +1,11 @@
 package com.example.tripin
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import androidx.room.Room
 import com.example.tripin.data.AppDatabase
@@ -103,10 +105,30 @@ class EditVoyage() : AppCompatActivity() {
         }
 
 
-        editv_modifier.setOnClickListener {
 
+    }
 
-            if (editv_titre_editText.text.isNotEmpty()) {
+    private fun updatDatedepartInView() {
+        val myFormat = "dd/MM/yyyy" // mention the format you need
+        val sdf = SimpleDateFormat(myFormat, Locale.US)
+        editv_dateDepart_editText!!.setText(sdf.format(cal.getTime()))
+    }
+
+    private fun updatDateretourInView() {
+        val myFormat = "dd/MM/yyyy" // mention the format you need
+        val sdf = SimpleDateFormat(myFormat, Locale.US)
+        editv_dateRetour_editText!!.setText(sdf.format(cal.getTime()))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_edit_voyage,menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            R.id.ic_menu_modifier_voyage ->{
+                if (editv_titre_editText.text.isNotEmpty()) {
                 titre = editv_titre_editText.text.toString()
             }
             if (editv_dateDepart_editText.text.isNotEmpty()) {
@@ -135,23 +157,12 @@ class EditVoyage() : AppCompatActivity() {
                 voyageDao.updateVoyage(nvvoyage)
             }
             finish()
-        }
-    }
+//            val intent= Intent(it.context,DetailVoyage::class.java)
+//            intent.putExtra("id",id)
+//            it.context.startActivity(intent)
 
-    private fun updatDatedepartInView() {
-        val myFormat = "dd/MM/yyyy" // mention the format you need
-        val sdf = SimpleDateFormat(myFormat, Locale.US)
-        editv_dateDepart_editText!!.setText(sdf.format(cal.getTime()))
-    }
-
-    private fun updatDateretourInView() {
-        val myFormat = "dd/MM/yyyy" // mention the format you need
-        val sdf = SimpleDateFormat(myFormat, Locale.US)
-        editv_dateRetour_editText!!.setText(sdf.format(cal.getTime()))
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when (item.itemId) {
+                true
+            }
             android.R.id.home -> {
                 finish()
                 true
