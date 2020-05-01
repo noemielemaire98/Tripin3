@@ -245,7 +245,7 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
                                 travelId,
                                 it.SegmentId,
                                 it.prixTotal,
-                                it.prixParAdult,
+                                it.prixParPassager,
                                 it.dateDepart,
                                 it.heureDepart,
                                 it.dateArrivee,
@@ -258,7 +258,6 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
                                 it.carrierName,
                                 it.nbEscales,
                                 it.retour,
-                                it.logo,
                                 it.favoris,
                                 it.uuid
                             )

@@ -42,9 +42,9 @@ class SavedFlight : AppCompatActivity() {
 
         runBlocking {
             if (flightDaoSaved?.getFlights() != null) {
-                layoutNoSavedFlight.visibility = View.GONE
+                layoutNoFlightAvailable.visibility = View.GONE
             } else {
-                layoutNoSavedFlight.visibility = View.VISIBLE
+                layoutNoFlightAvailable.visibility = View.VISIBLE
             }
         }
     }
@@ -55,7 +55,7 @@ class SavedFlight : AppCompatActivity() {
         runBlocking {
             val flights = flightDaoSaved?.getFlights()
             if (!flights.isNullOrEmpty()) {
-                layoutNoSavedFlight.visibility = View.GONE
+                layoutNoFlightAvailable.visibility = View.GONE
                 val flightsList: MutableList<MutableList<Flight>> = mutableListOf()
                 var testlist: MutableList<Flight> = mutableListOf()
                 var uuid = flights[0].uuid
@@ -78,7 +78,7 @@ class SavedFlight : AppCompatActivity() {
                 savedFlights_recyclerview.adapter = FlightsAdapter(flightsList)
 
             } else {
-                layoutNoSavedFlight.visibility = View.VISIBLE
+                layoutNoFlightAvailable.visibility = View.VISIBLE
             }
         }
     }

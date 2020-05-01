@@ -1,11 +1,10 @@
 package com.example.tripin
 
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,12 +19,15 @@ import androidx.room.Room
 import com.amadeus.Amadeus
 import com.amadeus.Params
 import com.amadeus.resources.FlightOfferSearch
+import com.aminography.primecalendar.civil.CivilCalendar
+import com.aminography.primedatepicker.picker.PrimeDatePickerBottomSheet
+import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
+import com.aminography.primedatepicker.picker.callback.SingleDayPickCallback
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.FlightDao
 import com.example.tripin.model.Flight
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import kotlinx.android.synthetic.main.activity_find_flight.*
-import kotlinx.android.synthetic.main.activity_find_flight.aller_date
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.time.Duration
@@ -42,7 +44,7 @@ class FindFlight : AppCompatActivity() {
     private lateinit var dateRetour: String
     private lateinit var lieuDepart: String
     private lateinit var lieuRetour: String
-    private var cal: Calendar = Calendar.getInstance()
+    private lateinit var travelClass: String
     private var flightDao: FlightDao? = null
     private lateinit var flightsRecyclerView: RecyclerView
 
@@ -53,7 +55,6 @@ class FindFlight : AppCompatActivity() {
         .build()
 
 
-    @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         // Inflate the layout for this fragment
         super.onCreate(savedInstanceState)
@@ -65,17 +66,107 @@ class FindFlight : AppCompatActivity() {
             findViewById<View>(R.id.flights_recyclerview) as RecyclerView
         flightsRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        initDatePicker(aller_date)
-        initDatePicker(return_date)
+        // Affiche le calendrier pour choisir la date d'aller
+        aller_date.setOnClickListener {
+            hideKeyboard()
+            savedTopLevel_layout.requestFocus()
+            if (return_dateLayout.visibility == View.VISIBLE) { // Si c'est un voyage aller-retour
+
+                rangeDatePickerPrimeCalendar()
+
+            } else if (return_dateLayout.visibility == View.GONE) { // Si c'est un voyage avec aller simple
+
+                val singleDayPickCallback = SingleDayPickCallback { date ->
+                    // TODO
+                    Log.d("Date", date.shortDateString)
+                    val parser =
+                        SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+                    val formatterDate =
+                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    val parsedDate =
+                        formatterDate.format(parser.parse(date.shortDateString)!!)
+                    aller_date.setText(parsedDate)
+                }
+
+                val today =
+                    CivilCalendar(Locale.getDefault())
+
+                if (aller_date.text.toString() != "") { // Si une date a déjà été choisie
+                    val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    val calStart = CivilCalendar(Locale.getDefault())
+                    calStart.timeInMillis = df.parse(aller_date.text.toString())!!.time
+
+                    val datePickerT = PrimeDatePickerBottomSheet
+                        .from(today)
+                        .pickSingleDay(singleDayPickCallback)
+                        .initiallyPickedSingleDay(calStart)
+                        .weekStartDay(Calendar.MONDAY)
+                        .minPossibleDate(today)
+                        .animateSelection(true)
+                        .build()
+
+                    datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
+                } else { // Si aucune date n'a encore été choisie
+
+                    val datePickerT = PrimeDatePickerBottomSheet
+                        .from(today)
+                        .pickSingleDay(singleDayPickCallback)
+                        .weekStartDay(Calendar.MONDAY)
+                        .minPossibleDate(today)            // Optional
+                        .animateSelection(true)
+                        .build()
+
+                    datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
+                }
+            }
+        }
+
+        // Affiche le calendrier pour choisir la date de retour
+        return_date.setOnClickListener {
+            hideKeyboard()
+            savedTopLevel_layout.requestFocus()
+            rangeDatePickerPrimeCalendar()
+        }
+
+        // Initialise la liste déroulante du nombre de passagers
+        val passengersNumber = resources.getStringArray(R.array.passengersNumber)
+        val adapterPassengers = IgnoreAccentsArrayAdapter(
+            this@FindFlight,
+            android.R.layout.simple_list_item_1, passengersNumber
+        )
+        passengers_number.setAdapter(adapterPassengers)
+
+        // Montre toute la liste déroulante à chaque fois
+        passengers_number.setOnClickListener {
+            hideKeyboard()
+            savedTopLevel_layout.requestFocus()
+            passengers_number.showDropDown()
+        }
+
+        // Initialise la liste déroulante des classes de vol
+        val travelClassList = resources.getStringArray(R.array.travelClass)
+        val adapterTravelClass = IgnoreAccentsArrayAdapter(
+            this@FindFlight,
+            android.R.layout.simple_list_item_1, travelClassList
+        )
+        travelClassEdit.setAdapter(adapterTravelClass)
+
+        // Montre toute la liste déroulante à chaque fois
+        travelClassEdit.setOnClickListener {
+            hideKeyboard()
+            savedTopLevel_layout.requestFocus()
+            travelClassEdit.showDropDown()
+        }
 
 
         runBlocking {
+            // Récupère la liste des aéroports dans le csv correspondant
             val airportCsv = resources.openRawResource(R.raw.iata_airport_list)
             val listAirports: List<Map<String, String>> = csvReader().readAllWithHeader(airportCsv)
 
-
             val listAirportsFormatted = mutableListOf<String>()
 
+            // Affiche uniquement les infos utiles des aéroports dans une liste
             listAirports.map { itMap ->
                 listAirportsFormatted.add(
                     itMap["city_name"].toString()
@@ -86,21 +177,28 @@ class FindFlight : AppCompatActivity() {
                 )
             }
 
-            val adapter = IgnoreAccentsArrayAdapter(
+            // Initialise la liste déroulante du lieu de départ
+            val adapterLieuDepart = IgnoreAccentsArrayAdapter(
                 this@FindFlight,
                 android.R.layout.simple_list_item_1, listAirportsFormatted.toTypedArray()
             )
-            autoTextViewDepart.setAdapter(adapter)
-            autoTextViewRetour.setAdapter(adapter)
+            // Initialise la liste déroulante du lieu d'arrivée
+            val adapterLieuArrival = IgnoreAccentsArrayAdapter(
+                this@FindFlight,
+                android.R.layout.simple_list_item_1, listAirportsFormatted.toTypedArray()
+            )
+            autoTextViewDepart.setAdapter(adapterLieuDepart)
+            autoTextViewRetour.setAdapter(adapterLieuArrival)
         }
         //empty autoTextView if not chosen from list
         clearFocusAutoTextView(autoTextViewDepart)
         clearFocusAutoTextView(autoTextViewRetour)
 
+        // Bouton pour lancer la recherche
         btn_search.setOnClickListener {
             hideKeyboard()
             savedTopLevel_layout.requestFocus()
-            if (autoTextViewDepart.text.toString() == "" || autoTextViewRetour.text.toString() == "") {
+            if (autoTextViewDepart.text.toString() == "" || autoTextViewRetour.text.toString() == "") { // Si les lieux ne sont pas bien spécifiés
                 Toast.makeText(
                     this,
                     "Veuillez choisir les destinations dans les listes déroulantes",
@@ -109,6 +207,7 @@ class FindFlight : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Récupère les code IATA des lieux
             val strDepart = autoTextViewDepart.text.toString()
             val keptDepart = strDepart.substringAfterLast("(")
             lieuDepart = keptDepart.substringBeforeLast(")")
@@ -116,26 +215,12 @@ class FindFlight : AppCompatActivity() {
             val keptRetour = strRetour.substringAfterLast("(")
             lieuRetour = keptRetour.substringBeforeLast(")")
 
-            if (aller_date.text.toString() != "" && return_date.text.toString() != "") {
-                val parsedDateDepart =
-                    SimpleDateFormat("yyyy-MM-dd").parse(aller_date.text.toString())
-                val parsedDateRetour =
-                    SimpleDateFormat("yyyy-MM-dd").parse(return_date.text.toString())
+            if (aller_date.text.toString() != "" && return_date.text.toString() != "") { // Si lieux bien spécifiés et voyage aller-retour
 
-                if (parsedDateDepart!!.before(parsedDateRetour)) {
+                dateRetour = return_date.text.toString()
+                beginSearchExported(dateRetour)
 
-                    dateRetour = return_date.text.toString()
-                    beginSearchExported(dateRetour)
-
-                } else {
-                    Toast.makeText(
-                        this,
-                        "La date de retour doit être ultérieure à celle de départ",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return_date.setText("")
-                }
-            } else if (aller_date.text.toString() != "" && return_date.visibility == View.GONE) {
+            } else if (aller_date.text.toString() != "" && return_dateLayout.visibility == View.GONE) { // Si voyage aller-simple
                 dateRetour = ""
                 beginSearchExported(dateRetour)
             } else {
@@ -148,17 +233,19 @@ class FindFlight : AppCompatActivity() {
             }
         }
 
+        // Choix du type de voyage (aller simple ou aller-retour)
         allerType_radiogroup.setOnCheckedChangeListener { _, checkedId ->
             val radio: RadioButton = findViewById(checkedId)
             if (radio.id == simple_button.id) {
-                return_date.visibility = View.GONE
+                return_dateLayout.visibility = View.GONE
                 return_date.setText("")
+
             } else {
-                return_date.visibility = View.VISIBLE
+                return_dateLayout.visibility = View.VISIBLE
             }
         }
 
-
+        // Initialise la BDD
         val database =
             Room.databaseBuilder(this, AppDatabase::class.java, "searchDatabase")
                 .build()
@@ -174,20 +261,20 @@ class FindFlight : AppCompatActivity() {
         runBlocking {
             //       val flights = listFlights
             val flights = flightDao?.getFlights()
-            if (!flights.isNullOrEmpty()) {
-                layoutNoSavedFlight.visibility = View.GONE
+            if (!flights.isNullOrEmpty()) { // S'il y a des vols de trouvés
+                layoutNoFlightAvailable.visibility = View.GONE
                 //            val flights = listFlights
                 val flightsList: MutableList<MutableList<Flight>> = mutableListOf()
                 var testlist: MutableList<Flight> = mutableListOf()
                 var travelId = 1
                 var position = 0
+                // map pour regrouper les vols d'un même itinéraire
                 flights.map {
                     val flight = flights[it.id - 1]
-                    if (it.travelId != travelId) {
+                    if (it.travelId != travelId) { // Si appartient au même itinéraire
                         flightsList.add(testlist)
                         testlist = mutableListOf()
                         travelId = it.travelId
-
                     }
                     testlist.add(flight)
                     position += 1
@@ -196,34 +283,37 @@ class FindFlight : AppCompatActivity() {
                     }
                 }
                 flightsRecyclerView.adapter = FlightsAdapter(flightsList)
-            } else if (!activityCreate) {
-                layoutNoSavedFlight.visibility = View.VISIBLE
+            } else if (!activityCreate) { // S'il n'y a pas de vols et qu'une recherche a été effectuée, affiche l'image aucun vol dispo
+                layoutNoFlightAvailable.visibility = View.VISIBLE
             }
-            loadingPanel.visibility = View.GONE
+            loadingPanel.visibility = View.GONE // cache roue de chargement
         }
     }
 
+    // Lancement de la recherche
     private fun beginSearchExported(dateRetour: String) {
         dateDepart = aller_date.text.toString()
 
-        val nbAdults = spinner.selectedItem.toString().toInt()
+        travelClass =
+            if (travelClassEdit.text.toString() != "PREMIUM ECO") travelClassEdit.text.toString() else "PREMIUM_ECONOMY"
+        val nbAdults = passengers_number.text.toString().toInt()
         flights_recyclerview.adapter = FlightsAdapter(mutableListOf())
-        layout_search.visibility = View.GONE
-        loadingPanel.visibility = View.VISIBLE
-        layoutNoSavedFlight.visibility = View.GONE
+        layout_search.visibility = View.GONE // cache le formulaire
+        loadingPanel.visibility = View.VISIBLE // affiche la roue de chargement
+        layoutNoFlightAvailable.visibility = View.GONE // cache l'image aucun vol dispo
         runBlocking {
-            beginSearch(dateDepart, dateRetour, lieuDepart, lieuRetour, nbAdults)
+            beginSearch(dateDepart, dateRetour, lieuDepart, lieuRetour, travelClass, nbAdults)
         }
         activityCreate = false
     }
 
-
-    @SuppressLint("SetTextI18n", "SimpleDateFormat")
+    // Appel API et enregistrement BDD
     private suspend fun beginSearch(
         dateDepart: String,
         dateRetour: String,
         lieuDepart: String,
         lieuRetour: String,
+        travelClass: String,
         nbAdults: Int
     ) {
         val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
@@ -231,140 +321,139 @@ class FindFlight : AppCompatActivity() {
 
         scope.launch {
 
+            val flightOffersSearches: Array<FlightOfferSearch>
+            if (dateRetour != "") { // si aller-retour
+                flightOffersSearches =
+                    amadeus.shopping.flightOffersSearch[Params
+                        .with("originLocationCode", lieuDepart)
+                        .and("destinationLocationCode", lieuRetour)
+                        .and("departureDate", dateDepart)
+                        .and("returnDate", dateRetour)
+                        .and("adults", nbAdults)
+                        .and("max", 10)
+                        .and("travelClass", travelClass)]
+            } else { // si aller simple
+                flightOffersSearches =
+                    amadeus.shopping.flightOffersSearch[Params
+                        .with("originLocationCode", lieuDepart)
+                        .and("destinationLocationCode", lieuRetour)
+                        .and("departureDate", dateDepart)
+                        .and("adults", nbAdults)
+                        .and("max", 10)
+                        .and("travelClass", travelClass)]
+            }
 
+            withContext(Dispatchers.Main) {
 
-                val flightOffersSearches: Array<FlightOfferSearch>
-                if (dateRetour != "") {
-                    flightOffersSearches =
-                        amadeus.shopping.flightOffersSearch[Params
-                            .with("originLocationCode", lieuDepart)
-                            .and("destinationLocationCode", lieuRetour)
-                            .and("departureDate", dateDepart)
-                            .and("returnDate", dateRetour)
-                            .and("adults", nbAdults)
-                            .and("max", 10)]
-                } else {
-                    flightOffersSearches =
-                        amadeus.shopping.flightOffersSearch[Params
-                            .with("originLocationCode", lieuDepart)
-                            .and("destinationLocationCode", lieuRetour)
-                            .and("departureDate", dateDepart)
-                            .and("adults", nbAdults)
-                            .and("max", 10)]
-                }
-
-                withContext(Dispatchers.Main) {
-                    //      runOnUiThread {
-
-                    val test = resources.openRawResource(R.raw.optd_airline)
-                    val rows: List<Map<String, String>> = csvReader().readAllWithHeader(test)
+                // recupère les noms des compagnies aériennes
+                val airlinesNamesCsv = resources.openRawResource(R.raw.optd_airline)
+                val rows: List<Map<String, String>> = csvReader().readAllWithHeader(airlinesNamesCsv)
 
 //                val testLogo = resources.openRawResource(R.raw.optd_airlines_websites_wkdt)
 //                val rowsLogo: List<Map<String, String>> = csvReader().readAllWithHeader(testLogo)
 
-                    var id = 1
-                    var valueCa = ""
-                    var valueLogo = ""
-                    val flightsList: MutableList<MutableList<Flight>> = mutableListOf()
+                var id = 1 // pour incrémenter les id
+                var carrierName = ""
+                var carrierCodeLogo = ""
+                val flightsList: MutableList<MutableList<Flight>> = mutableListOf()
 
-                    flightOffersSearches.map { itFlight ->
-                        var retour = 0
-                        var uuidSomme = ""
-                        val listFlightAdd = mutableListOf<Flight>()
-                        itFlight.itineraries.map { itItineraries ->
-                            val nbEscales = itItineraries.segments.size - 1
-                            itItineraries.segments.map { itSegments ->
+                flightOffersSearches.map { itFlight ->
+                    var retour = 0 // pour savoir si voyage aller ou voyage retour
+                    var uuidSomme = ""
+                    val listFlightAdd = mutableListOf<Flight>()
+                    itFlight.itineraries.map { itItineraries ->
+                        val nbEscales = itItineraries.segments.size - 1
+                        itItineraries.segments.map { itSegments ->
 
-                                val sec = Duration.parse(itItineraries.duration).seconds
-                                val dureeFormat = String.format(
-                                    "%02dh%02d", TimeUnit.SECONDS.toHours(sec),
-                                    TimeUnit.SECONDS.toMinutes(sec) % TimeUnit.HOURS.toMinutes(1)
-                                )
+                            val sec = Duration.parse(itItineraries.duration).seconds
+                            val dureeFormat = String.format(
+                                "%02dh%02d", TimeUnit.SECONDS.toHours(sec),
+                                TimeUnit.SECONDS.toMinutes(sec) % TimeUnit.HOURS.toMinutes(1)
+                            )
 
-                                val departureDate = itSegments.departure.at
-                                val arrivalDate = itSegments.arrival.at
+                            val departureDate = itSegments.departure.at
+                            val arrivalDate = itSegments.arrival.at
 
-                                val parser =
-                                    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-                                val formatterHour =
-                                    SimpleDateFormat("HH:mm")
-                                val formatterDate =
-                                    SimpleDateFormat("dd/MM/yyyy")
-                                val dateDepartFormat =
-                                    formatterDate.format(parser.parse(departureDate)!!)
-                                val dateArriveeFormat =
-                                    formatterDate.format(parser.parse(arrivalDate)!!)
-                                val heureDepartFormat =
-                                    formatterHour.format(parser.parse(departureDate)!!)
-                                val heureArriveeFormat =
-                                    formatterHour.format(parser.parse(arrivalDate)!!)
+                            val parser =
+                                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+                            val formatterHour =
+                                SimpleDateFormat("HH:mm", Locale.getDefault())
+                            val formatterDate =
+                                SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                            val dateDepartFormat =
+                                formatterDate.format(parser.parse(departureDate)!!)
+                            val dateArrivalFormat =
+                                formatterDate.format(parser.parse(arrivalDate)!!)
+                            val heureDepartFormat =
+                                formatterHour.format(parser.parse(departureDate)!!)
+                            val heureArrivalFormat =
+                                formatterHour.format(parser.parse(arrivalDate)!!)
 
 
-                                rows.map { itMap ->
-                                    itMap.map {
-                                        if (it.value == itSegments.carrierCode) {
-                                            valueCa = itMap["name"].toString()
-                                            valueLogo = itMap["2char_code"].toString()
-                                        }
+                            rows.map { itMap ->
+                                itMap.map {
+                                    if (it.value == itSegments.carrierCode) {
+                                        carrierName = itMap["name"].toString()
+                                        carrierCodeLogo = itMap["2char_code"].toString()
                                     }
                                 }
-
-                                val uuid = itSegments.carrierCode + itSegments.number
-
-                                val flight = Flight(
-                                    id,
-                                    itFlight.id.toInt(),
-                                    itSegments.id.toInt(),
-                                    itFlight.price.grandTotal,
-                                    itFlight.travelerPricings[0].price.total,
-                                    dateDepartFormat,
-                                    heureDepartFormat,
-                                    dateArriveeFormat,
-                                    heureArriveeFormat,
-                                    dureeFormat,
-                                    itSegments.departure.iataCode,
-                                    itSegments.arrival.iataCode,
-                                    itSegments.carrierCode,
-                                    valueLogo,
-                                    valueCa,
-                                    nbEscales,
-                                    retour,
-                                    "optd_airlines_websites_logos/${valueLogo.toLowerCase(
-                                        Locale.ROOT
-                                    )}.png",
-                                    false,
-                                    uuid
-                                )
-                                uuidSomme += uuid
-                                listFlightAdd.add(flight)
-
-                                id += 1
                             }
 
+                            val uuid = itSegments.carrierCode + itSegments.number
 
-                            retour += 1
+                            val flight = Flight(
+                                id,
+                                itFlight.id.toInt(),
+                                itSegments.id.toInt(),
+                                itFlight.price.grandTotal,
+                                itFlight.travelerPricings[0].price.total,
+                                dateDepartFormat,
+                                heureDepartFormat,
+                                dateArrivalFormat,
+                                heureArrivalFormat,
+                                dureeFormat,
+                                itSegments.departure.iataCode,
+                                itSegments.arrival.iataCode,
+                                itSegments.carrierCode,
+                                carrierCodeLogo,
+                                carrierName,
+                                nbEscales,
+                                retour,
+                                false,
+                                uuid
+                            )
+                            uuidSomme += uuid // Somme des uuid d'un même itinéraire
+                            listFlightAdd.add(flight)
+
+                            id += 1
                         }
-                        listFlightAdd.map { itListF ->
-                            itListF.uuid = uuidSomme
-                            flightDao?.addFlight(itListF)
-                        }
-                        flightsList.add(listFlightAdd)
 
-                    }
-                    if (!flightsList.isNullOrEmpty()) {
-                        layoutNoSavedFlight.visibility = View.GONE
-                        flightsRecyclerView.adapter = FlightsAdapter(flightsList)
-                    } else if (!activityCreate) {
-                        layoutNoSavedFlight.visibility = View.VISIBLE
-                    }
 
-                    loadingPanel.visibility = View.GONE
+                        retour += 1
+                    }
+                    // modifie l'uuid pour mettre celui commun à l'itinéraire
+                    listFlightAdd.map { itListF ->
+                        itListF.uuid = uuidSomme
+                        flightDao?.addFlight(itListF)
+                    }
+                    flightsList.add(listFlightAdd)
+
                 }
+                // Si au moins un vol de trouvé
+                if (!flightsList.isNullOrEmpty()) {
+                    layoutNoFlightAvailable.visibility = View.GONE
+                    flightsRecyclerView.adapter = FlightsAdapter(flightsList)
+                } else if (!activityCreate) {
+                    layoutNoFlightAvailable.visibility = View.VISIBLE
+                }
+
+                loadingPanel.visibility = View.GONE // cache roue de chargement
             }
+        }
 
     }
 
-
+    // vide textView si non choisi dans la liste
     private fun clearFocusAutoTextView(autoCompleteTextView: AutoCompleteTextView) {
         autoCompleteTextView.onFocusChangeListener = OnFocusChangeListener { _, b ->
             if (!b) {
@@ -382,27 +471,54 @@ class FindFlight : AppCompatActivity() {
         }
     }
 
-    private fun initDatePicker(text: EditText) {
-        val startDateSetListener =
-            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                cal.set(Calendar.YEAR, year)
-                cal.set(Calendar.MONTH, monthOfYear)
-                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                val myFormat = "yyyy-MM-dd" // mention the format you need
-                val sdf = SimpleDateFormat(myFormat, Locale.US)
-                text.setText(sdf.format(cal.time))
-            }
-        text.setOnClickListener {
-            val dialogDepart = DatePickerDialog(
-                this,
-                startDateSetListener,
-                // set DatePickerDialog to point to today's date when it loads up
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
-            )
-            dialogDepart.datePicker.minDate = Calendar.getInstance().timeInMillis
-            dialogDepart.show()
+    // affichage du calendrier aller-retour
+    private fun rangeDatePickerPrimeCalendar() {
+        val rangeDaysPickCallback = RangeDaysPickCallback { startDate, endDate ->
+            // TODO
+            Log.d("Date", "${startDate.shortDateString} ${endDate.shortDateString}")
+            val parser =
+                SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+            val formatterDate =
+                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val parsedStartDate =
+                formatterDate.format(parser.parse(startDate.shortDateString)!!)
+            val parsedEndDate =
+                formatterDate.format(parser.parse(endDate.shortDateString)!!)
+            aller_date.setText(parsedStartDate)
+            return_date.setText(parsedEndDate)
+        }
+
+        val today =
+            CivilCalendar(Locale.getDefault())
+
+        if (aller_date.text.toString() != "" && return_date.text.toString() != "") {
+            val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val calStart = CivilCalendar(Locale.getDefault())
+            calStart.timeInMillis = df.parse(aller_date.text.toString())!!.time
+            val calEnd =
+                CivilCalendar(Locale.getDefault())
+            calEnd.timeInMillis = df.parse(return_date.text.toString())!!.time
+
+            val datePickerT = PrimeDatePickerBottomSheet
+                .from(today)
+                .pickRangeDays(rangeDaysPickCallback)
+                .initiallyPickedRangeDays(calStart, calEnd)
+                .weekStartDay(Calendar.MONDAY)
+                .minPossibleDate(today)
+                .animateSelection(true)
+                .build()
+
+            datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
+        } else {
+            val datePickerT = PrimeDatePickerBottomSheet
+                .from(today)
+                .pickRangeDays(rangeDaysPickCallback)
+                .weekStartDay(Calendar.MONDAY)
+                .minPossibleDate(today)
+                .animateSelection(true)
+                .build()
+
+            datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
         }
     }
 
