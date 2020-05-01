@@ -1,4 +1,4 @@
-package com.example.tripin.data
+    package com.example.tripin.data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

@@ -15,11 +15,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.tripin.*
+import com.example.tripin.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import org.w3c.dom.Text
 
 
@@ -91,14 +89,11 @@ class ProfilFragment : Fragment() {
         }
 
         sharing.setOnClickListener {
-            //val intent = Intent(this.context, SharingActivity::class.java)
-            //startActivity(intent)
             val message = ""
             val intent = Intent()
             intent.action =  Intent.ACTION_SEND
             intent.putExtra(Intent.EXTRA_TEXT, message)
             intent.type = "text/plain"
-
             startActivity(Intent.createChooser(intent, "Partagez avec :"))
         }
 
@@ -106,6 +101,7 @@ class ProfilFragment : Fragment() {
             val intent = Intent(this.context, StarsActivity::class.java)
             startActivity(intent)
         }
+
         return root
     }
 }
