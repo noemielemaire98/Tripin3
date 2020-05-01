@@ -7,30 +7,30 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.tripin.ui.home.HomeFragment"
+        android:name="com.example.tripin.home.HomeFragment"
         android:label="Accueil"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_find"
-        android:name="com.example.tripin.ui.find.FindFragment"
+        android:name="com.example.tripin.find.FindFragment"
         android:label="Rechercher"
         tools:layout="@layout/fragment_find" />
     <fragment
         android:id="@+id/navigation_trip"
-        android:name="com.example.tripin.ui.trip.TripFragment"
+        android:name="com.example.tripin.trip.TripFragment"
         android:label="Mes voyages"
         tools:layout="@layout/fragment_trip" />
 
     <fragment
         android:id="@+id/navigation_saved"
-        android:name="com.example.tripin.ui.saved.SavedFragment"
+        android:name="com.example.tripin.saved.SavedFragment"
         android:label="Mes favoris"
         tools:layout="@layout/fragment_saved" />
 
     <fragment
         android:id="@+id/navigation_profil"
-        android:name="com.example.tripin.ui.profil.ProfilFragment"
+        android:name="com.example.tripin.profil.ProfilFragment"
         android:label="Mon profil"
         tools:layout="@layout/fragment_profil" />
 </navigation>

@@ -4,25 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
     android:orientation="vertical"
-    tools:context=".ui.find.FindFragment">
+    tools:context=".find.FindFragment">
 
-    <Button
+    <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="VOlS"
-        android:id="@+id/bt_flight"/>
-    <Button
+        app:tabMode="fixed"
+        android:id="@+id/tablayout_find"
+        android:background="@color/colorPrimary"
+        app:tabTextColor="#fff"/>
+
+    <androidx.viewpager.widget.ViewPager
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="HOTELS"
-        android:id="@+id/bt_hotel"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ACTIVITES"
-        android:id="@+id/bt_activities"/>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tablayout_find"
+        android:id="@+id/fragment_rechercheinterne"
+        android:layout_alignParentBottom="true" />
 
 
-</LinearLayout>
+   </LinearLayout>

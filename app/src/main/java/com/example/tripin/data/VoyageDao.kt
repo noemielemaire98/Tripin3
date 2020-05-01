@@ -9,7 +9,7 @@ import com.example.tripin.model.Voyage
 @Dao
 interface VoyageDao {
 
-    @Query("select * from myvoyages")
+    @Query("select * from myVoyages")
     suspend fun getVoyage() : List<Voyage>
 
     @Insert
@@ -18,7 +18,7 @@ interface VoyageDao {
     @Delete
     suspend fun deleteVoyage(voyage: Voyage)
 
-    @Query("select * from myvoyages where id = :id")
+    @Query("select * from myVoyages where id = :id")
     suspend fun getVoyage(id: Int) : Voyage
 
 

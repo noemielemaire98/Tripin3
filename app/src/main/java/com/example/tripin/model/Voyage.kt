@@ -5,7 +5,7 @@ import com.example.tripin.R
 import java.sql.Date
 import java.util.*
 
-@Entity(tableName = "myvoyages")
+@Entity(tableName = "myVoyages")
 data class Voyage (@PrimaryKey(autoGenerate = true) val id:Int,
                    val titre: String,
                    val date :String,

@@ -16,7 +16,41 @@
     <string name="signout_button">Déconnexion</string>
     <string name="signup_button">S\'inscrire</string>
     <string name="create_account_button">Créer un compte ?</string>
-    <string name="photo_profil_button">Photo de profil</string>
+    <string name="photo_profil_button">Photo</string>
     <string name="voyage_delete_confirm_title">Confirmation Supression</string>
     <string name="voyage_delete_confirm_message">Voulez-vous vraiment supprimer %1$s ?</string>
+    <string name="search">Rechercher</string>
+    <string name="noFlightsAvailable">Veuillez essayer une autre date ou modifier votre recherche</string>
+    <string name="noSavedFlights">Pour en ajouter, cliquez sur l\'image ci-dessous</string>
+    <string name="favFlight_description">Bouton ajout favoris</string>
+    <string name="logo_vol_retour">Logo vol retour</string>
+    <string name="logo_vol_aller">Logo vol aller</string>
+    <string name="radioButton_aller_retour">Aller-retour</string>
+    <string name="radioButton_aller_simple">Aller simple</string>
+    <string name="editText_date_depart">Date de départ</string>
+    <string name="editText_date_retour">Date de retour</string>
+    <string name="autoCompleteTextView_lieu_depart">Lieu de départ</string>
+    <string name="autoCompleteTextView_lieu_arrivee">Lieu d\'arrivée</string>
+    <string name="textView_nombre_adultes">Nombre d\'adultes :</string>
+    <string name="button_searchFlight">Rechercher</string>
+    <string name="textView_aucun_vol_disponible">Aucun vol disponible</string>
+    <string name="imageDescription_no_flights">Aucun vol trouvé</string>
+    <string name="textView_aucun_vol_favori">Aucun vol favori</string>
+    <string name="imageDescription_no_favoriteFlight">Aucun vol favori</string>
+
+
+    <string-array name="adultsNumber">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

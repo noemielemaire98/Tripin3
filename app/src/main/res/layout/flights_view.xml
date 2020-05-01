@@ -1,153 +1,289 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    tools:context=".ui.find.FindFragment">
+    tools:context=".find.FindFragment">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="8dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/flights_price_textview"
+        <ImageView
+            android:id="@+id/fab_favFlight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="10dp"
-            android:textSize="20dp"
-            tools:text="Prix" />
+            android:layout_below="@+id/layoutForFav"
+            android:layout_alignTop="@+id/layoutForFav"
+            android:layout_alignEnd="@+id/layoutForFav"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="15dp"
+            android:contentDescription="@string/favFlight_description"
+            android:src="@drawable/ic_favorite_border_black_24dp"
+            android:tint="@color/colorAccent"
+            app:backgroundTint="@color/colorAccent"
+            app:fabSize="auto" />
 
         <LinearLayout
+            android:id="@+id/layoutForFav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginVertical="15dp"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/flights_imageView"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center" />
+            <TextView
+                android:id="@+id/flights_price_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="3"
+                android:textSize="24sp"
+                tools:text="Prix" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/flights_imageView"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="6dp"
+                    android:contentDescription="@string/logo_vol_aller" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/heures_aller"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        tools:text="Heures" />
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/duree"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/aller_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            tools:text="Heure" />
+
+                        <TextView
+                            android:id="@+id/heureArrivee_aller"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            tools:text="Heure" />
+
+                        <TextView
+                            android:id="@+id/heureArriveeAdd_aller"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_weight="3"
+                            android:textSize="12sp"
+                            tools:text="+1" />
+
+                        <TextView
+                            android:id="@+id/duree"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10dp"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:textSize="18sp"
+                            tools:text="Duree" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/flights_date_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="3"
+                            tools:text="Date Retour" />
+
+                        <TextView
+                            android:id="@+id/flights_direct_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:textColor="#A9A9A9"
+                            tools:text="Direct" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        tools:text="Duree" />
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
 
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/lieuDepart_aller"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#A9A9A9"
+                            android:textSize="12sp"
+                            tools:text="LieuDepart" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/flights_date_textview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight="3"
-                        tools:text="Date Retour" />
+                        <TextView
+                            android:id="@+id/lieuArrivee_aller"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#A9A9A9"
+                            android:textSize="12sp"
+                            tools:text="LieuArrivee" />
 
-                    <TextView
-                        android:id="@+id/flights_direct_textview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight="1"
-                        tools:text="Direct" />
+                        <TextView
+                            android:id="@+id/compagnie_aller"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#A9A9A9"
+                            android:textSize="12sp"
+                            tools:text="Compagnie" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_retour"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/flights_imageView_return"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center" />
 
             <LinearLayout
+                android:id="@+id/layout_retour"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/flights_imageView_return"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="6dp"
+                    android:contentDescription="@string/logo_vol_retour" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/heures_retour"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/heureDepart_retour"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            tools:text="Heure Retour" />
+
+                        <TextView
+                            android:id="@+id/heureArrivee_retour"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            tools:text="Heure Retour" />
+
+                        <TextView
+                            android:id="@+id/heureArriveeAdd_retour"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_weight="3"
+                            android:textSize="12sp"
+                            tools:text="+1" />
+
+                        <TextView
+                            android:id="@+id/duree_retour"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10dp"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:textSize="18sp"
+                            tools:text="Duree retour" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/flights_date_return_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="3"
+                            tools:text="Date Retour" />
+
+                        <TextView
+                            android:id="@+id/flights_direct_return_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:textColor="#A9A9A9"
+                            tools:text="Direct Retour" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        tools:text="Heures Retour" />
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/duree_retour"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        tools:text="Duree retour" />
+                        <TextView
+                            android:id="@+id/lieuDepart_retour"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#A9A9A9"
+                            android:textSize="12sp"
+                            tools:text="LieuDepart" />
 
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/lieuArrivee_retour"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#A9A9A9"
+                            android:textSize="12sp"
+                            tools:text="LieuArrivee" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/compagnie_retour"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#A9A9A9"
+                            android:textSize="12sp"
+                            tools:text="Compagnie" />
 
-                    <TextView
-                        android:id="@+id/flights_date_return_textview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight="3"
-                        tools:text="Date Retour" />
-
-                    <TextView
-                        android:id="@+id/flights_direct_return_textview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight="1"
-                        tools:text="Direct Retour" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-
-
-    </LinearLayout>
-
+    </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
