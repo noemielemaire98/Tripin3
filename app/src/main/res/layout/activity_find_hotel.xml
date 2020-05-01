@@ -8,19 +8,34 @@
     tools:context=".FindHotel">
 
 
-   <androidx.appcompat.widget.SearchView
+    <androidx.appcompat.widget.SearchView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#E1E1E1"
         app:queryHint="Choisissez une ville"
-        android:id="@+id/search_activity_bar"/>
+        android:inputType="textCapCharacters"
+        android:id="@+id/search_hotel"/>
 
     <Button
-        android:id="@+id/btn_search"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
+        android:layout_gravity="center_horizontal"
         android:layout_height="wrap_content"
-        android:text="Rechercher" />
+        android:background="@null"
+        android:textColor="@color/colorAccent"
+        android:text="Rechercher"
+        android:id="@+id/btn_search"/>
 
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -31,7 +31,9 @@ class SavedHotel : AppCompatActivity() {
             val hotels = hotelDao?.getHotels()
             hotels_saved_recyclerview.adapter = HotelsAdapter(hotels!!)
         }
-    }
+
+        }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,12 +46,16 @@ class SavedHotel : AppCompatActivity() {
             Room.databaseBuilder(this, AppDatabase::class.java, "allhotels")
                 .build()
 
+
+
         hotelDao = database.getHotelDao()
         runBlocking {
-            val hotels = hotelDao?.getFavHotels(true)
+            val hotels = hotelDao?.getHotels()
             hotels_saved_recyclerview.adapter = HotelsAdapter(hotels!!)
             }
 
-    }}
+    }
+
+}
 
 

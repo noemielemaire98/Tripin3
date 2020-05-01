@@ -5,13 +5,12 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
-import com.bumptech.glide.Glide
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.HotelDao
 import com.example.tripin.model.Hotel
 import kotlinx.android.synthetic.main.activity_details_hotel.*
-import kotlinx.android.synthetic.main.hotel_view.view.*
 import kotlinx.coroutines.runBlocking
 
 class DetailsHotel : AppCompatActivity() {
@@ -27,6 +26,8 @@ class DetailsHotel : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details_hotel)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        equipement_recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         hotel = intent.getParcelableExtra("hotel")
 
@@ -71,14 +72,17 @@ class DetailsHotel : AppCompatActivity() {
             var nom = "${hotel?.hotelName}".toLowerCase()
             detail_hotel_nom_textview.text=formatString(nom)
             detail_hotel_description_textview.text = hotel?.hotelDescription
-            detail_hotel_adresse_texview.text= hotel?.adresse
+            var adresse = "${hotel?.adresse}".toLowerCase()
+            detail_hotel_adresse_texview.text= formatString(adresse)
             detail_hotel_email_texview.text=hotel?.email
             detail_hotel_telephone_texview.text = hotel?.telephone
+            equipement_recyclerview.adapter=EquipementAdapter(hotel?.equipements, this@DetailsHotel)
 
 
 
 
-            // 3 - AU CLIC SUR LE BOUTON
+
+
             fab_fav.setOnClickListener {
                 if (favoris == false) {
                     hotel?.favoris=true
@@ -87,17 +91,16 @@ class DetailsHotel : AppCompatActivity() {
                     }
                     favoris = true
                     fab_fav.setImageResource(R.drawable.ic_favorite_black_24dp)
-                    Toast.makeText(this@DetailsHotel, "L'activité a bien été ajoutée aux favoris", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@DetailsHotel, "L'hôtel a bien été ajoutée aux favoris", Toast.LENGTH_SHORT).show()
 
                 } else if (favoris == true) {
                     hotel?.favoris = false
                     runBlocking {
                         hotelDao?.deleteHotel(hotel!!.id)
-
                     }
                     favoris = false
                     fab_fav.setImageResource(R.drawable.ic_favorite_border_black_24dp)
-                    Toast.makeText(this@DetailsHotel, "L'activité a bien été supprimé des favoris", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@DetailsHotel, "L'hôtel bien été supprimé des favoris", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -106,24 +109,22 @@ class DetailsHotel : AppCompatActivity() {
 
 
     fun formatString(nom:String): String {
-
-        Log.d("nom", nom)
-        var nomFormat:String = nom
+        var stringFormat:String = nom
         val nomSplit = nom.split(" ")
-        Log.d("nom split", nomSplit.toString())
         for(item in nomSplit){
-            val mot = item.capitalize()
-            if(nomFormat == nom){
-                nomFormat = mot
+            val ajout = item.capitalize()
+            if(stringFormat == nom){
+                stringFormat = ajout
             }else{
-                nomFormat = "$nomFormat $mot"
+                stringFormat = "$stringFormat $ajout"
             }}
-        return nomFormat
-
+        return stringFormat
     }
 
 
-
+    override fun onResume() {
+        super.onResume()
+    }
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

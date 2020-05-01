@@ -69,11 +69,8 @@ class HotelsAdapter (val hotels : List<Hotel>): RecyclerView.Adapter<HotelsAdapt
     }
 
     fun formatNomHotel(nom:String): String {
-
-        Log.d("nom", nom)
         var nomFormat:String = nom
         val nomSplit = nom.split(" ")
-        Log.d("nom split", nomSplit.toString())
         for(item in nomSplit){
             val mot = item.capitalize()
             if(nomFormat == nom){

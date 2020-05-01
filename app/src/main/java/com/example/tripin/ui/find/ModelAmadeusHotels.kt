@@ -23,9 +23,9 @@ data class Hotel(
     val longitude: Double,
     val hotelDistance: HotelDistance,
     val address: Address,
-    val contact: Contact? = null,
+    val contact: Contact?,
     val description: Description? = null,
-    val amenities: ArrayList<String>,
+    val amenities: ArrayList<String>?,
     val media: ArrayList<Media?>
 
     )
