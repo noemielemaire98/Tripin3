@@ -27,7 +27,7 @@ class DetailFlights : AppCompatActivity() {
 
         priceTotal.text = "${flights[0].prixTotal} €"
         dateDepart.text = flights[0].dateDepart
-        priceAdult.text = "${flights[0].prixParAdult} €"
+        priceAdult.text = "${flights[0].prixParPassager} €"
 
         var retourDone = false
         flights.map {

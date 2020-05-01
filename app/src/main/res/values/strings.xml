@@ -31,15 +31,16 @@
     <string name="editText_date_retour">Date de retour</string>
     <string name="autoCompleteTextView_lieu_depart">Lieu de départ</string>
     <string name="autoCompleteTextView_lieu_arrivee">Lieu d\'arrivée</string>
-    <string name="textView_nombre_adultes">Nombre d\'adultes :</string>
+    <string name="textView_nombre_passagers">Passagers</string>
     <string name="button_searchFlight">Rechercher</string>
     <string name="textView_aucun_vol_disponible">Aucun vol disponible</string>
     <string name="imageDescription_no_flights">Aucun vol trouvé</string>
     <string name="textView_aucun_vol_favori">Aucun vol favori</string>
     <string name="imageDescription_no_favoriteFlight">Aucun vol favori</string>
+    <string name="travelClass">Classe</string>
 
 
-    <string-array name="adultsNumber">
+    <string-array name="passengersNumber">
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -62,4 +63,10 @@
     <string name="notez_notre_application">Notez notre application :</string>
     <string name="valider">Valider</string>
     <string name="contact_entete_textview">Veuillez remplir ce formulaire en explicitant votre problème. Une zone de texte est prévu à cet effet. Veuillez l\'adresser au mail suivant :</string>
+    <string-array name="travelClass">
+        <item>ECONOMY</item>
+        <item>PREMIUM ECO</item>
+        <item>BUSINESS</item>
+        <item>FIRST</item>
+    </string-array>
 </resources>

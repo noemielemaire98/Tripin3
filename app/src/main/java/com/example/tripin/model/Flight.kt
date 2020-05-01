@@ -10,7 +10,7 @@ data class Flight(
     val travelId: Int,
     val SegmentId: Int,
     val prixTotal: Double,
-    val prixParAdult: Double,
+    val prixParPassager: Double,
     val dateDepart: String,
     val heureDepart: String,
     val dateArrivee: String,
@@ -23,7 +23,6 @@ data class Flight(
     val carrierName: String,
     val nbEscales: Int,
     val retour: Int,
-    val logo: String,
     var favoris: Boolean,
     var uuid: String
 ) : Serializable {
@@ -49,7 +48,6 @@ data class Flight(
                 "Air France",
                 2,
                 0,
-                "optd/pic.png",
                 false,
                 "DY7000"
             )
