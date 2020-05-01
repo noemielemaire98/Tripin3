@@ -23,7 +23,7 @@ import org.w3c.dom.Text
 
 class ProfilFragment : Fragment() {
 
-    private lateinit var profilViewModel: ProfilViewModel
+
     private lateinit var username: TextView
 
     override fun onCreateView(
