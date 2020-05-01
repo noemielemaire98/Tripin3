@@ -1,9 +1,6 @@
 package com.example.tripin.data
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.example.tripin.model.Voyage
 
 @Dao
@@ -20,6 +17,12 @@ interface VoyageDao {
 
     @Query("select * from myVoyages where id = :id")
     suspend fun getVoyage(id: Int) : Voyage
+
+//    @Query("update myvoyages set titre where id = :id")
+    @Update
+    suspend fun updateVoyage(voyage: Voyage)
+
+
 
 
 

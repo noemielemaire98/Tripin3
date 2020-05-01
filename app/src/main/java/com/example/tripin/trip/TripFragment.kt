@@ -50,9 +50,8 @@ class TripFragment : Fragment() {
 
         runBlocking {
             val voyages  = voyageDao?.getVoyage()
-            voyage_recyclerview.adapter =
-                VoyageAdapter(voyages ?: emptyList())
-            val voyage =Voyage(0,"titre","debut",R.drawable.destination1,0)
+            voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
+            val voyage =Voyage(0,"titre","debut","fin",R.drawable.destination1,0)
 
         }
     }

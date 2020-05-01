@@ -31,14 +31,25 @@
                 android:id="@+id/voyage_title_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-
-            <TextView
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="10dp"
-                tools:text="Date"
-                android:id="@+id/voyage_date_textview"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="10dp"
+                    tools:text="Date départ"
+                    android:id="@+id/voyage_date_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="10dp"
+                    tools:text="Date retour"
+                    android:id="@+id/voyage_dateRetour_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
             <TextView
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="10dp"

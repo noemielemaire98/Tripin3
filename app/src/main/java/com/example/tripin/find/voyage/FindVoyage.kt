@@ -19,6 +19,7 @@ import com.example.tripin.R
  */
 class FindVoyage : Fragment() {
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -26,12 +27,17 @@ class FindVoyage : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_find_voyage, container, false)
 
+
+
+
         val btFlight: Button = view.findViewById(R.id.bt_flight)
+
 
         btFlight.setOnClickListener {
             val intent = Intent(this.context, FindFlightActivity::class.java)
             startActivity(intent)
         }
+
 
         val btHotel: Button = view.findViewById(R.id.bt_hotel)
 

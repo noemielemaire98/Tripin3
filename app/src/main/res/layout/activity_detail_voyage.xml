@@ -10,40 +10,61 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/addvoyage"
-         />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/voyage_title_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginLeft="8dp"
+        android:textSize="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        android:textSize="20dp"
         tools:text="Mon voyage" />
 
-    <TextView
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="40dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/voyage_title_textview"
-        tools:text="Date"
-        android:id="@+id/voyage_date_textview"
+    <LinearLayout
+        android:id="@+id/voyage_datett_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"/>
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/voyage_title_textview"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/voyage_dateDepart_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="40dp"
+            android:textSize="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:text="Date depart" />
+
+        <TextView
+            android:id="@+id/voyage_dateRetour_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="40dp"
+            android:textSize="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:text="Date retour" />
+
+    </LinearLayout>
 
     <TextView
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="40dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/voyage_date_textview"
-        tools:text="Date"
         android:id="@+id/voyage_nb_voyageurs_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"/>
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="40dp"
+        android:textSize="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/voyage_datett_textview"
+        tools:text="Date" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
