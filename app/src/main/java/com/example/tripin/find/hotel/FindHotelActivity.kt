@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.amadeus.Amadeus
 import com.amadeus.Params
+import com.example.tripin.HotelsAdapter
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.HotelDao
 import com.example.tripin.model.Hotel
