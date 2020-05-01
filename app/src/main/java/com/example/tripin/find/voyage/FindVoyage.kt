@@ -51,5 +51,5 @@ class FindVoyage : Fragment() {
 
         return view
     }
-
 }
+

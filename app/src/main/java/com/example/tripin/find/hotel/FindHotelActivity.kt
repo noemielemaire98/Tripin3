@@ -267,3 +267,5 @@ class FindHotelActivity : AppCompatActivity() {
             }
         }
 
+    }
+}
