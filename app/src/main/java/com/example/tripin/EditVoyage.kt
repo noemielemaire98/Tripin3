@@ -11,6 +11,7 @@ import androidx.room.Room
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Voyage
+import com.example.tripin.trip.DetailVoyage
 import kotlinx.android.synthetic.main.activity_edit_voyage.*
 import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
@@ -41,6 +42,12 @@ class EditVoyage() : AppCompatActivity() {
         nbvoyageur = intent.getIntExtra("nbvoyager", 0)
 
         Log.d("EPF"," $id, $titre, $dateDepart, $dateRetour, $nbvoyageur")
+
+//        ancien_voyage_titre_textview.text
+        editv_titre_editText.hint = titre
+        editv_dateDepart_editText.hint = dateDepart
+        editv_dateRetour_editText.hint = dateRetour
+        editv_nbvoyageur_editText.hint = nbvoyageur.toString()
 
 
 //        val database =
@@ -129,39 +136,38 @@ class EditVoyage() : AppCompatActivity() {
         when (item.itemId) {
             R.id.ic_menu_modifier_voyage ->{
                 if (editv_titre_editText.text.isNotEmpty()) {
-                titre = editv_titre_editText.text.toString()
-            }
-            if (editv_dateDepart_editText.text.isNotEmpty()) {
-                dateDepart = editv_dateDepart_editText.text.toString()
-            }
-            if (editv_dateRetour_editText.text.isNotEmpty()) {
-                dateRetour = editv_dateRetour_editText.text.toString()
-            }
-            if (editv_nbvoyageur_editText.text.isNotEmpty()) {
-                nbvoyageur = editv_nbvoyageur_editText.text.toString().toInt()
-            }
+                    titre = editv_titre_editText.text.toString()
+                }
+                if (editv_dateDepart_editText.text.isNotEmpty()) {
+                    dateDepart = editv_dateDepart_editText.text.toString()
+                }
+                if (editv_dateRetour_editText.text.isNotEmpty()) {
+                    dateRetour = editv_dateRetour_editText.text.toString()
+                }
+                if (editv_nbvoyageur_editText.text.isNotEmpty()) {
+                    nbvoyageur = editv_nbvoyageur_editText.text.toString().toInt()
+                }
 
 
-            // finish dépile l'activité et revient à la page d'en dessous
+                // finish dépile l'activité et revient à la page d'en dessous
 
-            Log.d("EPF"," $id, $titre, $dateDepart, $dateRetour, $nbvoyageur")
-            val nvvoyage =
-                Voyage(id, titre, dateDepart, dateRetour, R.drawable.destination1, nbvoyageur)
+                Log.d("EPF"," $id, $titre, $dateDepart, $dateRetour, $nbvoyageur")
+                val nvvoyage =
+                    Voyage(id, titre, dateDepart, dateRetour, R.drawable.destination1, nbvoyageur)
 
 
-            val database: AppDatabase =
-                Room.databaseBuilder(this, AppDatabase::class.java, "gestionvoyages").build()
-            val voyageDao: VoyageDao = database.getVoyageDao()
+                val database: AppDatabase =
+                    Room.databaseBuilder(this, AppDatabase::class.java, "gestionvoyages").build()
+                val voyageDao: VoyageDao = database.getVoyageDao()
 
-            runBlocking {
-                voyageDao.updateVoyage(nvvoyage)
-            }
-            finish()
-//            val intent= Intent(it.context,DetailVoyage::class.java)
-//            intent.putExtra("id",id)
-//            it.context.startActivity(intent)
-
-                true
+                runBlocking {
+                    voyageDao.updateVoyage(nvvoyage)
+                }
+                finish()
+//                val intent= Intent(it.context, DetailVoyage::class.java)
+//                intent.putExtra("id",id)
+//                it.context.startActivity(intent)
+                    true
             }
             android.R.id.home -> {
                 finish()

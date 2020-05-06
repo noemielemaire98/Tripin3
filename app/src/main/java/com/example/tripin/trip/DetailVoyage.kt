@@ -36,10 +36,10 @@ class DetailVoyage : AppCompatActivity() {
         voyageDao = database.getVoyageDao()
         runBlocking {
             voyage = voyageDao!!.getVoyage(id) // Référence aux coroutines Kotlin
-            voyage_title_textview.text = voyage?.titre
+            voyage_title_textview.text = "Voyage : ${voyage?.titre}"
             voyage_dateDepart_textview.text = "Du "+voyage?.date
             voyage_dateRetour_textview.text = "Au "+voyage?.dateRetour
-            voyage_nb_voyageurs_textview.text = "Nombre de voyageur :" +voyage?.nb_voyageur.toString()
+            voyage_nb_voyageurs_textview.text = "Nombre de voyageur :" +voyage?.nb_voyageur
         }
     }
 

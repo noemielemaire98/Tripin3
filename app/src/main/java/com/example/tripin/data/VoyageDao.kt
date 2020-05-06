@@ -18,7 +18,6 @@ interface VoyageDao {
     @Query("select * from myVoyages where id = :id")
     suspend fun getVoyage(id: Int) : Voyage
 
-//    @Query("update myvoyages set titre where id = :id")
     @Update
     suspend fun updateVoyage(voyage: Voyage)
 
