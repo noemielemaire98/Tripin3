@@ -1,9 +1,11 @@
 package com.example.tripin.find.flight
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -165,7 +167,8 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
                             )
                             view.heureArrivee_aller.setTextColor(
                                 ContextCompat
-                                    .getColor(view.heureArrivee_aller.context,
+                                    .getColor(
+                                        view.heureArrivee_aller.context,
                                         R.color.colorAccent
                                     )
                             )
@@ -198,7 +201,8 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
                             )
                             view.heureArrivee_retour.setTextColor(
                                 ContextCompat
-                                    .getColor(view.heureArrivee_retour.context,
+                                    .getColor(
+                                        view.heureArrivee_retour.context,
                                         R.color.colorAccent
                                     )
                             )
@@ -310,6 +314,25 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+
+
+            }
+
+            view.fab_addFlight.setOnClickListener {
+
+                val builder: AlertDialog.Builder =
+                    AlertDialog.Builder(context, R.style.ThemeOverlay_MaterialComponents_Dialog)
+                builder.setTitle("Ajouter à un voyage")
+
+//list of items
+                val items = arrayOf("Voyage 1", "Voyage 2", "Voyage 3")
+                // set single choice items
+                builder.setItems(items) { dialog, which ->
+                    Log.d("valog", items[which])
+                }
+                val dialog: AlertDialog = builder.create()
+                // display dialog
+                dialog.show()
 
 
             }
