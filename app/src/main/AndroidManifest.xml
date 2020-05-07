@@ -31,7 +31,7 @@
         <activity android:name=".saved.SavedFlight" android:label="Vols sauvegardés" />
 
         <activity
-            android:name=".saved.SplashActivity"
+            android:name=".SplashActivity"
             android:theme="@style/SlashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

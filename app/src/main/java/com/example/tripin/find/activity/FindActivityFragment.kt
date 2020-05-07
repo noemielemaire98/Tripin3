@@ -15,9 +15,12 @@ import androidx.room.Room
 import com.example.tripin.R
 import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
+import com.example.tripin.data.CityDao
 import com.example.tripin.data.retrofit
 import com.example.tripin.model.Activity
 import kotlinx.android.synthetic.main.activity_find_activites.*
+import kotlinx.android.synthetic.main.activity_find_activites.activities_recyclerview
+import kotlinx.android.synthetic.main.fragment_find_activity2.*
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -27,6 +30,7 @@ class FindActivityFragment : Fragment() {
 
     private var activityDaoSearch : ActivityDao? = null
     private var activityDaoSaved : ActivityDao? = null
+    private lateinit var citydao : CityDao
     val lang : String = "fr-FR"
     val monnaie :String = "EUR"
     var list_favoris  = arrayListOf<Boolean>()
@@ -51,42 +55,73 @@ class FindActivityFragment : Fragment() {
             Room.databaseBuilder(requireActivity().baseContext, AppDatabase::class.java, "savedDatabase")
                 .build()
 
+
         activityDaoSearch = databasesearch.getActivityDao()
         activityDaoSaved = databasesaved.getActivityDao()
+        citydao = databasesaved.getCityDao()
+
 
 
       bt.setOnClickListener {
+          layoutNoActivities_frag.visibility = View.GONE
 
           runBlocking {
               activityDaoSearch?.deleteActivity()
+              val list_activities_bdd = citydao?.getCity()
+              Log.d("ccc","$list_activities_bdd")
           }
           list_favoris.clear()
 
-            val query = editText.text.toString()
+            val name = editText.text.toString()
+
             runBlocking {
+                val city = citydao?.getCity(name)
+                Log.d("ccc","$city")
+                if (city != null) {
+
                 val service = retrofit().create(ActivitybyCity::class.java)
-                val result = service.listActivity("$query", lang, monnaie)
+                //val result = service.listActivity("$query", lang, monnaie)
+                val result = service.listActivitybyCity(city.id, lang, monnaie)
+                if (result.meta.count == 0L) {
+                    layoutNoActivities_frag.visibility = View.VISIBLE
+                } else {
+                    layoutNoActivities_frag.visibility = View.GONE
+                }
+
                 val list_activities_bdd = activityDaoSaved?.getActivity()
                 // le map permet d'appeler la fonction sur chacun des éléments d'une collection (== boucle for)
                 result.data.map {
                     val titre = it.title
                     var match_bdd = false
                     list_activities_bdd?.forEach {
-                        if(it.title == titre){
+                        if (it.title == titre) {
                             list_favoris.add(true)
                             match_bdd = true
                         }
                     }
-                    if (match_bdd == false ){list_favoris.add(false)}
+                    if (match_bdd == false) {
+                        list_favoris.add(false)
+                    }
 
 
-                    val activity = Activity(it.uuid, it.title, it.cover_image_url,it.retail_price.formatted_iso_value,it.operational_days,it.about)
+                    val activity = Activity(
+                        it.uuid,
+                        it.title,
+                        it.cover_image_url,
+                        it.retail_price.formatted_iso_value,
+                        it.operational_days,
+                        it.about
+                    )
                     activityDaoSearch?.addActivity(activity)
 
                 }
                 val activities = activityDaoSearch?.getActivity()
-                activities_recyclerview.adapter = ActivityAdapter(activities ?: emptyList(),list_favoris)
-
+                activities_recyclerview.adapter =
+                    ActivityAdapter(activities ?: emptyList(), list_favoris)
+            }
+                else {
+                    layoutNoActivities_frag.visibility = View.VISIBLE
+                }
             }
         }
 

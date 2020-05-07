@@ -66,22 +66,21 @@ class FindActivitesActivity : AppCompatActivity() {
             }
             list_favoris.clear()
             val query = search_activity_bar.query
-            Log.d("CCC","$query")
 
             runBlocking {
                 val service = retrofit().create(ActivitybyCity::class.java)
                 val result = service.listActivity("$query", lang, monnaie)
                 if (result.meta.count == 0L){
-                    layoutNoActivities.visibility = View.VISIBLE
+                    layoutNoActivities_activity.visibility = View.VISIBLE
+                }else {
+                    layoutNoActivities_activity.visibility = View.GONE
                 }
-                Log.d("CCC","$result")
 
                 val list_activities_bdd = activityDaoSaved?.getActivity()
                 // le map permet d'appeler la fonction sur chacun des éléments d'une collection (== boucle for)
                 result.data.map {
                     val titre = it.title
                     var match_bdd = false
-                    Log.d("CCC","$it")
                     list_activities_bdd?.forEach {
                         if(it.title == titre){
                             list_favoris.add(true)
