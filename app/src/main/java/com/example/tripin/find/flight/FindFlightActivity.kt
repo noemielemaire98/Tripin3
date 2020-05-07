@@ -10,7 +10,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.AutoCompleteTextView
+import android.widget.ListAdapter
+import android.widget.RadioButton
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,9 +23,11 @@ import com.amadeus.Amadeus
 import com.amadeus.Params
 import com.amadeus.resources.FlightOfferSearch
 import com.aminography.primecalendar.civil.CivilCalendar
-import com.aminography.primedatepicker.picker.PrimeDatePickerBottomSheet
+import com.aminography.primedatepicker.calendarview.PrimeCalendarView
+import com.aminography.primedatepicker.picker.PrimeDatePicker
 import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
 import com.aminography.primedatepicker.picker.callback.SingleDayPickCallback
+import com.aminography.primedatepicker.picker.theme.LightThemeFactory
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.FlightDao
@@ -67,13 +72,25 @@ class FindFlightActivity : AppCompatActivity() {
             findViewById<View>(R.id.flights_recyclerview) as RecyclerView
         flightsRecyclerView.layoutManager = LinearLayoutManager(this)
 
+        val themeFactory = object : LightThemeFactory() {
+//                    override val calendarViewFlingOrientation: PrimeCalendarView.FlingOrientation
+//                        get() = PrimeCalendarView.FlingOrientation.HORIZONTAL
+
+            // Other customizations...
+            override val selectionBarBackgroundColor: Int
+                get() = super.getColor(R.color.contrast_blue)
+
+            override val calendarViewPickedDayCircleColor: Int
+                get() = super.getColor(R.color.contrast_blue)
+        }
+
         // Affiche le calendrier pour choisir la date d'aller
         aller_date.setOnClickListener {
             hideKeyboard()
             savedTopLevel_layout.requestFocus()
             if (return_dateLayout.visibility == View.VISIBLE) { // Si c'est un voyage aller-retour
 
-                rangeDatePickerPrimeCalendar()
+                rangeDatePickerPrimeCalendar(themeFactory)
 
             } else if (return_dateLayout.visibility == View.GONE) { // Si c'est un voyage avec aller simple
 
@@ -90,31 +107,29 @@ class FindFlightActivity : AppCompatActivity() {
                 }
 
                 val today =
-                    CivilCalendar(Locale.getDefault())
+                    CivilCalendar()
 
                 if (aller_date.text.toString() != "") { // Si une date a déjà été choisie
                     val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                    val calStart = CivilCalendar(Locale.getDefault())
+                    val calStart = CivilCalendar()
                     calStart.timeInMillis = df.parse(aller_date.text.toString())!!.time
 
-                    val datePickerT = PrimeDatePickerBottomSheet
-                        .from(today)
+                    val datePickerT = PrimeDatePicker.dialogWith(today)
                         .pickSingleDay(singleDayPickCallback)
                         .initiallyPickedSingleDay(calStart)
-                        .weekStartDay(Calendar.MONDAY)
+                        .firstDayOfWeek(Calendar.MONDAY)
+                        .applyTheme(themeFactory)
                         .minPossibleDate(today)
-                        .animateSelection(true)
                         .build()
 
                     datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
                 } else { // Si aucune date n'a encore été choisie
 
-                    val datePickerT = PrimeDatePickerBottomSheet
-                        .from(today)
+                    val datePickerT = PrimeDatePicker.dialogWith(today)
                         .pickSingleDay(singleDayPickCallback)
-                        .weekStartDay(Calendar.MONDAY)
-                        .minPossibleDate(today)            // Optional
-                        .animateSelection(true)
+                        .firstDayOfWeek(Calendar.MONDAY)
+                        .applyTheme(themeFactory)
+                        .minPossibleDate(today)
                         .build()
 
                     datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
@@ -126,7 +141,7 @@ class FindFlightActivity : AppCompatActivity() {
         return_date.setOnClickListener {
             hideKeyboard()
             savedTopLevel_layout.requestFocus()
-            rangeDatePickerPrimeCalendar()
+            rangeDatePickerPrimeCalendar(themeFactory)
         }
 
         // Initialise la liste déroulante du nombre de passagers
@@ -473,7 +488,7 @@ class FindFlightActivity : AppCompatActivity() {
     }
 
     // affichage du calendrier aller-retour
-    private fun rangeDatePickerPrimeCalendar() {
+    private fun rangeDatePickerPrimeCalendar(themeFactory: LightThemeFactory) {
         val rangeDaysPickCallback = RangeDaysPickCallback { startDate, endDate ->
             // TODO
             Log.d("Date", "${startDate.shortDateString} ${endDate.shortDateString}")
@@ -490,33 +505,31 @@ class FindFlightActivity : AppCompatActivity() {
         }
 
         val today =
-            CivilCalendar(Locale.getDefault())
+            CivilCalendar()
 
         if (aller_date.text.toString() != "" && return_date.text.toString() != "") {
             val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val calStart = CivilCalendar(Locale.getDefault())
+            val calStart = CivilCalendar()
             calStart.timeInMillis = df.parse(aller_date.text.toString())!!.time
             val calEnd =
-                CivilCalendar(Locale.getDefault())
+                CivilCalendar()
             calEnd.timeInMillis = df.parse(return_date.text.toString())!!.time
 
-            val datePickerT = PrimeDatePickerBottomSheet
-                .from(today)
+            val datePickerT = PrimeDatePicker.dialogWith(today)
                 .pickRangeDays(rangeDaysPickCallback)
                 .initiallyPickedRangeDays(calStart, calEnd)
-                .weekStartDay(Calendar.MONDAY)
+                .firstDayOfWeek(Calendar.MONDAY)
+                .applyTheme(themeFactory)
                 .minPossibleDate(today)
-                .animateSelection(true)
                 .build()
 
             datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
         } else {
-            val datePickerT = PrimeDatePickerBottomSheet
-                .from(today)
+            val datePickerT = PrimeDatePicker.dialogWith(today)
                 .pickRangeDays(rangeDaysPickCallback)
-                .weekStartDay(Calendar.MONDAY)
+                .firstDayOfWeek(Calendar.MONDAY)
                 .minPossibleDate(today)
-                .animateSelection(true)
+                .applyTheme(themeFactory)
                 .build()
 
             datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")

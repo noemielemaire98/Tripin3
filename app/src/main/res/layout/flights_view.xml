@@ -12,14 +12,29 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/fab_favFlight"
+            android:id="@+id/fab_addFlight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layoutForFav"
             android:layout_alignTop="@+id/layoutForFav"
             android:layout_alignEnd="@+id/layoutForFav"
             android:layout_marginTop="0dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="60dp"
+            android:contentDescription="@string/favFlight_description"
+            android:src="@drawable/ic_add_circle_outline_black_24dp"
+            android:tint="@color/colorAccent"
+            app:backgroundTint="@color/colorAccent"
+            app:fabSize="auto" />
+
+        <ImageView
+            android:id="@+id/fab_favFlight"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/layoutForFav"
+            android:layout_alignTop="@+id/layoutForFav"
+            android:layout_alignEnd="@+id/layoutForFav"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="10dp"
             android:contentDescription="@string/favFlight_description"
             android:src="@drawable/ic_favorite_border_black_24dp"
             android:tint="@color/colorAccent"

@@ -107,6 +107,6 @@ dependencies {
 
     implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:0.7.3'
 
-    implementation 'com.aminography:primedatepicker:2.0.0'
-    implementation 'com.aminography:primecalendar:1.2.18'
+    implementation 'com.aminography:primedatepicker:3.0.4'
+    implementation 'com.aminography:primecalendar:1.2.19'
 }
