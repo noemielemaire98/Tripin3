@@ -1,7 +1,6 @@
 package com.example.tripin.find.hotel
 
 import android.app.Activity
-import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -10,7 +9,6 @@ import com.example.tripin.R
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
-import android.widget.EditText
 import android.widget.ListAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,19 +16,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.amadeus.Amadeus
 import com.amadeus.Params
-import com.example.tripin.HotelsAdapter
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.HotelDao
 import com.example.tripin.model.Hotel
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
-import kotlinx.android.synthetic.main.activity_find_flight.*
 import kotlinx.android.synthetic.main.activity_find_hotel.*
 import kotlinx.android.synthetic.main.activity_find_hotel.btn_search
 import kotlinx.android.synthetic.main.activity_find_hotel.loadingPanel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -212,7 +207,10 @@ class FindHotelActivity : AppCompatActivity() {
                             }
 
 
-                            hotels_recyclerview.adapter = HotelsAdapter(list_hotels ?: emptyList())
+                            hotels_recyclerview.adapter =
+                                HotelsAdapter(
+                                    list_hotels ?: emptyList()
+                                )
                             loadingPanel.visibility = View.GONE
                         })
                     }

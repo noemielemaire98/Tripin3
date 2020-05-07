@@ -1,14 +1,13 @@
-package com.example.tripin
+package com.example.tripin.find.hotel
 
 
 import android.content.Intent
 import android.graphics.Typeface
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.example.tripin.R
 import com.example.tripin.model.Hotel
 import kotlinx.android.synthetic.main.hotel_view.view.*
 

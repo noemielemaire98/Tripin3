@@ -11,10 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-import com.example.tripin.ContactActivity
-import com.example.tripin.FeedbackActivity
 import com.example.tripin.R
-import com.example.tripin.StarsActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot

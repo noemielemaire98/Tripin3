@@ -1,12 +1,12 @@
-package com.example.tripin
+package com.example.tripin.find.hotel
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
+import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.HotelDao
 import com.example.tripin.model.Hotel
@@ -76,7 +76,11 @@ class DetailsHotel : AppCompatActivity() {
             detail_hotel_adresse_texview.text= formatString(adresse)
             detail_hotel_email_texview.text=hotel?.email
             detail_hotel_telephone_texview.text = hotel?.telephone
-            equipement_recyclerview.adapter=EquipementAdapter(hotel?.equipements, this@DetailsHotel)
+            equipement_recyclerview.adapter=
+                EquipementAdapter(
+                    hotel?.equipements,
+                    this@DetailsHotel
+                )
 
 
 

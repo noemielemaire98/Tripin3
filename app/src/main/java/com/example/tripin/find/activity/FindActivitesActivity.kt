@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
@@ -16,6 +18,11 @@ import com.example.tripin.data.AppDatabase
 import com.example.tripin.model.Activity
 import com.example.tripin.data.retrofit
 import kotlinx.android.synthetic.main.activity_find_activites.*
+import kotlinx.android.synthetic.main.activity_find_activites.activities_recyclerview
+import kotlinx.android.synthetic.main.activity_find_activites.bt_recherche_activity
+import kotlinx.android.synthetic.main.activity_find_activites.search_activity_bar
+import kotlinx.android.synthetic.main.activity_find_flight.*
+import kotlinx.android.synthetic.main.fragment_find_activity2.*
 import kotlinx.coroutines.runBlocking
 
 class FindActivitesActivity : AppCompatActivity() {
@@ -53,20 +60,28 @@ class FindActivitesActivity : AppCompatActivity() {
         bt_recherche_activity.setOnClickListener {
             hideKeyboard()
             search_activity_bar.clearFocus()
+
             runBlocking {
                 activityDaoSearch?.deleteActivity()
             }
             list_favoris.clear()
-
             val query = search_activity_bar.query
+            Log.d("CCC","$query")
+
             runBlocking {
                 val service = retrofit().create(ActivitybyCity::class.java)
                 val result = service.listActivity("$query", lang, monnaie)
+                if (result.meta.count == 0L){
+                    layoutNoActivities.visibility = View.VISIBLE
+                }
+                Log.d("CCC","$result")
+
                 val list_activities_bdd = activityDaoSaved?.getActivity()
                 // le map permet d'appeler la fonction sur chacun des éléments d'une collection (== boucle for)
                 result.data.map {
                     val titre = it.title
                     var match_bdd = false
+                    Log.d("CCC","$it")
                     list_activities_bdd?.forEach {
                         if(it.title == titre){
                             list_favoris.add(true)
@@ -80,9 +95,10 @@ class FindActivitesActivity : AppCompatActivity() {
 
                 }
                 val activities = activityDaoSearch?.getActivity()
-               activities_recyclerview.adapter = ActivityAdapter(activities ?: emptyList(),list_favoris)
+                activities_recyclerview.adapter = ActivityAdapter(activities ?: emptyList(),list_favoris)
 
             }
+
         }
     }
 

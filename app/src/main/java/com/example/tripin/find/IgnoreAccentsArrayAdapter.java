@@ -1,4 +1,4 @@
-package com.example.tripin.ui;
+package com.example.tripin.find;
 
 import android.content.Context;
 import android.util.Log;

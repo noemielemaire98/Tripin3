@@ -15,11 +15,11 @@
         <activity android:name=".find.activity.FindActivitesActivity" android:label="Rechercher des activites"></activity>
         <activity android:name=".find.hotel.FindHotelActivity" android:label="Recherche d'hôtels"/>
         <activity android:name=".find.flight.FindFlightActivity" android:label="Rechercher des vols"/>
-        <activity android:name=".DetailsHotel" android:label="Détail d'un hôtel"></activity>
-        <activity android:name=".StarsActivity"></activity>
-        <activity android:name=".SharingActivity" />
-        <activity android:name=".FeedbackActivity" />
-        <activity android:name=".ContactActivity" />
+        <activity android:name=".find.hotel.DetailsHotel" android:label="Détail d'un hôtel"></activity>
+        <activity android:name=".profil.StarsActivity"></activity>
+        <activity android:name=".profil.SharingActivity" />
+        <activity android:name=".profil.FeedbackActivity" />
+        <activity android:name=".profil.ContactActivity" />
         <activity
             android:name=".find.activity.DetailActivites"
             android:label="Detail activité" />
@@ -46,7 +46,7 @@
             android:name=".trip.AddVoyage"
             android:label="Ajouter un voyage" />
         <activity
-            android:name=".EditVoyage"
+            android:name=".trip.EditVoyage"
             android:label="Modifier le voyage" />
         <activity
             android:name=".MainActivity"

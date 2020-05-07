@@ -8,19 +8,23 @@
     tools:context=".find.activity.FindActivitesActivity">
 
 
+
     <EditText
         android:id="@+id/search_activity_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="true"
         android:hint="Choisissez une ville"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Rechercher"
-        android:id="@+id/bt_recherche_activity"/>
+        android:id="@+id/bt_recherche_activity"
+        style="@style/Widget.MaterialComponents.Button"
+        app:backgroundTint="@color/contrast_blue"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -38,6 +42,7 @@
             tools:listitem="@layout/activities_view" />
 
     </RelativeLayout>
+
 
 
 </LinearLayout>
