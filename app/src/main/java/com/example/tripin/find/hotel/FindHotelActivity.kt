@@ -16,6 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.amadeus.Amadeus
 import com.amadeus.Params
+import com.aminography.primecalendar.civil.CivilCalendar
+import com.aminography.primedatepicker.picker.PrimeDatePicker
+import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
+import com.aminography.primedatepicker.picker.callback.SingleDayPickCallback
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.HotelDao
 import com.example.tripin.model.Hotel
@@ -23,9 +27,11 @@ import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import kotlinx.android.synthetic.main.activity_find_hotel.*
 import kotlinx.android.synthetic.main.activity_find_hotel.btn_search
 import kotlinx.android.synthetic.main.activity_find_hotel.loadingPanel
+import kotlinx.android.synthetic.main.fragment_find_flight2.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -34,16 +40,20 @@ class FindHotelActivity : AppCompatActivity() {
 
 
     private var hotelDao: HotelDao? = null
-    private lateinit var cityCode : String
-    val list_hotels : MutableList<Hotel> = mutableListOf()
+    private lateinit var cityCode: String
+    val list_hotels: MutableList<Hotel> = mutableListOf()
     val listCitiesFormatted = mutableListOf<List<String>>()
     val listEquipementFormatted = mutableListOf<List<String>>()
     private var cal: Calendar = Calendar.getInstance()
+    var rooms_number: Int = 0
+    private lateinit var dateArrivee: String
+    private lateinit var dateDepart: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find_hotel)
-        hotels_recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        hotels_recyclerview.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         loadingPanel.visibility = View.GONE
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -55,50 +65,78 @@ class FindHotelActivity : AppCompatActivity() {
             .build()
 
         //TODO : mettre des dates d'arrivée et de départ
-        // Help : initDatePicker(aller_date) initDatePicker(return_date)
-
-        runBlocking {
-
-            val cityCsv = resources.openRawResource(R.raw.iata_airport_list)
-            val listCities: List<Map<String, String>> = csvReader().readAllWithHeader(cityCsv)
-
-            var verification : Boolean
-            listCities.map { itMap ->
-                verification = false
-                var city_code = itMap["city_code"].toString()
-                var city_name = itMap["city_name"].toString().toUpperCase()
-                var city : List<String> = listOf(city_code,city_name)
-                if (listCitiesFormatted.isEmpty()){
-                    listCitiesFormatted.add(city)
-                }else{
-                    listCitiesFormatted.forEach(){
-                        if (it.get(1).equals(city_name) ){ verification=true }}
-                if (verification == false){ listCitiesFormatted.add(city)}
-                    else{}
-                }
-                }
+        arriveeDate_date.setOnClickListener {
+            hideKeyboard()
+           // savedTopLevel_layout.requestFocus()
+            rangeDatePickerPrimeCalendar()
         }
+
+        // Affiche le calendrier pour choisir la date de retour
+        departDate_date.setOnClickListener {
+            hideKeyboard()
+           // savedTopLevel_layout.requestFocus()
+            rangeDatePickerPrimeCalendar()
+        }
+
+        // Bouton pour lancer la recherche
+        btn_search.setOnClickListener {
+            hideKeyboard()
+            savedTopLevel_layout.requestFocus()
+            /* if (autoTextViewDepart.text.toString() == "" || autoTextViewRetour.text.toString() == "") { // Si les lieux ne sont pas bien spécifiés
+                Toast.makeText(
+                    requireContext(),
+                    "Veuillez choisir les destinations dans les listes déroulantes",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }*/
+
+            runBlocking {
+
+                val cityCsv = resources.openRawResource(R.raw.iata_airport_list)
+                val listCities: List<Map<String, String>> = csvReader().readAllWithHeader(cityCsv)
+
+                var verification: Boolean
+                listCities.map { itMap ->
+                    verification = false
+                    var city_code = itMap["city_code"].toString()
+                    var city_name = itMap["city_name"].toString().toUpperCase()
+                    var city: List<String> = listOf(city_code, city_name)
+                    if (listCitiesFormatted.isEmpty()) {
+                        listCitiesFormatted.add(city)
+                    } else {
+                        listCitiesFormatted.forEach() {
+                            if (it.get(1).equals(city_name)) {
+                                verification = true
+                            }
+                        }
+                        if (verification == false) {
+                            listCitiesFormatted.add(city)
+                        } else {
+                        }
+                    }
+                }
+            }
 
             val database =
                 Room.databaseBuilder(this, AppDatabase::class.java, "allhotels").build()
             hotelDao = database.getHotelDao()
 
 
-        search_hotel.setOnClickListener { search_hotel.isIconified = false }
 
             btn_search.setOnClickListener {
                 hideKeyboard()
                 search_hotel.clearFocus()
                 loadingPanel.visibility = View.VISIBLE
 
-                val searchCity = search_hotel.query.toString()
-                listCitiesFormatted.forEach(){
+                val searchCity = search_hotel.text.toString()
+                listCitiesFormatted.forEach() {
                     if (searchCity.equals(it.get(1), ignoreCase = true))
                         cityCode = it.get(0)
 
                 }
                 Log.d("cityCode", cityCode)
-                if (search_hotel.query.toString() == "" || cityCode == null) {
+                if (search_hotel.text.toString() == "" || cityCode == null) {
                     Toast.makeText(
                         this,
                         "Veuillez entrer une destination",
@@ -108,15 +146,17 @@ class FindHotelActivity : AppCompatActivity() {
                 }
                 runBlocking {
 
-                    var equipementsCsv =  resources.openRawResource(R.raw.equipements)
-                    var listEquipements: List<Map<String, String>> = csvReader().readAllWithHeader(equipementsCsv)
+                    var equipementsCsv = resources.openRawResource(R.raw.equipements)
+                    var listEquipements: List<Map<String, String>> =
+                        csvReader().readAllWithHeader(equipementsCsv)
 
 
                     listEquipements.map { itMap ->
                         var amenity_code = itMap["amenity_code"].toString()
                         var amenity_name = itMap["amenity_name"].toString()
                         var amenity_icon = itMap["amenity_icon"].toString()
-                        var listEquipement : List<String> = listOf(amenity_code,amenity_name,amenity_icon)
+                        var listEquipement: List<String> =
+                            listOf(amenity_code, amenity_name, amenity_icon)
                         listEquipementFormatted.add(listEquipement)
 
                     }
@@ -135,7 +175,7 @@ class FindHotelActivity : AppCompatActivity() {
                     GlobalScope.launch {
                         val hotelOffersSearches =
                             amadeus.shopping.hotelOffers[Params.with("cityCode", cityCode)]
-                        Log.d("Hotel","Récupération des données terminée")
+                        Log.d("Hotel", "Récupération des données terminée")
                         runOnUiThread(java.lang.Runnable {
                             //permet d'appeler le block sur chacun des éléments d'une collection (== boucle for)
                             hotelOffersSearches.map { itHotelOffer ->
@@ -157,12 +197,13 @@ class FindHotelActivity : AppCompatActivity() {
                                 var equipements = mutableListOf<String>()
                                 equipements.clear()
 
-                                amenities.forEach{ itAmenity ->
-                                   val amenity = itAmenity
-                                    listEquipementFormatted.forEach{
-                                        if (amenity == it.get(0)){
-                                          equipements.add(it.get(1))
-                                              } else{}
+                                amenities.forEach { itAmenity ->
+                                    val amenity = itAmenity
+                                    listEquipementFormatted.forEach {
+                                        if (amenity == it.get(0)) {
+                                            equipements.add(it.get(1))
+                                        } else {
+                                        }
 
                                     }
 
@@ -178,7 +219,7 @@ class FindHotelActivity : AppCompatActivity() {
                                     tel = "Téléphone non disponible"
                                 } else {
                                     //TODO : Résoudre problème récupération email
-                                    email ="email@test.fr"
+                                    email = "email@test.fr"
                                     tel = itHotelOffer.hotel.contact.phone
                                 }
                                 if (itHotelOffer.hotel.media == null) {
@@ -219,51 +260,115 @@ class FindHotelActivity : AppCompatActivity() {
             }
 
         }
+    }
 
-        override fun onResume() {
-            super.onResume()
-        }
 
-        override fun onOptionsItemSelected(item: MenuItem): Boolean {
-            return when (item.itemId) {
-                android.R.id.home -> {
-                    finish()
-                    true
-                }
-                else -> super.onOptionsItemSelected(item)
+    override fun onResume() {
+        super.onResume()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
             }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+
+
+
+    private fun rangeDatePickerPrimeCalendar() {
+        val rangeDaysPickCallback = RangeDaysPickCallback { startDate, endDate ->
+            // TODO
+            Log.d("Date", "${startDate.shortDateString} ${endDate.shortDateString}")
+            val parser =
+                SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+            val formatterDate =
+                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val parsedStartDate =
+                formatterDate.format(parser.parse(startDate.shortDateString)!!)
+            val parsedEndDate =
+                formatterDate.format(parser.parse(endDate.shortDateString)!!)
+            arriveeDate_date.setText(parsedStartDate)
+            departDate_date.setText(parsedEndDate)
         }
 
+        val today = CivilCalendar()
+
+        if (arriveeDate_date.text.toString() != "" && departDate_date.text.toString() != "") {
+            val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val calStart = CivilCalendar()
+            calStart.timeInMillis = df.parse(arriveeDate_date.text.toString())!!.time
+            val calEnd = CivilCalendar()
+            calEnd.timeInMillis = df.parse(departDate_date.text.toString())!!.time
+
+            val datePickerT = PrimeDatePicker.dialogWith(today)
+                .pickRangeDays(rangeDaysPickCallback)
+                .initiallyPickedRangeDays(calStart, calEnd)
+                .firstDayOfWeek(Calendar.MONDAY)
+                .minPossibleDate(today)
+                .build()
+
+            datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
+        } else {
+            val datePickerT = PrimeDatePicker.dialogWith(today)
+                .pickRangeDays(rangeDaysPickCallback)
+                .firstDayOfWeek(Calendar.MONDAY)
+                .minPossibleDate(today)
+                .build()
+
+            datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
         }
+    }
+
+    private fun Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
 
 
-        private fun Activity.hideKeyboard() {
-            hideKeyboard(currentFocus ?: View(this))
-        }
-
-        private fun Context.hideKeyboard(view: View) {
-            val inputMethodManager =
-                getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-        }
-
-
-        private fun clearFocusAutoTextView(autoCompleteTextView: AutoCompleteTextView) {
-            autoCompleteTextView.onFocusChangeListener = View.OnFocusChangeListener { _, b ->
-                if (!b) {
-                    // on focus off
-                    val str: String = autoCompleteTextView.text.toString()
-                    val listAdapter: ListAdapter = autoCompleteTextView.adapter
-                    for (i in 0 until listAdapter.count) {
-                        val temp: String = listAdapter.getItem(i).toString()
-                        if (str.compareTo(temp) == 0) {
-                            return@OnFocusChangeListener
-                        }
+    private fun clearFocusAutoTextView(autoCompleteTextView: AutoCompleteTextView) {
+        autoCompleteTextView.onFocusChangeListener = View.OnFocusChangeListener { _, b ->
+            if (!b) {
+                // on focus off
+                val str: String = autoCompleteTextView.text.toString()
+                val listAdapter: ListAdapter = autoCompleteTextView.adapter
+                for (i in 0 until listAdapter.count) {
+                    val temp: String = listAdapter.getItem(i).toString()
+                    if (str.compareTo(temp) == 0) {
+                        return@OnFocusChangeListener
                     }
-                    autoCompleteTextView.setText("")
                 }
+                autoCompleteTextView.setText("")
             }
         }
+    }
+
+
+    fun decreaseRooms(view: View) {
+        if (rooms_number == 0) {
+        } else {
+            rooms_number = rooms_number.minus(1)
+        }
+
+        room_number.text = rooms_number.toString()
+    }
+
+    fun increaseRooms(view: View) {
+        rooms_number = rooms_number.plus(1)
+        room_number.text = rooms_number.toString()
+    }
+}
+
+
 
 
 
