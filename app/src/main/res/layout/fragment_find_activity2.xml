@@ -8,15 +8,104 @@
     tools:context=".find.activity.FindActivitesActivity">
 
 
-
-    <EditText
-        android:id="@+id/search_activity_bar"
+    <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+    <AutoCompleteTextView
+        android:layout_margin="10dp"
+        android:id="@+id/search_activity_bar"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:focusable="true"
         android:hint="Choisissez une ville"
         android:textAlignment="center"
+        android:completionThreshold="1"
         />
+
+    <ImageButton
+        android:id="@+id/btn_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_filter"
+        android:background="@color/white"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"/>
+
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/cat_museum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Musée et art"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/white"
+                />
+
+            <Button
+                android:id="@+id/cat_sport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Sport et aventure"
+                android:backgroundTint="@color/white"
+                android:textAllCaps="false"/>
+
+            <Button
+                android:id="@+id/cat_food"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Vin et gastronomie"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/white"
+                android:backgroundTintMode="src_in"/>
+
+            <Button
+                android:id="@+id/cat_night"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Vie nocture"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/white"/>
+
+            <Button
+                android:id="@+id/cat_fun"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Divertissement"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/white"/>
+
+            <Button
+                android:id="@+id/cat_other"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Activités et visites"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/white"/>
+        </LinearLayout>
+
+
+
+    </HorizontalScrollView>
 
     <Button
         android:layout_width="match_parent"

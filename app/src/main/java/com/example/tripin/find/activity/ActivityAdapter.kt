@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.bumptech.glide.Glide
@@ -17,6 +18,7 @@ import com.example.tripin.model.Activity
 import com.example.tripin.saved.SavedActivites
 import kotlinx.android.synthetic.main.activities_view.view.*
 import kotlinx.android.synthetic.main.activity_detail_activites.*
+import kotlinx.android.synthetic.main.activity_find_activites.*
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.anko.matchParent
 
@@ -65,11 +67,26 @@ class ActivityAdapter(val list_activity: List<Activity>, val attribut_favoris : 
 
         holder.activtyView.activity_price_textview.text = "Prix : ${activity.formatted_iso_value}"
         holder.activtyView.activity_days_textview.text = "Dispo : ${activity.operational_days}"
+        if(activity.reviews_avg != 0.0){
+            holder.activtyView.layout_activity_rate.visibility = View.VISIBLE
+            holder.activtyView.activity_rate_textview.text = "${activity.reviews_avg}"
+        }
+
+        //holder.activtyView.activity_category_textview.text = "${activity.category}"
+
 
         if(attribut_favoris[position] == true){
             holder.activtyView.fab_favActivity.setImageResource(R.drawable.ic_favorite_black_24dp)
 
         }
+
+        var ll = arrayListOf<String>("aaaaaaaa","bbbbbbbb","xxxxxxxxxxxxx","dddddddddddddddd","uuuuuuuuuu")
+
+        holder.activtyView.rv_categorie.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        holder.activtyView.rv_categorie.adapter =
+            CategoryAdapter(activity.category  ?: emptyList())
+
+
 
 
         holder.activtyView.fab_favActivity.setOnClickListener {
@@ -86,11 +103,11 @@ class ActivityAdapter(val list_activity: List<Activity>, val attribut_favoris : 
                 runBlocking {
                     activityDaoSaved?.addActivity(activity)
                 }
-
-                attribut_favoris[position] = false
+                attribut_favoris[position] = true
                 Toast.makeText(context, "L'activité a bien été ajoutée aux favoris", Toast.LENGTH_SHORT).show()
             }
         }
+
 
 
 

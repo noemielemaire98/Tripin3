@@ -52,7 +52,7 @@ object ModelMusement {
         val discount: Long,
         val categories: List<Category>,
         val reviewsNumber: Long,
-        val reviewsAvg: Double,
+        val reviews_avg: Double,
         val reviewsAggregatedInfo: Map<String, Long>,
         val latitude: Double,
         val longitude: Double,

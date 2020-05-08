@@ -12,6 +12,8 @@ data class Activity (@PrimaryKey val uuid:String,
                      val cover_image_url:String?,
                      val formatted_iso_value : String?,
                      val operational_days : String?,
+                     val reviews_avg : Double?,
+                     val category : List<String>?,
                      val about : String?
 
                         ) : Parcelable {
@@ -19,7 +21,9 @@ data class Activity (@PrimaryKey val uuid:String,
     companion object { /*  all: même chose que :ListClient<>*/
         val all = (1..10).map {
 
-            Activity("id$it","Titre$it", "R.drawable.activite1","10€", "tous les jours","about")
+            val ll = listOf<String>("aa","bb")
+
+            Activity("id$it","Titre$it", "R.drawable.activite1","10€", "tous les jours",5.5,ll,"about")
         }.toMutableList()
 
     }
