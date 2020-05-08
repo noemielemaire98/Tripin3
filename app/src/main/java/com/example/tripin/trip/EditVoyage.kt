@@ -1,13 +1,13 @@
-package com.example.tripin
+package com.example.tripin.trip
 
 import android.app.DatePickerDialog
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.room.Room
+import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Voyage
@@ -151,9 +151,10 @@ class EditVoyage() : AppCompatActivity() {
 
                 // finish dépile l'activité et revient à la page d'en dessous
 
-                Log.d("EPF"," $id, $titre, $dateDepart, $dateRetour, $nbvoyageur")
-                val nvvoyage =
-                    Voyage(id, titre, dateDepart, dateRetour, R.drawable.destination1, nbvoyageur)
+            Log.d("EPF"," $id, $titre, $dateDepart, $dateRetour, $nbvoyageur")
+            val nvvoyage =
+                Voyage(id, titre, dateDepart, dateRetour,
+                    R.drawable.destination1, nbvoyageur)
 
 
                 val database: AppDatabase =

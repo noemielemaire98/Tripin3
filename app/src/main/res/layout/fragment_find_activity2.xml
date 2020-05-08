@@ -8,19 +8,54 @@
     tools:context=".find.activity.FindActivitesActivity">
 
 
+
     <EditText
         android:id="@+id/search_activity_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="true"
         android:hint="Choisissez une ville"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Rechercher"
-        android:id="@+id/bt_recherche_activity"/>
+        android:id="@+id/bt_recherche_activity"
+        style="@style/Widget.MaterialComponents.Button"
+        app:backgroundTint="@color/contrast_blue"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="15dp"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:id="@+id/layoutNoActivities_frag"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="70dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/nosavedflights"
+            android:id="@+id/iv_noactivityfind" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Aucune activité ne correspond à votre recherche... Essayer autre chose !"
+            android:layout_below="@+id/iv_noactivityfind"
+            android:layout_marginTop="10dp"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:textStyle="bold"
+            />
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -38,6 +73,7 @@
             tools:listitem="@layout/activities_view" />
 
     </RelativeLayout>
+
 
 
 </LinearLayout>

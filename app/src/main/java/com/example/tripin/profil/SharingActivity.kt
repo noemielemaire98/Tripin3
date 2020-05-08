@@ -1,7 +1,8 @@
-package com.example.tripin
+package com.example.tripin.profil
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.tripin.R
 
 class SharingActivity : AppCompatActivity() {
 

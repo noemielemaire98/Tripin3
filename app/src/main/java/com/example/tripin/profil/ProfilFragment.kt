@@ -2,9 +2,6 @@ package com.example.tripin.profil
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,12 +10,14 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
-import com.example.tripin.*
+import com.bumptech.glide.Glide
 import com.example.tripin.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
-import org.w3c.dom.Text
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.fragment_profil.*
 
 
 class ProfilFragment : Fragment() {
@@ -37,7 +36,42 @@ class ProfilFragment : Fragment() {
         var uid = FirebaseAuth.getInstance().uid    //not the appropriate way to switch value
         val profilbutton: Button = root.findViewById(R.id.auth_button_profil)
         val signoutbutton: Button = root.findViewById(R.id.signout_button_profil)
-        username = root.findViewById(R.id.username_profil)
+        val username : TextView = root.findViewById(R.id.username_profil)
+
+        if(uid != null){
+            val database = FirebaseDatabase.getInstance()
+            val myRef = database.getReference("users/$uid")
+            val users = myRef.orderByKey().addChildEventListener(object: ChildEventListener{
+                override fun onCancelled(p0: DatabaseError) {
+                    Log.d("toto", "$p0")
+                }
+
+                override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                    if(p0.key == "profilImageUrl"){
+                        //Log.d("toto", "$p0, $p1")
+                        //Log.d("toto", "${p0.getValue(String::class.java)}")
+                        Glide.with(requireContext()).load("${p0.getValue(String::class.java)}").into(display_photo_circleview)
+                    }
+                    if(p0.key == "username"){
+                        //Log.d("toto", "${p0.getValue(String::class.java)}")
+                        username.setText("${p0.getValue(String::class.java)}")
+                    }
+                }
+                override fun onChildRemoved(p0: DataSnapshot) {
+                    TODO("Not yet implemented")
+                }
+            })
+            //Log.d("tata", "$users")
+        }
+
 
         profilbutton.setOnClickListener { view ->
             if (uid != null) {

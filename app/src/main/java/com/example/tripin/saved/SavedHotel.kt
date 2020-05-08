@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
-import com.example.tripin.HotelsAdapter
+import com.example.tripin.find.hotel.HotelsAdapter
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.HotelDao

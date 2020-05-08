@@ -1,10 +1,11 @@
-package com.example.tripin
+package com.example.tripin.profil
 
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.example.tripin.R
 import kotlinx.android.synthetic.main.activity_contact.*
 import java.lang.Exception
 

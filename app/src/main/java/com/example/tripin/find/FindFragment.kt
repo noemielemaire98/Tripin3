@@ -12,6 +12,7 @@ import com.example.tripin.find.flight.FindFlightFragment
 import com.example.tripin.find.hotel.FindHotelFragment
 import com.example.tripin.find.voyage.FindVoyage
 import com.google.android.material.tabs.TabLayout
+import kotlinx.coroutines.*
 
 
 /**
@@ -19,9 +20,9 @@ import com.google.android.material.tabs.TabLayout
  */
 class FindFragment : Fragment() {
 
-    private lateinit var viewpager : ViewPager
+    private lateinit var viewpager: ViewPager
     private lateinit var tabLayout: TabLayout
-    private lateinit var myfragment : View
+    private lateinit var myfragment: View
 
 
     override fun onCreateView(
@@ -32,7 +33,8 @@ class FindFragment : Fragment() {
         // Inflate the layout for this fragment
         myfragment = inflater.inflate(R.layout.fragment_find, container, false)
         viewpager = myfragment.findViewById(R.id.fragment_rechercheinterne)
-        setupViewPager(viewpager);
+        setupViewPager(viewpager)
+        viewpager.offscreenPageLimit = 3
         tabLayout = myfragment.findViewById(R.id.tablayout_find)
         tabLayout.setupWithViewPager(viewpager)
 
@@ -40,13 +42,19 @@ class FindFragment : Fragment() {
 
     }
 
-    fun setupViewPager(viewPager : ViewPager){
-        var adapter : FindTabAdapter = FindTabAdapter(childFragmentManager)
-        adapter.addFragment(FindVoyage(),"Voyage")
-        adapter.addFragment(FindFlightFragment(),"Vol")
-        adapter.addFragment(FindHotelFragment(),"Hotel")
-        adapter.addFragment(FindActivityFragment(),"Activites")
-        viewPager.adapter = adapter
+    private fun setupViewPager(viewPager: ViewPager) {
+        val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
+        scope.launch {
+            val adapter = FindTabAdapter(childFragmentManager)
+            adapter.addFragment(FindVoyage(), "Voyage")
+            adapter.addFragment(FindFlightFragment(), "Vol")
+            adapter.addFragment(FindHotelFragment(), "Hotel")
+            adapter.addFragment(FindActivityFragment(), "Activites")
+            withContext(Dispatchers.Main) {
+                viewPager.adapter = adapter
+            }
+        }
 
     }
 }
