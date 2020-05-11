@@ -37,7 +37,7 @@ class TripFragment : Fragment() {
             true
         }
         val database =
-            Room.databaseBuilder(requireActivity().baseContext, AppDatabase::class.java, "gestionvoyages")
+            Room.databaseBuilder(requireActivity().baseContext, AppDatabase::class.java, "savedDatabase")
                 .build()
 
         voyageDao = database.getVoyageDao()

@@ -1,5 +1,6 @@
 package com.example.tripin.find.activity
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -54,11 +55,12 @@ class ActivityAdapter(val list_activity: List<Activity>, val attribut_favoris : 
 
 
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ActivityViewHolder, position: Int) {
 
 
         val activity =list_activity[position]
-        holder.activtyView.activity_title_textview.text = "${activity.title}"
+        holder.activtyView.activity_title_textview.text = activity.title
         val url = activity.cover_image_url
         Glide.with(holder.activtyView)
             .load(url)
@@ -66,7 +68,12 @@ class ActivityAdapter(val list_activity: List<Activity>, val attribut_favoris : 
             .into(holder.activtyView.activity_imageview)
 
         holder.activtyView.activity_price_textview.text = "Prix : ${activity.formatted_iso_value}"
-        holder.activtyView.activity_days_textview.text = "Dispo : ${activity.operational_days}"
+        if (activity.operational_days != null){
+            holder.activtyView.activity_days_textview.text = "Dispo : ${activity.operational_days}"
+        }else {
+            holder.activtyView.activity_days_textview.text = "Dispo : non communiquées"
+        }
+
         if(activity.reviews_avg != 0.0){
             holder.activtyView.layout_activity_rate.visibility = View.VISIBLE
             holder.activtyView.activity_rate_textview.text = "${activity.reviews_avg}"
@@ -80,7 +87,6 @@ class ActivityAdapter(val list_activity: List<Activity>, val attribut_favoris : 
 
         }
 
-        var ll = arrayListOf<String>("aaaaaaaa","bbbbbbbb","xxxxxxxxxxxxx","dddddddddddddddd","uuuuuuuuuu")
 
         holder.activtyView.rv_categorie.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         holder.activtyView.rv_categorie.adapter =

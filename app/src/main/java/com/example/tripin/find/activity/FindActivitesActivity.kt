@@ -94,7 +94,7 @@ class FindActivitesActivity : AppCompatActivity() {
                     }
 
 
-                    val activity = Activity(it.uuid, it.title, it.cover_image_url,it.retail_price.formatted_iso_value,it.operational_days,it.reviews_avg,list_cat,it.about)
+                    val activity = Activity(it.uuid, it.title, it.cover_image_url,it.retail_price.formatted_iso_value,it.operational_days,it.reviews_avg,list_cat,it.url,it.top_seller,it.must_see,it.description,it.about,it.latitude,it.longitude)
                     activityDaoSearch?.addActivity(activity)
 
                 }

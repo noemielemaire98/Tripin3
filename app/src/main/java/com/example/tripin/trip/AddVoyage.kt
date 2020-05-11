@@ -103,7 +103,7 @@ class AddVoyage : AppCompatActivity() {
                 // finish dépile l'activité et revient à la page d'en dessous
                 val voyage = Voyage(0,titre.toString(),dateDepart.toString(), dateRetour.toString() ,R.drawable.destination1, nombrevoyageur.toString().toInt())
                 val database: AppDatabase =
-                    Room.databaseBuilder(this, AppDatabase::class.java, "gestionvoyages").build()
+                    Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase").build()
                 val voyageDao: VoyageDao = database.getVoyageDao()
 
                 runBlocking {
