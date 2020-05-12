@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.AutoCompleteTextView
 import androidx.room.Room
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
+import com.example.tripin.find.flight.IgnoreAccentsArrayAdapter
 import com.example.tripin.model.Voyage
 import com.example.tripin.trip.DetailVoyage
 import kotlinx.android.synthetic.main.activity_edit_voyage.*
@@ -46,7 +48,7 @@ class EditVoyage() : AppCompatActivity() {
         editv_titre_editText.hint = titre
         editv_dateDepart_editText.hint = dateDepart
         editv_dateRetour_editText.hint = dateRetour
-        editv_nbvoyageur_editText.hint = nbvoyageur.toString()
+        //editv_nbvoyageur_editText.hint = nbvoyageur.toString()
 
 
 //        val database =
@@ -110,6 +112,14 @@ class EditVoyage() : AppCompatActivity() {
             dialog.show()
         }
 
+        editv_passengers_number.hint = nbvoyageur.toString()
+        var nbpasager = findViewById<AutoCompleteTextView>(R.id.editv_passengers_number)
+
+        val passengersNumber = resources.getStringArray(R.array.passengersNumber)
+        val adapterPassengers =
+            IgnoreAccentsArrayAdapter(this, android.R.layout.simple_list_item_1, passengersNumber)
+
+        nbpasager.setAdapter(adapterPassengers)
 
 
     }
@@ -143,9 +153,8 @@ class EditVoyage() : AppCompatActivity() {
                 if (editv_dateRetour_editText.text.isNotEmpty()) {
                     dateRetour = editv_dateRetour_editText.text.toString()
                 }
-                if (editv_nbvoyageur_editText.text.isNotEmpty()) {
-                    nbvoyageur = editv_nbvoyageur_editText.text.toString().toInt()
-                }
+                nbvoyageur = editv_passengers_number.text.toString().toInt()
+
 
 
                 // finish dépile l'activité et revient à la page d'en dessous

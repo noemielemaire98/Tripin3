@@ -71,13 +71,29 @@
             android:text="Nombre de voyageur"
             android:textSize="20dp" />
 
-        <EditText
-            android:id="@+id/editv_nbvoyageur_editText"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:ems="10"
-            android:inputType="number" />
+            android:layout_marginEnd="2dp"
+            android:layout_weight="8"
+            app:boxBackgroundColor="@color/colorBackground">
+
+            <AutoCompleteTextView
+                android:id="@+id/editv_passengers_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:focusable="false"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+<!--        <EditText-->
+<!--            android:id="@+id/editv_nbvoyageur_editText"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="20dp"-->
+<!--            android:ems="10"-->
+<!--            android:inputType="number" />-->
 
     </LinearLayout>
 </ScrollView>
