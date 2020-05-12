@@ -70,22 +70,30 @@
         android:text="Nombre de voyageur"
         android:textSize="20dp" />
 
-    <EditText
-        android:id="@+id/addv_nbvoyageur_editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:ems="10"
-        android:inputType="number" />
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="8"
+            app:boxBackgroundColor="@color/colorBackground">
 
-
-<!--    <Button-->
-<!--        android:id="@+id/addv_valider"-->
-<!--        android:layout_width="100dp"-->
+        <AutoCompleteTextView
+            android:id="@+id/passengers_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:focusable="false"
+            android:inputType="none"
+            android:text="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+<!--    <EditText-->
+<!--        android:id="@+id/addv_nbvoyageur_editText"-->
+<!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center_horizontal"-->
-<!--        android:layout_marginTop="30dp"-->
-<!--        android:background="@color/colorAccent"-->
-<!--        android:text="Ajouter" />-->
+<!--        android:layout_marginBottom="20dp"-->
+<!--        android:ems="10"-->
+<!--        android:inputType="number"/>-->
+
 </LinearLayout>
 </ScrollView>

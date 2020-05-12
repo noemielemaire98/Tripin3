@@ -6,13 +6,19 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.Spinner
+import android.widget.Toast
 import androidx.room.Room
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
+import com.example.tripin.find.flight.IgnoreAccentsArrayAdapter
 import com.example.tripin.model.Voyage
 import kotlinx.android.synthetic.main.activity_add_voyage.*
 import kotlinx.coroutines.runBlocking
+import org.jetbrains.anko.colorAttr
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,8 +32,6 @@ class AddVoyage : AppCompatActivity() {
 
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
-
 
 
         val dateDepartSetListener =
@@ -72,6 +76,16 @@ class AddVoyage : AppCompatActivity() {
             dialog.show()
         }
 
+        //liste nombre de participant
+        var nbpasager = findViewById<AutoCompleteTextView>(R.id.passengers_number)
+
+        val passengersNumber = resources.getStringArray(R.array.passengersNumber)
+        val adapterPassengers =
+            IgnoreAccentsArrayAdapter(this, android.R.layout.simple_list_item_1, passengersNumber)
+
+        nbpasager.setAdapter(adapterPassengers)
+
+
     }
 
     private fun updatDatedepartInView() {
@@ -88,30 +102,48 @@ class AddVoyage : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_add_voyage,menu)
+        menuInflater.inflate(R.menu.menu_add_voyage, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
-            R.id.ic_menu_add_voyage ->{
-                val titre = addv_titre_editText.text
-                val dateDepart = addv_dateDepart_editText.text
-                val dateRetour = addv_dateRetour_editText.text
-                val nombrevoyageur= addv_nbvoyageur_editText.text
+            R.id.ic_menu_add_voyage -> {
+                if (addv_titre_editText.text.isEmpty() || addv_dateDepart_editText.text.isEmpty() || addv_dateRetour_editText.text.isEmpty()) {
+                    Toast.makeText(
+                        this@AddVoyage,
+                        "Tous les champs ne sont pas rempli",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
-                // finish dépile l'activité et revient à la page d'en dessous
-                val voyage = Voyage(0,titre.toString(),dateDepart.toString(), dateRetour.toString() ,R.drawable.destination1, nombrevoyageur.toString().toInt())
-                val database: AppDatabase =
-                    Room.databaseBuilder(this, AppDatabase::class.java, "gestionvoyages").build()
-                val voyageDao: VoyageDao = database.getVoyageDao()
+                } else {
+                    val titre = addv_titre_editText.text
+                    val dateDepart = addv_dateDepart_editText.text
+                    val dateRetour = addv_dateRetour_editText.text
+                    val nombrevoyageur = passengers_number.text
 
-                runBlocking {
-                    voyageDao.addVoyage(voyage)// Reference aux co-routines Kotlin
+                    // finish dépile l'activité et revient à la page d'en dessous
+                    val voyage = Voyage(
+                        0,
+                        titre.toString(),
+                        dateDepart.toString(),
+                        dateRetour.toString(),
+                        R.drawable.destination1,
+                        nombrevoyageur.toString().toInt()
+                    )
+                    val database: AppDatabase =
+                        Room.databaseBuilder(this, AppDatabase::class.java, "gestionvoyages")
+                            .build()
+                    val voyageDao: VoyageDao = database.getVoyageDao()
+
+                    runBlocking {
+                        voyageDao.addVoyage(voyage)// Reference aux co-routines Kotlin
+                    }
+                    finish()
                 }
-                finish()
 
                 true
+
             }
             android.R.id.home -> {
                 finish()

@@ -43,7 +43,6 @@ class EditVoyage() : AppCompatActivity() {
 
         Log.d("EPF"," $id, $titre, $dateDepart, $dateRetour, $nbvoyageur")
 
-//        ancien_voyage_titre_textview.text
         editv_titre_editText.hint = titre
         editv_dateDepart_editText.hint = dateDepart
         editv_dateRetour_editText.hint = dateRetour

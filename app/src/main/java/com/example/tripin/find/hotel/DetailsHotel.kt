@@ -13,7 +13,7 @@ import com.example.tripin.model.Hotel
 import kotlinx.android.synthetic.main.activity_details_hotel.*
 import kotlinx.coroutines.runBlocking
 
-class DetailsHotel : AppCompatActivity() {
+class  DetailsHotel : AppCompatActivity() {
 
     private var hotel: Hotel? = null
     private var id: Int = 0

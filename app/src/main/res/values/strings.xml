@@ -39,7 +39,6 @@
     <string name="imageDescription_no_favoriteFlight">Aucun vol favori</string>
     <string name="travelClass">Classe</string>
     <string name="editText_voyage_Titre">Titre</string>
-    <string name="ancien_titre">Titre</string>
 
 
     <string-array name="passengersNumber">
