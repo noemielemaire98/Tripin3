@@ -20,8 +20,10 @@ data class Hotel(
     val rate: Int?,
     val image_url: String?,
     val adresse: String?,
-    val email: String,
     val telephone: String,
+    val latitude : Double,
+    val longitude : Double,
+    val prix : Double,
 
     @TypeConverters(Converters :: class)
     val equipements: MutableList<String>,
@@ -34,10 +36,12 @@ data class Hotel(
                 "Name$it",
                 "Description$it",
                 it,
-                "R.drawable.activite1", //TODO a modifier
+                "R.drawable.activite1",
                 "adresse$it",
-                "email$it",
                 "telephone$it",
+                0.1,
+                0.1,
+                0.1,
                 mutableListOf("A","B","C"),
                 false) }.toMutableList()
     }

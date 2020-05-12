@@ -1,5 +1,6 @@
 package com.example.tripin.find.hotel
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
@@ -12,14 +13,21 @@ import com.example.tripin.data.HotelDao
 import com.example.tripin.model.Hotel
 import kotlinx.android.synthetic.main.activity_details_hotel.*
 import kotlinx.coroutines.runBlocking
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
 class DetailsHotel : AppCompatActivity() {
 
     private var hotel: Hotel? = null
     private var id: Int = 0
-    private var hotelDao: HotelDao? = null
+    private var hotelDaoSaved: HotelDao? = null
     private var favoris: Boolean = false
-    private var bdd_hotels = emptyList<Hotel>()
+    private var hotels_saved_bdd = emptyList<Hotel>()
+    lateinit var mapFragment : SupportMapFragment
+    lateinit var googleMap: GoogleMap
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,16 +39,18 @@ class DetailsHotel : AppCompatActivity() {
 
         hotel = intent.getParcelableExtra("hotel")
 
-        val database =
-            Room.databaseBuilder(this, AppDatabase::class.java, "allhotels")
+        val databasesaved =
+            Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabaseHotels")
                 .build()
 
-        hotelDao = database.getHotelDao()
+        hotelDaoSaved = databasesaved.getHotelDao()
 
 
         runBlocking {
-            bdd_hotels = hotelDao!!.getHotels()
-            bdd_hotels?.forEach{
+            hotels_saved_bdd = hotelDaoSaved!!.getHotels()
+        }
+
+        hotels_saved_bdd?.forEach{
                 if(it.hotelId==hotel!!.hotelId){
                     favoris = true
                 }
@@ -74,7 +84,6 @@ class DetailsHotel : AppCompatActivity() {
             detail_hotel_description_textview.text = hotel?.hotelDescription
             var adresse = "${hotel?.adresse}".toLowerCase()
             detail_hotel_adresse_texview.text= formatString(adresse)
-            detail_hotel_email_texview.text=hotel?.email
             detail_hotel_telephone_texview.text = hotel?.telephone
             equipement_recyclerview.adapter=
                 EquipementAdapter(
@@ -91,7 +100,7 @@ class DetailsHotel : AppCompatActivity() {
                 if (favoris == false) {
                     hotel?.favoris=true
                     runBlocking {
-                        hotelDao?.addHotel(hotel!!)
+                        hotelDaoSaved?.addHotel(hotel!!)
                     }
                     favoris = true
                     fab_fav.setImageResource(R.drawable.ic_favorite_black_24dp)
@@ -100,13 +109,34 @@ class DetailsHotel : AppCompatActivity() {
                 } else if (favoris == true) {
                     hotel?.favoris = false
                     runBlocking {
-                        hotelDao?.deleteHotel(hotel!!.id)
+                        hotelDaoSaved?.deleteHotel(hotel!!.id)
                     }
                     favoris = false
                     fab_fav.setImageResource(R.drawable.ic_favorite_border_black_24dp)
                     Toast.makeText(this@DetailsHotel, "L'hôtel bien été supprimé des favoris", Toast.LENGTH_SHORT).show()
                 }
             }
+
+
+
+        button_description.setOnClickListener {
+            AlertDialog.Builder(this).apply {
+                setTitle("Lire plus")
+                setMessage("${hotel?.hotelDescription}")
+                setPositiveButton(android.R.string.ok) { _, _ ->
+                }
+                show()
+            }
+        }
+
+
+
+        mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync {
+            googleMap = it
+            val location = LatLng(hotel!!.latitude,hotel!!.longitude)
+            googleMap.addMarker(MarkerOptions().position(location).title("Location"))
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,12f))
 
         }
     }
@@ -140,6 +170,9 @@ class DetailsHotel : AppCompatActivity() {
                 else -> super.onOptionsItemSelected(item)
             }
         }
+
+
+
 
 
 

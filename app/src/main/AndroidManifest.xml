@@ -61,6 +61,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".profil.LoginActivity" />
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDV2U6h6CMjc7XtihLrQFhldVSYT47lAFc"/>
     </application>
 
 </manifest>
