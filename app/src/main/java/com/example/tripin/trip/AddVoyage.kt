@@ -1,24 +1,33 @@
 package com.example.tripin.trip
 
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ArrayAdapter
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
-import android.widget.Spinner
+import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.room.Room
+import com.aminography.primecalendar.civil.CivilCalendar
+import com.aminography.primedatepicker.picker.PrimeDatePicker
+import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
+import com.aminography.primedatepicker.picker.callback.SingleDayPickCallback
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.find.flight.IgnoreAccentsArrayAdapter
 import com.example.tripin.model.Voyage
 import kotlinx.android.synthetic.main.activity_add_voyage.*
+import kotlinx.android.synthetic.main.activity_add_voyage.passengers_number
+import kotlinx.android.synthetic.main.activity_find_flight.*
 import kotlinx.coroutines.runBlocking
-import org.jetbrains.anko.colorAttr
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,46 +43,14 @@ class AddVoyage : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
 
-        val dateDepartSetListener =
-            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                cal.set(Calendar.YEAR, year)
-                cal.set(Calendar.MONTH, monthOfYear)
-                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                updatDatedepartInView()
-            }
+        // Affiche le calendrier
+        addv_dateDepart.setOnClickListener {
 
-        val dateRetourSetListener =
-            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                cal.set(Calendar.YEAR, year)
-                cal.set(Calendar.MONTH, monthOfYear)
-                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                updatDateretourInView()
-            }
-
-        addv_dateDepart_editText?.setOnClickListener {
-            var dialog = DatePickerDialog(
-                this,
-                dateDepartSetListener,
-                // set DatePickerDialog to point to today's date when it loads up
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
-            )
-            dialog.datePicker.minDate = Calendar.getInstance().timeInMillis
-            dialog.show()
+                rangeDatePickerPrimeCalendar()
         }
-
-        addv_dateRetour_editText?.setOnClickListener {
-            var dialog = DatePickerDialog(
-                this,
-                dateRetourSetListener,
-                // set DatePickerDialog to point to today's date when it loads up
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
-            )
-            dialog.datePicker.minDate = Calendar.getInstance().timeInMillis
-            dialog.show()
+        // Affiche le calendrier pour choisir la date de retour
+        addv_dateRetour.setOnClickListener {
+            rangeDatePickerPrimeCalendar()
         }
 
         //liste nombre de participant
@@ -88,16 +65,50 @@ class AddVoyage : AppCompatActivity() {
 
     }
 
-    private fun updatDatedepartInView() {
-        val myFormat = "dd/MM/yyyy" // mention the format you need
-        val sdf = SimpleDateFormat(myFormat, Locale.US)
-        addv_dateDepart_editText!!.setText(sdf.format(cal.getTime()))
-    }
 
-    private fun updatDateretourInView() {
-        val myFormat = "dd/MM/yyyy" // mention the format you need
-        val sdf = SimpleDateFormat(myFormat, Locale.US)
-        addv_dateRetour_editText!!.setText(sdf.format(cal.getTime()))
+    // affichage du calendrier aller-retour
+    private fun rangeDatePickerPrimeCalendar() {
+        val rangeDaysPickCallback = RangeDaysPickCallback { startDate, endDate ->
+            // TODO
+            Log.d("Date", "${startDate.shortDateString} ${endDate.shortDateString}")
+            val parser =
+                SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+            val formatterDate =
+                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val parsedStartDate =
+                formatterDate.format(parser.parse(startDate.shortDateString)!!)
+            val parsedEndDate =
+                formatterDate.format(parser.parse(endDate.shortDateString)!!)
+            addv_dateDepart.setText(parsedStartDate)
+            addv_dateRetour.setText(parsedEndDate)
+        }
+
+        val today = CivilCalendar()
+
+        if (addv_dateDepart.text.toString() != "" && addv_dateRetour.text.toString() != "") {
+            val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val calStart = CivilCalendar()
+            calStart.timeInMillis = df.parse(addv_dateDepart.text.toString())!!.time
+            val calEnd = CivilCalendar()
+            calEnd.timeInMillis = df.parse(addv_dateRetour.text.toString())!!.time
+
+            val datePickerT = PrimeDatePicker.dialogWith(today)
+                .pickRangeDays(rangeDaysPickCallback)
+                .initiallyPickedRangeDays(calStart, calEnd)
+                .firstDayOfWeek(Calendar.MONDAY)
+                .minPossibleDate(today)
+                .build()
+
+            datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
+        } else {
+            val datePickerT = PrimeDatePicker.dialogWith(today)
+                .pickRangeDays(rangeDaysPickCallback)
+                .firstDayOfWeek(Calendar.MONDAY)
+                .minPossibleDate(today)
+                .build()
+
+            datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
+        }
     }
 
 
@@ -109,7 +120,9 @@ class AddVoyage : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.ic_menu_add_voyage -> {
-                if (addv_titre_editText.text.isEmpty() || addv_dateDepart_editText.text.isEmpty() || addv_dateRetour_editText.text.isEmpty()) {
+                if (addv_titre_editText.text.isEmpty() || addv_dateDepart.text.toString()
+                        .isEmpty() || addv_dateRetour.text.toString().isEmpty()
+                ) {
                     Toast.makeText(
                         this@AddVoyage,
                         "Tous les champs ne sont pas rempli",
@@ -118,8 +131,8 @@ class AddVoyage : AppCompatActivity() {
 
                 } else {
                     val titre = addv_titre_editText.text
-                    val dateDepart = addv_dateDepart_editText.text
-                    val dateRetour = addv_dateRetour_editText.text
+                    val dateDepart = addv_dateDepart.text
+                    val dateRetour = addv_dateRetour.text
                     val nombrevoyageur = passengers_number.text
 
                     // finish dépile l'activité et revient à la page d'en dessous
@@ -151,6 +164,7 @@ class AddVoyage : AppCompatActivity() {
             }
             else -> onOptionsItemSelected(item)
         }
+
 
 }
 

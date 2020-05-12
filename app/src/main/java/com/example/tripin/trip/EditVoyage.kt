@@ -70,47 +70,47 @@ class EditVoyage() : AppCompatActivity() {
 //        }
 
 
-        val dateDepartSetListener =
-            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                cal.set(Calendar.YEAR, year)
-                cal.set(Calendar.MONTH, monthOfYear)
-                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                updatDatedepartInView()
-            }
-
-        val dateRetourSetListener =
-            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                cal.set(Calendar.YEAR, year)
-                cal.set(Calendar.MONTH, monthOfYear)
-                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                updatDateretourInView()
-            }
-
-        editv_dateDepart_editText?.setOnClickListener {
-            var dialog = DatePickerDialog(
-                this,
-                dateDepartSetListener,
-                // set DatePickerDialog to point to today's date when it loads up
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
-            )
-            dialog.datePicker.minDate = Calendar.getInstance().timeInMillis
-            dialog.show()
-        }
-
-        editv_dateRetour_editText?.setOnClickListener {
-            var dialog = DatePickerDialog(
-                this,
-                dateRetourSetListener,
-                // set DatePickerDialog to point to today's date when it loads up
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
-            )
-            dialog.datePicker.minDate = Calendar.getInstance().timeInMillis
-            dialog.show()
-        }
+//        val dateDepartSetListener =
+//            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+//                cal.set(Calendar.YEAR, year)
+//                cal.set(Calendar.MONTH, monthOfYear)
+//                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+//                updatDatedepartInView()
+//            }
+//
+//        val dateRetourSetListener =
+//            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+//                cal.set(Calendar.YEAR, year)
+//                cal.set(Calendar.MONTH, monthOfYear)
+//                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+//                updatDateretourInView()
+//            }
+//
+//        editv_dateDepart_editText?.setOnClickListener {
+//            var dialog = DatePickerDialog(
+//                this,
+//                dateDepartSetListener,
+//                // set DatePickerDialog to point to today's date when it loads up
+//                cal.get(Calendar.YEAR),
+//                cal.get(Calendar.MONTH),
+//                cal.get(Calendar.DAY_OF_MONTH)
+//            )
+//            dialog.datePicker.minDate = Calendar.getInstance().timeInMillis
+//            dialog.show()
+//        }
+//
+//        editv_dateRetour_editText?.setOnClickListener {
+//            var dialog = DatePickerDialog(
+//                this,
+//                dateRetourSetListener,
+//                // set DatePickerDialog to point to today's date when it loads up
+//                cal.get(Calendar.YEAR),
+//                cal.get(Calendar.MONTH),
+//                cal.get(Calendar.DAY_OF_MONTH)
+//            )
+//            dialog.datePicker.minDate = Calendar.getInstance().timeInMillis
+//            dialog.show()
+//        }
 
         editv_passengers_number.hint = nbvoyageur.toString()
         var nbpasager = findViewById<AutoCompleteTextView>(R.id.editv_passengers_number)
@@ -124,17 +124,17 @@ class EditVoyage() : AppCompatActivity() {
 
     }
 
-    private fun updatDatedepartInView() {
-        val myFormat = "dd/MM/yyyy" // mention the format you need
-        val sdf = SimpleDateFormat(myFormat, Locale.US)
-        editv_dateDepart_editText!!.setText(sdf.format(cal.getTime()))
-    }
-
-    private fun updatDateretourInView() {
-        val myFormat = "dd/MM/yyyy" // mention the format you need
-        val sdf = SimpleDateFormat(myFormat, Locale.US)
-        editv_dateRetour_editText!!.setText(sdf.format(cal.getTime()))
-    }
+//    private fun updatDatedepartInView() {
+//        val myFormat = "dd/MM/yyyy" // mention the format you need
+//        val sdf = SimpleDateFormat(myFormat, Locale.US)
+//        editv_dateDepart_editText!!.setText(sdf.format(cal.getTime()))
+//    }
+//
+//    private fun updatDateretourInView() {
+//        val myFormat = "dd/MM/yyyy" // mention the format you need
+//        val sdf = SimpleDateFormat(myFormat, Locale.US)
+//        editv_dateRetour_editText!!.setText(sdf.format(cal.getTime()))
+//    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_edit_voyage,menu)
