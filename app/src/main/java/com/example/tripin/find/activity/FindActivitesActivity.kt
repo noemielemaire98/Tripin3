@@ -89,7 +89,12 @@ class FindActivitesActivity : AppCompatActivity() {
                     }
                     if (match_bdd == false ){list_favoris.add(false)}
 
-                    val activity = Activity(it.uuid, it.title, it.cover_image_url,it.retail_price.formatted_iso_value,it.operational_days,it.about)
+                    var list_cat =  it.categories.map {
+                        it.name
+                    }
+
+
+                    val activity = Activity(it.uuid, it.title, it.cover_image_url,it.retail_price.formatted_iso_value,it.operational_days,it.reviews_avg,list_cat,it.url,it.top_seller,it.must_see,it.description,it.about,it.latitude,it.longitude)
                     activityDaoSearch?.addActivity(activity)
 
                 }

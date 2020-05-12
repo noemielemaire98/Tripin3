@@ -1,30 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".find.activity.DetailActivites">
 
+   <androidx.coordinatorlayout.widget.CoordinatorLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+       <RelativeLayout
+           android:layout_width="60dp"
+           android:layout_height="25dp"
+           android:background="@color/colorAccent"
+           android:layout_alignParentEnd="true"
+           android:id="@+id/layout_activity_topseller"
+           android:visibility="invisible">
+
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:textColor="@color/white"
+                   android:text="TOP SELLER"
+                   android:textStyle="bold|italic"
+                   android:paddingRight="5dp"/>
+
+
+       </RelativeLayout>
+
+       <RelativeLayout
+           android:layout_width="60dp"
+           android:layout_height="25dp"
+           android:background="@color/colorAccent"
+           android:layout_alignParentEnd="true"
+           android:id="@+id/layout_activity_must_see"
+           android:visibility="invisible">
+
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:textColor="@color/white"
+                   android:text="MUST SEE"
+                   android:textStyle="bold|italic"
+                   android:paddingRight="5dp"/>
+
+
+
+       </RelativeLayout>
+
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/detail_activity_imageview"/>
+            android:id="@+id/detail_activity_imageview"
+            android:src="@drawable/addvoyage"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_categories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Titre"
             android:textSize="15dp"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="10dp"
             android:id="@+id/detail_activity_titre_textview"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/layout_note_activity"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Note : "
+                android:layout_marginLeft="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RATE"
+                android:id="@+id/tv_activity_rate" />
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/rate_hotel"
+                android:layout_marginLeft="10dp"/>
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -53,27 +130,43 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="10dp"/>
 
-        <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="15dp">
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="blablalbla"
                 android:textSize="15dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:id="@+id/detail_activity_about_textview"
                 android:layout_marginLeft="10dp"
                 android:paddingBottom="10dp"/>
-        </ScrollView>
 
+         <Button
+             android:id="@+id/lire_plus_activity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lire plus +"
+             android:textAllCaps="false"
+             android:backgroundTint="@color/white"
+             android:elevation="0dp"
+             android:layout_gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ou ? Voici la carte :"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"/>
+
+        <fragment
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_margin="5dp"
+            android:layout_height="400dp"
+            android:layout_marginBottom="30dp"
+            android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
         </LinearLayout>
+
 
 
 
@@ -84,13 +177,42 @@
 
         app:layout_anchor="@id/detail_activity_imageview"
         app:layout_anchorGravity="bottom|end"
-        android:layout_marginRight="30dp"
-
+        android:layout_marginRight="70dp"
         android:clickable="true"
         android:elevation="6dp"
         android:src="@drawable/ic_favorite_border_black_24dp"
         app:backgroundTint="@color/colorAccent"
-        app:fabSize="auto"/>
+        app:fabSize="mini"
+        android:padding="15dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_plus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@id/detail_activity_imageview"
+        app:layout_anchorGravity="bottom|end"
+        android:layout_marginEnd="20dp"
+        android:clickable="true"
+        android:elevation="6dp"
+        android:src="@drawable/plus"
+        app:backgroundTint="@color/colorAccent"
+        app:fabSize="mini"
+        android:padding="15dp"
+        android:focusable="true" />
+
+    <Button
+        android:id="@+id/booking_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reserver"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        android:background="@drawable/rounded_button"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="20dp"/>
+
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</ScrollView>

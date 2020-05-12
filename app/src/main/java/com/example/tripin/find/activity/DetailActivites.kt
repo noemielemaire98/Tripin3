@@ -1,27 +1,46 @@
 package com.example.tripin.find.activity
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
+import android.content.DialogInterface.OnMultiChoiceClickListener
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.example.tripin.R
 import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
+import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Activity
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.android.synthetic.main.activities_view.view.*
 import kotlinx.android.synthetic.main.activity_detail_activites.*
 import kotlinx.coroutines.runBlocking
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class DetailActivites : AppCompatActivity() {
 
     private var activite: Activity? = null
     private var id: Int = 0
     private var activityDaoSaved: ActivityDao? = null
+    private var voyageDao: VoyageDao? = null
     private var favoris : Boolean = false
     private var list_activities_bdd = emptyList<Activity>()
+    lateinit var mapFragment : SupportMapFragment
+    lateinit var googleMap: GoogleMap
 
 
 
@@ -67,10 +86,36 @@ class DetailActivites : AppCompatActivity() {
 
         }
 
+        if(activite?.top_seller == true){
+            layout_activity_topseller.visibility = View.VISIBLE
+        }
+        if(activite?.must_see == true){
+            layout_activity_must_see.visibility = View.VISIBLE
+        }
+
+
+        if(activite?.reviews_avg != null){
+            layout_note_activity.visibility = View.VISIBLE
+            tv_activity_rate.text = "${activite?.reviews_avg}"
+        }
+
             detail_activity_titre_textview.text = activite?.title
             detail_activity_dispo_textview.text = "Dispo : " + activite?.operational_days
             detail_activity_prix_textview.text = "Prix : " + activite?.formatted_iso_value
-            detail_activity_about_textview.text = activite?.about
+            detail_activity_about_textview.text = activite?.description
+            rv_categories.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            rv_categories.adapter = CategoryAdapter(activite!!.category)
+
+
+        mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync {
+            googleMap = it
+            val location = LatLng(activite!!.latitude,activite!!.longitude)
+            googleMap.addMarker(MarkerOptions().position(location).title("Location"))
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,12f))
+
+        }
+
 
 
         // 3 - AU CLIC SUR LE BOUTON
@@ -93,6 +138,69 @@ class DetailActivites : AppCompatActivity() {
                 Toast.makeText(this, "L'activité a bien été supprimé des favoris", Toast.LENGTH_SHORT).show()
             }
         }
+
+
+        booking_button.setOnClickListener {
+            var u = ((activite?.url)?.split("sandbox."))?.get(1)
+            var url = "https://$u"
+            val uri : Uri = Uri.parse(url)
+            val intent : Intent = Intent(Intent.ACTION_VIEW,uri)
+            if(intent.resolveActivity(packageManager) != null){
+                startActivity(intent)
+            }
+
+        }
+
+        fab_plus.setOnClickListener {
+            var contenu = false
+            voyageDao = databasesaved.getVoyageDao()
+            var list_voyage: Array<String> = arrayOf<String>()
+            var list_voyage2: ArrayList<String> = arrayListOf<String>()
+            val selectedList = ArrayList<Int>()
+
+            runBlocking {
+                if(voyageDao?.getVoyage() != null){
+                    voyageDao?.getVoyage()!!.map {list_voyage2.add(it.titre) }
+                    list_voyage = list_voyage2.toTypedArray()
+                     contenu = true
+
+                }
+            }
+            if(contenu){
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Choisissez un dossier de voyage")
+
+
+                builder.setMultiChoiceItems(list_voyage,null){ dialog, which, isChecked ->
+                    // Update the current focused item's checked status
+                    if (isChecked) {
+                        selectedList.add(which)
+                    } else if (selectedList.contains(which)) {
+                        selectedList.remove(Integer.valueOf(which))
+                    }
+
+                }
+                builder.setPositiveButton(android.R.string.ok) { _, _ ->
+
+                }
+
+                builder.show()
+
+            }
+
+        }
+
+        lire_plus_activity.setOnClickListener {
+            AlertDialog.Builder(this).apply {
+                setTitle("Lire plus")
+                setMessage("${activite?.about}")
+                setPositiveButton(android.R.string.ok) { _, _ ->
+                }
+                show()
+            }
+        }
+
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
