@@ -18,7 +18,7 @@
         <activity android:name=".find.hotel.DetailsHotel" android:label="Détail d'un hôtel"></activity>
         <activity android:name=".profil.StarsActivity"></activity>
         <activity android:name=".profil.SharingActivity" />
-        <activity android:name=".profil.FeedbackActivity" />
+        <activity android:name=".profil.PreferencesActivity" />
         <activity android:name=".profil.ContactActivity" />
         <activity
             android:name=".find.activity.DetailActivites"

@@ -116,7 +116,7 @@ class ProfilFragment : Fragment() {
         }
 
         feedback.setOnClickListener {
-            val intent = Intent(this.context, FeedbackActivity::class.java)
+            val intent = Intent(this.context, PreferencesActivity::class.java)
             startActivity(intent)
         }
 
@@ -136,4 +136,5 @@ class ProfilFragment : Fragment() {
 
         return root
     }
+
 }
