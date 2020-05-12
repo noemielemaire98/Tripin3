@@ -28,7 +28,7 @@ class DetailVoyage : AppCompatActivity() {
         id = intent.getIntExtra("id",0)
 
         val database =
-            Room.databaseBuilder(this, AppDatabase::class.java, "gestionvoyages")
+            Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
                 .build()
 
         voyageDao = database.getVoyageDao()

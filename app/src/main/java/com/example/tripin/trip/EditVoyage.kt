@@ -166,7 +166,7 @@ class EditVoyage() : AppCompatActivity() {
 
 
                 val database: AppDatabase =
-                    Room.databaseBuilder(this, AppDatabase::class.java, "gestionvoyages").build()
+                    Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase").build()
                 val voyageDao: VoyageDao = database.getVoyageDao()
 
                 runBlocking {

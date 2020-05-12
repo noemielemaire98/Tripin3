@@ -132,7 +132,7 @@ class AddVoyage : AppCompatActivity() {
                         nombrevoyageur.toString().toInt()
                     )
                     val database: AppDatabase =
-                        Room.databaseBuilder(this, AppDatabase::class.java, "gestionvoyages")
+                        Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
                             .build()
                     val voyageDao: VoyageDao = database.getVoyageDao()
 
