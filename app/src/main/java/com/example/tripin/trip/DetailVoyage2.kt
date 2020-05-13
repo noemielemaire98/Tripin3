@@ -11,38 +11,35 @@ import androidx.viewpager.widget.ViewPager
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
+import com.example.tripin.find.voyage.FindVoyage
 import com.example.tripin.model.Voyage
-import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.activity_detail_voyage.*
-import kotlinx.coroutines.runBlocking
+import kotlinx.android.synthetic.main.activity_detail_voyage2.*
+import kotlinx.coroutines.*
 
-class DetailVoyage : AppCompatActivity() {
+class DetailVoyage2 : AppCompatActivity() {
 
-    private var voyage: Voyage?=null
+    var voyage: Voyage?=null
     private var id : Int=0
     private var voyageDao : VoyageDao? = null
-    private lateinit var viewpager: ViewPager
-    private lateinit var tabLayout: TabLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail_voyage)
+        setContentView(R.layout.activity_detail_voyage2)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         id = intent.getIntExtra("id",0)
 
         val database =
-            Room.databaseBuilder(this, AppDatabase::class.java, "gestionvoyages")
+            Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
                 .build()
 
         voyageDao = database.getVoyageDao()
         runBlocking {
-            voyage = voyageDao!!.getVoyage(id) // Référence aux coroutines Kotlin
-            voyage_title_textview.text = voyage?.titre
-            voyage_dateDepart_textview.text = "Du "+voyage?.date
-            voyage_dateRetour_textview.text = "Au "+voyage?.dateRetour
-            voyage_nb_voyageurs_textview.text = "Nombre de voyageur :" +voyage?.nb_voyageur.toString()
+            voyage = voyageDao!!.getVoyage(id)
         }
+        setupViewPager(viewpager_detail_voyage)
+        viewpager_detail_voyage.offscreenPageLimit = 3
+        tablayout_detail_voyage.setupWithViewPager(viewpager_detail_voyage)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -93,6 +90,23 @@ class DetailVoyage : AppCompatActivity() {
             else -> onOptionsItemSelected(item)
 
         }
+    private fun setupViewPager(viewPager: ViewPager) {
+        val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
+        scope.launch {
+            val adapter = FindTabAdapterTrip(supportFragmentManager)
+            adapter.addFragment(FindVoyage(), "Aperçu")
+            adapter.addFragment(VolTripFragment(), "Vol")
+            adapter.addFragment(HotelTripFragment(), "Hotel")
+            adapter.addFragment(ActivityTripFragment(), "Activites")
+            withContext(Dispatchers.Main) {
+                viewPager.adapter = adapter
+            }
+        }
+
+    }
+
+
 
 
 }

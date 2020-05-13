@@ -1,7 +1,6 @@
 package com.example.tripin.find.activity
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface.OnMultiChoiceClickListener
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -24,23 +23,20 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.activities_view.view.*
 import kotlinx.android.synthetic.main.activity_detail_activites.*
 import kotlinx.coroutines.runBlocking
-import java.util.*
 import kotlin.collections.ArrayList
 
 
 class DetailActivites : AppCompatActivity() {
 
     private var activite: Activity? = null
-    private var id: Int = 0
     private var activityDaoSaved: ActivityDao? = null
     private var voyageDao: VoyageDao? = null
     private var favoris : Boolean = false
     private var list_activities_bdd = emptyList<Activity>()
-    lateinit var mapFragment : SupportMapFragment
-    lateinit var googleMap: GoogleMap
+    private lateinit var mapFragment : SupportMapFragment
+    private lateinit var googleMap: GoogleMap
 
 
 
@@ -72,7 +68,7 @@ class DetailActivites : AppCompatActivity() {
         runBlocking {
             list_activities_bdd = activityDaoSaved!!.getActivity()
         }
-        list_activities_bdd?.forEach {
+        list_activities_bdd.forEach {
             if (it.title == activite!!.title) {
                 favoris = true
             }
@@ -141,9 +137,9 @@ class DetailActivites : AppCompatActivity() {
 
 
         booking_button.setOnClickListener {
-            var u = ((activite?.url)?.split("sandbox."))?.get(1)
-            var url = "https://$u"
-            val uri : Uri = Uri.parse(url)
+            val u = ((activite?.url)?.split("sandbox."))?.get(1)
+            val urll = "https://$u"
+            val uri : Uri = Uri.parse(urll)
             val intent : Intent = Intent(Intent.ACTION_VIEW,uri)
             if(intent.resolveActivity(packageManager) != null){
                 startActivity(intent)
@@ -152,10 +148,11 @@ class DetailActivites : AppCompatActivity() {
         }
 
         fab_plus.setOnClickListener {
+            voyageDao = databasesaved.getVoyageDao()
             var contenu = false
             voyageDao = databasesaved.getVoyageDao()
             var list_voyage: Array<String> = arrayOf<String>()
-            var list_voyage2: ArrayList<String> = arrayListOf<String>()
+            val list_voyage2: ArrayList<String> = arrayListOf<String>()
             val selectedList = ArrayList<Int>()
 
             runBlocking {
@@ -167,25 +164,43 @@ class DetailActivites : AppCompatActivity() {
                 }
             }
             if(contenu){
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("Choisissez un dossier de voyage")
+               AlertDialog.Builder(this).apply {
+                   setTitle("Choisissez un dossier de voyage")
+                   val list_choix = arrayListOf<String>()
+                   setMultiChoiceItems(list_voyage,null){ dialog, which: Int, isChecked ->
+                       // Update the current focused item's checked status
+                       if (isChecked) {
+                           selectedList.add(which)
+                           list_choix.add(list_voyage.get(which))
+                       } else if (selectedList.contains(which)) {
+                           selectedList.remove(Integer.valueOf(which))
+                           list_choix.remove(list_voyage.get(which))
+                       }
 
 
-                builder.setMultiChoiceItems(list_voyage,null){ dialog, which, isChecked ->
-                    // Update the current focused item's checked status
-                    if (isChecked) {
-                        selectedList.add(which)
-                    } else if (selectedList.contains(which)) {
-                        selectedList.remove(Integer.valueOf(which))
-                    }
+                   }
 
-                }
-                builder.setPositiveButton(android.R.string.ok) { _, _ ->
+                   setPositiveButton(android.R.string.ok) { _, _ ->
+                       if(list_choix.isEmpty()){
+                           list_choix.forEach {
+                               runBlocking {
+                                   val voyage = voyageDao?.getVoyageByTitre(it)
+                                   val ancienne_list = voyage!!.list_activity?.toMutableList()
+                                   ancienne_list?.add(activite!!)
+                                   val nouvelle_liste = ancienne_list?.toList()
+                                   voyage.list_activity = nouvelle_liste
+                                   voyageDao?.updateVoyage(voyage)
+                               }
 
-                }
 
-                builder.show()
+                           }
+                       }
 
+
+                   }
+
+                   show()
+               }
             }
 
         }

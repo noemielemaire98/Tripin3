@@ -10,6 +10,8 @@ import androidx.room.Room
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
+import com.example.tripin.model.Activity
+import com.example.tripin.model.Test
 import com.example.tripin.model.Voyage
 import kotlinx.android.synthetic.main.activity_add_voyage.*
 import kotlinx.coroutines.runBlocking
@@ -101,7 +103,9 @@ class AddVoyage : AppCompatActivity() {
                 val nombrevoyageur= addv_nbvoyageur_editText.text
 
                 // finish dépile l'activité et revient à la page d'en dessous
-                val voyage = Voyage(0,titre.toString(),dateDepart.toString(), dateRetour.toString() ,R.drawable.destination1, nombrevoyageur.toString().toInt())
+                //val ll = listOf("aa","bb")
+                val list_activities = listOf<Activity>()
+                val voyage = Voyage(0,titre.toString(),dateDepart.toString(), dateRetour.toString() ,R.drawable.destination1, nombrevoyageur.toString().toInt(),list_activities)
                 val database: AppDatabase =
                     Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase").build()
                 val voyageDao: VoyageDao = database.getVoyageDao()
