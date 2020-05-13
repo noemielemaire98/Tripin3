@@ -10,6 +10,8 @@ import androidx.room.Room
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
+import com.example.tripin.model.Activity
+import com.example.tripin.model.Test
 import com.example.tripin.model.Voyage
 import kotlinx.android.synthetic.main.activity_edit_voyage.*
 import kotlinx.coroutines.runBlocking
@@ -145,9 +147,10 @@ class EditVoyage() : AppCompatActivity() {
             // finish dépile l'activité et revient à la page d'en dessous
 
             Log.d("EPF"," $id, $titre, $dateDepart, $dateRetour, $nbvoyageur")
+                val list_activities = listOf<Activity>()
             val nvvoyage =
                 Voyage(id, titre, dateDepart, dateRetour,
-                    R.drawable.destination1, nbvoyageur)
+                    R.drawable.destination1, nbvoyageur,list_activities)
 
 
             val database: AppDatabase =

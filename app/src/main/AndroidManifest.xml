@@ -43,6 +43,9 @@
             android:name=".trip.DetailVoyage"
             android:label="Detail" />
         <activity
+            android:name=".trip.DetailVoyage2"
+            android:label="Detail" />
+        <activity
             android:name=".trip.AddVoyage"
             android:label="Ajouter un voyage" />
         <activity

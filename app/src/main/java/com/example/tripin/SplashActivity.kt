@@ -30,6 +30,7 @@ class SplashActivity : AppCompatActivity() {
 
         citydao = database.getCityDao()
 
+
         runBlocking {
             citydao?.deleteCities()
             val service = retrofit().create(ActivitybyCity::class.java)
