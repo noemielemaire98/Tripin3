@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -18,13 +20,17 @@ import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Activity
+import com.example.tripin.model.Voyage
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_detail_activites.*
+import kotlinx.android.synthetic.main.createvoyage_popup.*
+import kotlinx.android.synthetic.main.createvoyage_popup.view.*
 import kotlinx.coroutines.runBlocking
+import org.jetbrains.anko.find
 import kotlin.collections.ArrayList
 
 
@@ -44,6 +50,7 @@ class DetailActivites : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_activites)
+
 
         // BOUTON RETOUR
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -149,39 +156,35 @@ class DetailActivites : AppCompatActivity() {
 
         fab_plus.setOnClickListener {
             voyageDao = databasesaved.getVoyageDao()
-            var contenu = false
-            voyageDao = databasesaved.getVoyageDao()
             var list_voyage: Array<String> = arrayOf<String>()
             val list_voyage2: ArrayList<String> = arrayListOf<String>()
             val selectedList = ArrayList<Int>()
-
             runBlocking {
                 if(voyageDao?.getVoyage() != null){
                     voyageDao?.getVoyage()!!.map {list_voyage2.add(it.titre) }
                     list_voyage = list_voyage2.toTypedArray()
-                     contenu = true
-
                 }
             }
-            if(contenu){
-               AlertDialog.Builder(this).apply {
-                   setTitle("Choisissez un dossier de voyage")
+            val plusdialog = AlertDialog.Builder(this)
+            //AlertDialog.Builder(this).apply {
+                   plusdialog.setTitle("Dossier de voyage")
                    val list_choix = arrayListOf<String>()
-                   setMultiChoiceItems(list_voyage,null){ dialog, which: Int, isChecked ->
-                       // Update the current focused item's checked status
-                       if (isChecked) {
-                           selectedList.add(which)
-                           list_choix.add(list_voyage.get(which))
-                       } else if (selectedList.contains(which)) {
-                           selectedList.remove(Integer.valueOf(which))
-                           list_choix.remove(list_voyage.get(which))
+                   if(list_voyage.isEmpty()){
+                       plusdialog.setMessage("Vous n'avez constitué aucun dossier de voyage, cliquez sur ajouter")
+                   }else{
+                       plusdialog.setMultiChoiceItems(list_voyage,null){ dialog, which: Int, isChecked ->
+                           // Update the current focused item's checked status
+                           if (isChecked) {
+                               selectedList.add(which)
+                               list_choix.add(list_voyage.get(which))
+                           } else if (selectedList.contains(which)) {
+                               selectedList.remove(Integer.valueOf(which))
+                               list_choix.remove(list_voyage.get(which))
+                           }
                        }
-
-
                    }
-
-                   setPositiveButton(android.R.string.ok) { _, _ ->
-                       if(list_choix.isEmpty()){
+                  plusdialog.setPositiveButton(android.R.string.ok) { _, _ ->
+                       if(!list_choix.isEmpty()){
                            list_choix.forEach {
                                runBlocking {
                                    val voyage = voyageDao?.getVoyageByTitre(it)
@@ -191,17 +194,47 @@ class DetailActivites : AppCompatActivity() {
                                    voyage.list_activity = nouvelle_liste
                                    voyageDao?.updateVoyage(voyage)
                                }
-
-
-                           }
+                         }
+                           Toast.makeText(this,"L'activité à bien été ajoutée",Toast.LENGTH_SHORT).show()
                        }
-
-
                    }
 
-                   show()
-               }
-            }
+                plusdialog.setNeutralButton("Créer"){_, _ ->
+
+                       AlertDialog.Builder(this).apply {
+                           val view = layoutInflater.inflate(R.layout.createvoyage_popup,null)
+                           setView(view)
+                           setTitle("Créer")
+                           setPositiveButton("OK"){_,_ ->
+                               val voyage = Voyage(0,view.et_titre.text.toString(),view.et_date1.text.toString(),view.et_date2.text.toString(),R.drawable.destination1,view.et_nb_voyageur.text.toString().toInt(), emptyList())
+                               runBlocking {
+                                   voyageDao?.addVoyage(voyage)
+                               }
+                               list_voyage2.add(voyage.titre)
+                               list_voyage = list_voyage2.toTypedArray()
+                               plusdialog.setMultiChoiceItems(list_voyage,null){ dialog, which: Int, isChecked ->
+                                   // Update the current focused item's checked status
+                                   if (isChecked) {
+                                       selectedList.add(which)
+                                       list_choix.add(list_voyage.get(which))
+                                   } else if (selectedList.contains(which)) {
+                                       selectedList.remove(Integer.valueOf(which))
+                                       list_choix.remove(list_voyage.get(which))
+                                   }
+                               }
+                               Toast.makeText(this.context,"Le dossier ${voyage.titre}  a bien été ajouté",Toast.LENGTH_SHORT).show()
+                               plusdialog.show()
+                           }
+                           setNeutralButton("Retour"){_,_ ->
+                               plusdialog.show()
+                           }
+                           show()
+                       }
+                   }
+
+                    plusdialog.show()
+               //}
+
 
         }
 

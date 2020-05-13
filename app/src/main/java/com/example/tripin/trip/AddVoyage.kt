@@ -11,7 +11,6 @@ import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Activity
-import com.example.tripin.model.Test
 import com.example.tripin.model.Voyage
 import kotlinx.android.synthetic.main.activity_add_voyage.*
 import kotlinx.coroutines.runBlocking

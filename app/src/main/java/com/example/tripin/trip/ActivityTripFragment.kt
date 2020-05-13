@@ -2,7 +2,6 @@ package com.example.tripin.trip
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tripin.R
-import com.example.tripin.find.activity.ActivityAdapter
+import com.example.tripin.find.activity.ActivityAdapterGlobal
+import com.example.tripin.find.activity.ActivityAdapterTrip
 import com.example.tripin.find.activity.FindActivitesActivity
 import kotlinx.coroutines.runBlocking
 
@@ -50,7 +50,8 @@ class ActivityTripFragment : Fragment() {
             }else {
                 rl.visibility = View.GONE
             }
-           rv.adapter = ActivityAdapter(activities ?: emptyList(),list_fav)
+            val activities2 = activities.toMutableList()
+           rv.adapter = ActivityAdapterTrip(activities2,list_fav,voyage)
         }
 
 

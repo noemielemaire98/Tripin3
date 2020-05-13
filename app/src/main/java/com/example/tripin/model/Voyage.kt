@@ -21,8 +21,3 @@ import androidx.room.PrimaryKey
 //
 //    }
 }
-data class Test(  val id:Int,
-                  val titre: String
-) {
-
-}

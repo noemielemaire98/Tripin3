@@ -1,7 +1,6 @@
 package com.example.tripin.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,7 @@ import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.CityDao
 import com.example.tripin.data.retrofit
-import com.example.tripin.find.activity.ActivityAdapter
+import com.example.tripin.find.activity.ActivityAdapterGlobal
 import com.example.tripin.find.activity.ActivitybyCity
 import com.example.tripin.model.Activity
 import kotlinx.coroutines.runBlocking
@@ -47,7 +46,7 @@ class HomeFragment : Fragment() {
             Room.databaseBuilder(
                 requireActivity().baseContext,
                 AppDatabase::class.java,
-                "searchDatabase"
+                "homeDatabase"
             )
                 .build()
         val databasesaved =
@@ -131,7 +130,7 @@ class HomeFragment : Fragment() {
                 }
                 val activities = activityDaoSearch?.getActivity()
                 recyclerview_home.adapter =
-                    ActivityAdapter(activities ?: emptyList(), list_favoris)
+                    ActivityAdapterGlobal(activities ?: emptyList(), list_favoris)
             } else {
                 noActivity_home.visibility = View.VISIBLE
             }
