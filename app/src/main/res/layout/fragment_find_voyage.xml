@@ -3,23 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".find.voyage.FindVoyage"
     android:orientation="vertical">
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        style="@style/Widget.MaterialComponents.Button"
+        app:backgroundTint="@color/contrast_blue"
         android:text="VOlS"
-        android:id="@+id/bt_flight"
-        android:layout_marginTop="100dp"/>
+        android:id="@+id/bt_flight"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.Button"
+        app:backgroundTint="@color/contrast_blue"
         android:text="HOTELS"
         android:id="@+id/bt_hotel"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.Button"
+        app:backgroundTint="@color/contrast_blue"
         android:text="ACTIVITES"
         android:id="@+id/bt_activities"/>
 

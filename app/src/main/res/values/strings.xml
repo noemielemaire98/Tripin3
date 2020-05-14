@@ -5,7 +5,7 @@
     <string name="app_contact">Contactez-nous</string>
     <string name="app_sharing">Partagez notre application</string>
     <string name="app_stars">Notez notre application</string>
-    <string name="app_preferences">Choisissez votre préférence</string>
+    <string name="app_preferences">Choisissez vos préférences</string>
     <string name="connexion_button_profil">Profil</string>
     <string name="pseudo_edit">Pseudo</string>
     <string name="mail_edit">Mail</string>

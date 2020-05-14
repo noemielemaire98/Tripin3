@@ -1,5 +1,6 @@
 package com.example.tripin.profil
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +19,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_profil.*
+import java.lang.RuntimeException
 
 
 class ProfilFragment : Fragment() {
