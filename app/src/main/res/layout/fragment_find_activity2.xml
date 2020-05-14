@@ -7,8 +7,33 @@
     android:orientation="vertical"
     tools:context=".find.activity.FindActivitesActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
 
 
+    <AutoCompleteTextView
+        android:layout_margin="10dp"
+        android:id="@+id/search_activity_bar"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:hint="Ville"
+        android:textAlignment="center"
+        android:completionThreshold="1"
+        />
+
+    <EditText
+        android:id="@+id/et_query"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:hint="Texte"
+        android:textAlignment="center"
+        android:layout_marginLeft="7dp"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,27 +41,13 @@
         android:orientation="horizontal">
 
 
-    <AutoCompleteTextView
-        android:layout_margin="10dp"
-        android:id="@+id/search_activity_bar"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:hint="Choisissez une ville"
-        android:textAlignment="center"
-        android:completionThreshold="1"
-        />
-
-    <ImageButton
-        android:id="@+id/btn_price_filter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_filter"
-        android:background="@color/white"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="8dp"/>
-
-    </LinearLayout>
+        <ImageButton
+            android:id="@+id/bt_price_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_euro_symbol_black_24dp"
+            android:layout_gravity="center_vertical"
+            android:backgroundTint="@color/colorAccent"/>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
@@ -47,6 +58,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
+
+
 
             <Button
                 android:id="@+id/cat_museum"
@@ -105,9 +118,8 @@
                 android:backgroundTint="@color/white"/>
         </LinearLayout>
 
-
-
     </HorizontalScrollView>
+    </LinearLayout>
 
     <Button
         android:layout_width="match_parent"

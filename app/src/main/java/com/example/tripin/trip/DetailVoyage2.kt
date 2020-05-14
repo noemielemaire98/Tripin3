@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.room.Room
 import androidx.viewpager.widget.ViewPager
@@ -39,6 +40,9 @@ class DetailVoyage2 : AppCompatActivity() {
         setupViewPager(viewpager_detail_voyage)
         viewpager_detail_voyage.offscreenPageLimit = 3
         tablayout_detail_voyage.setupWithViewPager(viewpager_detail_voyage)
+        if(viewpager_detail_voyage.currentItem != 0 ){
+            imageView.setImageResource(R.drawable.destination1)
+        }
 
     }
 

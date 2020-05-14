@@ -37,6 +37,20 @@ interface ActivitybyCity {
         @Header("x-musement-currency") monnaie: String
     ): ModelMusement.Welcome
 
+    @GET("api/v3/activities?")
+    suspend fun listAct(
+        @Query("text") query: String,
+        @Query("text_operator") text_operator: String,
+        @Query("fuzziness_level") fuziness_level: String,
+        @Query("sort_by") sort_by: String,
+        @Query("city_in") city_id: String,
+        @Query("default_price_range") price_range : String,
+        @Query("vertical_in") vertical_in: String,
+        @Query("limit") limit: String,
+        @Header("accept-language") lang: String,
+        @Header("x-musement-currency") monnaie: String
+    ): ModelMusement.Welcome
+
 
 }
     data class City(val id : Int = 0,val name : String="",val show_in_popular : Boolean=false)

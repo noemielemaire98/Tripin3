@@ -2,13 +2,16 @@ package com.example.tripin
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import org.jetbrains.anko.toolbar
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,11 +24,27 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.navigation_home,R.id.navigation_find, R.id.navigation_trip,R.id.navigation_saved, R.id.navigation_profil))
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.navigation_home,
+                R.id.navigation_find,
+                R.id.navigation_trip,
+                R.id.navigation_saved,
+                R.id.navigation_profil
+            )
+        )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-    }
+
+        navController.addOnDestinationChangedListener { _, destination, _->
+            if(destination.id == R.id.navigation_find){
+                supportActionBar!!.hide()
+            }else{
+                supportActionBar!!.show()
+            }
+        }
+
+        }
 
 
 

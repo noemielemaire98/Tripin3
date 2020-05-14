@@ -51,7 +51,7 @@ object ModelMusement {
         val originalRetailPrice: OriginalRetailPrice,
         val discount: Long,
         val categories: List<Category>,
-        val reviewsNumber: Long,
+        val reviews_number: Long,
         val reviews_avg: Double,
         val reviewsAggregatedInfo: Map<String, Long>,
         val latitude: Double,

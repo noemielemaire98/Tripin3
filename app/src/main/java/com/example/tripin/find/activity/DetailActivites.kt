@@ -114,7 +114,6 @@ class DetailActivites : AppCompatActivity() {
 
 
 
-        // 3 - AU CLIC SUR LE BOUTON
         fab_fav.setOnClickListener {
             if (favoris == false) {
                 runBlocking {
@@ -146,6 +145,7 @@ class DetailActivites : AppCompatActivity() {
             }
 
         }
+
 
         fab_plus.setOnClickListener {
             voyageDao = databasesaved.getVoyageDao()
@@ -191,7 +191,6 @@ class DetailActivites : AppCompatActivity() {
                                    voyage.list_activity = nouvelle_liste
                                    voyageDao?.updateVoyage(voyage)
                                }
-
 
                            }
                        }

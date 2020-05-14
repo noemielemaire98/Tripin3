@@ -6,10 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,7 +24,6 @@ import kotlinx.coroutines.runBlocking
 /**
  * A simple [Fragment] subclass.
  */
-class FindActivityFragment : Fragment() {
 
     private var activityDaoSearch : ActivityDao? = null
     private var activityDaoSaved : ActivityDao? = null
@@ -37,7 +32,6 @@ class FindActivityFragment : Fragment() {
     val monnaie :String = "EUR"
     var list_favoris  = arrayListOf<Boolean>()
     var list_cities_name = arrayListOf<String>()
-    var prix = 1
 
 
     @SuppressLint("ResourceAsColor")
@@ -46,12 +40,12 @@ class FindActivityFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+
         // initalisation des items du layout
         val view = inflater.inflate(R.layout.fragment_find_activity2, container, false)
         val rv = view.findViewById<RecyclerView>(R.id.activities_recyclerview)
         val bt_search = view.findViewById<Button>(R.id.bt_recherche_activity)
         val editText = view.findViewById<AutoCompleteTextView>(R.id.search_activity_bar)
-        val bt_filter = view.findViewById<ImageButton>(R.id.btn_price_filter)
         val btn_museum = view.findViewById<Button>(R.id.cat_museum)
         val btn_sport = view.findViewById<Button>(R.id.cat_sport)
         val btn_food = view.findViewById<Button>(R.id.cat_food)
@@ -87,17 +81,10 @@ class FindActivityFragment : Fragment() {
         editText.setAdapter(adapter)
 
         // listener sur les boutons activités = change de couleur
-        val btn_museum_activate = listener_bouton(btn_museum,requireContext())
-        val btn_sport_activate = listener_bouton(btn_sport,requireContext())
-        val btn_fun_activate = listener_bouton(btn_fun,requireContext())
-        val btn_night_activate = listener_bouton(btn_night,requireContext())
-        val btn_food_activate = listener_bouton(btn_food,requireContext())
-        val btn_other_activate = listener_bouton(btn_other,requireContext())
 
 
       bt_search.setOnClickListener {
 
-          // supression des anciens éléments (list_fav + list_activité
           runBlocking {
               activityDaoSearch?.deleteActivity()
               list_favoris.clear()
@@ -111,25 +98,7 @@ class FindActivityFragment : Fragment() {
                 if (city != null) {
 
 
-                    var result = service.listActivitybyCity(city.id,"relevance","",lang, monnaie)
-
-                    if(btn_museum_activate.isActivated||btn_sport_activate.isActivated||btn_night_activate.isActivated||btn_food_activate.isActivated||btn_fun_activate.isActivated||btn_other_activate.isActivated){
-                        var categories = liste_cat_active(btn_museum,btn_food,btn_night,btn_fun,btn_other,btn_sport)
-                        result = service.listActivitybyCityandCategory(city.id,categories,lang, monnaie)
-                    }
-
-                if (result.meta.count == 0L) {
-                    layoutNoActivities_frag.visibility = View.VISIBLE
-                } else {
                     layoutNoActivities_frag.visibility = View.GONE
-                }
-
-                val list_activities_bdd = activityDaoSaved?.getActivity()
-                result.data.map {
-                    val titre = it.title
-                    var match_bdd = false
-                    // vérification pour le bouton favoris
-                    list_activities_bdd?.forEach {
                         if (it.title == titre) {
                             list_favoris.add(true)
                             match_bdd = true
@@ -172,13 +141,13 @@ class FindActivityFragment : Fragment() {
                     layoutNoActivities_frag.visibility = View.VISIBLE
                 }
             }
-        }
 
         return view
     }
 
     override fun onResume() {
         super.onResume()
+
         list_favoris.clear()
 
         val databasesearch =
@@ -213,13 +182,7 @@ class FindActivityFragment : Fragment() {
 
         }
 
-
-
-
-
-
     }
-
 }
 
 private fun listener_bouton(bt : Button,context: Context) : Button{
@@ -231,7 +194,7 @@ private fun listener_bouton(bt : Button,context: Context) : Button{
         } else {
             bt.isActivated = true
             bt.backgroundTintList =
-                context?.getResources()!!.getColorStateList(R.color.butn_pressed)
+                context.getResources()!!.getColorStateList(R.color.butn_pressed)
         }
     }
 
@@ -246,33 +209,36 @@ private fun liste_cat_active(bt_musee : Button,bt_food : Button,bt_night : Butto
     if(bt_musee.isActivated){
         if(premier_item == true) {
             string += "arts-culture"
-            premier_item = false} else {string += "%2Carts-culture"}
+            premier_item = false} else {string += ",arts-culture"}
     }
     if(bt_food.isActivated){
         if(premier_item == true) {
             string += "food-wine"
-            premier_item = false} else {string += "%2Cfood_wine"}
+            premier_item = false} else {string += ",food_wine"}
     }
     if(bt_night.isActivated){
         if(premier_item == true) {
             string += "nightlife"
             premier_item = false} else {string += "%2Cnightlife"}
+            premier_item = false} else {string += ",nightlife"}
     }
     if(bt_fun.isActivated){
         if(premier_item == true) {
             string += "entertainment"
             premier_item = false} else {string += "%2Centertainement"}
+            premier_item = false} else {string += ",entertainement"}
     }
     if(bt_other.isActivated){
         if(premier_item == true) {
             string += "sightseeing"
             premier_item = true} else {string += "%2Csightseeing"}
+            premier_item = true} else {string += ",sightseeing"}
     }
     if(bt_sport.isActivated){
         if(premier_item == true) {
             //string += "adventure2Csports"
             string += "sports"
-            premier_item = false} else {string += "%2Cadventure%2Csports"}
+            premier_item = false} else {string += ",adventure,sports"}
     }
 
     return string
