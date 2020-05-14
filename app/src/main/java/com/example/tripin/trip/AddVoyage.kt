@@ -1,6 +1,5 @@
 package com.example.tripin.trip
 
-import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +22,7 @@ import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.find.flight.IgnoreAccentsArrayAdapter
+import com.example.tripin.model.Activity
 import com.example.tripin.model.Voyage
 import kotlinx.android.synthetic.main.activity_add_voyage.*
 import kotlinx.android.synthetic.main.activity_add_voyage.passengers_number
@@ -137,14 +137,15 @@ class AddVoyage : AppCompatActivity() {
                     val dateRetour = addv_dateRetour.text
                     val nombrevoyageur = passengers_number.text
 
-                    // finish dépile l'activité et revient à la page d'en dessous
+                    val list_activities = listOf<Activity>()
                     val voyage = Voyage(
                         0,
                         titre.toString(),
                         dateDepart.toString(),
                         dateRetour.toString(),
                         R.drawable.destination1,
-                        nombrevoyageur.toString().toInt()
+                        nombrevoyageur.toString().toInt(),
+                        list_activities
                     )
                     val database: AppDatabase =
                         Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")

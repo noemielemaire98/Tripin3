@@ -3,23 +3,17 @@ package com.example.tripin.saved
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
-import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.example.tripin.R
 import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
-import com.example.tripin.find.activity.ActivityAdapter
+import com.example.tripin.find.activity.ActivityAdapterGlobal
 import com.example.tripin.find.activity.FindActivitesActivity
-import com.example.tripin.find.activity.FindActivityFragment
-import com.example.tripin.find.flight.FindFlightActivity
 import kotlinx.android.synthetic.main.activity_saved_activites.*
-import kotlinx.android.synthetic.main.activity_saved_flight.*
 import kotlinx.coroutines.runBlocking
-import org.jetbrains.anko.act
 
 class SavedActivites : AppCompatActivity() {
 
@@ -54,7 +48,7 @@ class SavedActivites : AppCompatActivity() {
 
             layout_nosavedActivities.isVisible = activities!!.isEmpty()
 
-            activitiessaved_recyclerview.adapter = ActivityAdapter(activities ?: emptyList(),list_fav)
+            activitiessaved_recyclerview.adapter = ActivityAdapterGlobal(activities ?: emptyList(),list_fav)
         }
 
 
@@ -82,7 +76,7 @@ class SavedActivites : AppCompatActivity() {
             layout_nosavedActivities.isVisible = activities!!.isEmpty()
 
             activitiessaved_recyclerview.adapter =
-                ActivityAdapter(activities ?: emptyList(),list_fav)
+                ActivityAdapterGlobal(activities ?: emptyList(),list_fav)
         }
     }
 }

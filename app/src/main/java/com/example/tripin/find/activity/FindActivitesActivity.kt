@@ -3,12 +3,9 @@ package com.example.tripin.find.activity
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.RelativeLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
@@ -21,8 +18,6 @@ import kotlinx.android.synthetic.main.activity_find_activites.*
 import kotlinx.android.synthetic.main.activity_find_activites.activities_recyclerview
 import kotlinx.android.synthetic.main.activity_find_activites.bt_recherche_activity
 import kotlinx.android.synthetic.main.activity_find_activites.search_activity_bar
-import kotlinx.android.synthetic.main.activity_find_flight.*
-import kotlinx.android.synthetic.main.fragment_find_activity2.*
 import kotlinx.coroutines.runBlocking
 
 class FindActivitesActivity : AppCompatActivity() {
@@ -99,7 +94,7 @@ class FindActivitesActivity : AppCompatActivity() {
 
                 }
                 val activities = activityDaoSearch?.getActivity()
-                activities_recyclerview.adapter = ActivityAdapter(activities ?: emptyList(),list_favoris)
+                activities_recyclerview.adapter = ActivityAdapterGlobal(activities ?: emptyList(),list_favoris)
 
             }
 

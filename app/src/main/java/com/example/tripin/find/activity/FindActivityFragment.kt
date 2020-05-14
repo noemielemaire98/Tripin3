@@ -3,16 +3,17 @@ package com.example.tripin.find.activity
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.Button
+import android.widget.ImageButton
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
-
 import com.example.tripin.R
 import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
@@ -22,6 +23,7 @@ import com.example.tripin.model.Activity
 import kotlinx.android.synthetic.main.activity_find_activites.activities_recyclerview
 import kotlinx.android.synthetic.main.fragment_find_activity2.*
 import kotlinx.coroutines.runBlocking
+
 
 /**
  * A simple [Fragment] subclass.
@@ -38,12 +40,12 @@ class FindActivityFragment : Fragment() {
     var prix = 1
 
 
-
     @SuppressLint("ResourceAsColor")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // initalisation des items du layout
         val view = inflater.inflate(R.layout.fragment_find_activity2, container, false)
         val rv = view.findViewById<RecyclerView>(R.id.activities_recyclerview)
@@ -164,7 +166,7 @@ class FindActivityFragment : Fragment() {
                 }
                 val activities = activityDaoSearch?.getActivity()
                 activities_recyclerview.adapter =
-                    ActivityAdapter(activities ?: emptyList(), list_favoris)
+                    ActivityAdapterGlobal(activities ?: emptyList(), list_favoris)
             }
                 else {
                     layoutNoActivities_frag.visibility = View.VISIBLE
@@ -205,7 +207,7 @@ class FindActivityFragment : Fragment() {
                         list_favoris.add(false)
                     }
                 activities_recyclerview.adapter =
-                    ActivityAdapter(activities ?: emptyList(), list_favoris)
+                    ActivityAdapterGlobal(activities ?: emptyList(), list_favoris)
             }
 
 

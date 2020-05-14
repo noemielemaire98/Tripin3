@@ -11,16 +11,22 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.Button"
+        app:backgroundTint="@color/contrast_blue"
         android:text="VOlS SAVED"
         android:id="@+id/bt_flight_saved"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.Button"
+        app:backgroundTint="@color/contrast_blue"
         android:text="HOTELS SAVED"
         android:id="@+id/bt_hotel_saved"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.Button"
+        app:backgroundTint="@color/contrast_blue"
         android:text="ACTIVITES SAVED"
         android:id="@+id/bt_activities_saved"/>
 

@@ -5,20 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".find.FindFragment">
+    tools:context=".trip.DetailVoyage">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/pub"
+        android:adjustViewBounds="true"
+        android:backgroundTint="@color/colorPrimary"/>
+
 
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabMode="fixed"
-        android:id="@+id/tablayout_find"
-        android:background="@color/colorPrimary"
+        android:id="@+id/tablayout_detail_voyage"
+        android:background="@color/contrast_blue"
         app:tabTextColor="#fff"/>
 
     <androidx.viewpager.widget.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fragment_rechercheinterne" />
+        android:id="@+id/viewpager_detail_voyage" />
 
 
-   </LinearLayout>
+</LinearLayout>
