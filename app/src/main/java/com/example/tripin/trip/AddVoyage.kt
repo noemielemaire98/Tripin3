@@ -28,6 +28,7 @@ import kotlinx.android.synthetic.main.activity_add_voyage.*
 import kotlinx.android.synthetic.main.activity_add_voyage.passengers_number
 import kotlinx.android.synthetic.main.activity_find_flight.*
 import kotlinx.coroutines.runBlocking
+import org.jetbrains.anko.colorAttr
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -128,6 +129,7 @@ class AddVoyage : AppCompatActivity() {
                         "Tous les champs ne sont pas rempli",
                         Toast.LENGTH_SHORT
                     ).show()
+                    
 
                 } else {
                     val titre = addv_titre_editText.text

@@ -8,6 +8,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.AutoCompleteTextView
 import androidx.room.Room
+import com.aminography.primecalendar.civil.CivilCalendar
+import com.aminography.primedatepicker.picker.PrimeDatePicker
+import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
@@ -46,8 +49,8 @@ class EditVoyage() : AppCompatActivity() {
         Log.d("EPF"," $id, $titre, $dateDepart, $dateRetour, $nbvoyageur")
 
         editv_titre_editText.hint = titre
-        editv_dateDepart_editText.hint = dateDepart
-        editv_dateRetour_editText.hint = dateRetour
+        editv_dateDepart.hint = dateDepart
+        editv_dateRetour.hint = dateRetour
         //editv_nbvoyageur_editText.hint = nbvoyageur.toString()
 
 
@@ -69,48 +72,15 @@ class EditVoyage() : AppCompatActivity() {
 //            Log.d("EPF", "ancien voyage:$titre , $dateDepart, $dateRetour, $nb_voyageur")
 //        }
 
+        // Affiche le calendrier
+        editv_dateDepart.setOnClickListener {
 
-//        val dateDepartSetListener =
-//            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-//                cal.set(Calendar.YEAR, year)
-//                cal.set(Calendar.MONTH, monthOfYear)
-//                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-//                updatDatedepartInView()
-//            }
-//
-//        val dateRetourSetListener =
-//            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-//                cal.set(Calendar.YEAR, year)
-//                cal.set(Calendar.MONTH, monthOfYear)
-//                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-//                updatDateretourInView()
-//            }
-//
-//        editv_dateDepart_editText?.setOnClickListener {
-//            var dialog = DatePickerDialog(
-//                this,
-//                dateDepartSetListener,
-//                // set DatePickerDialog to point to today's date when it loads up
-//                cal.get(Calendar.YEAR),
-//                cal.get(Calendar.MONTH),
-//                cal.get(Calendar.DAY_OF_MONTH)
-//            )
-//            dialog.datePicker.minDate = Calendar.getInstance().timeInMillis
-//            dialog.show()
-//        }
-//
-//        editv_dateRetour_editText?.setOnClickListener {
-//            var dialog = DatePickerDialog(
-//                this,
-//                dateRetourSetListener,
-//                // set DatePickerDialog to point to today's date when it loads up
-//                cal.get(Calendar.YEAR),
-//                cal.get(Calendar.MONTH),
-//                cal.get(Calendar.DAY_OF_MONTH)
-//            )
-//            dialog.datePicker.minDate = Calendar.getInstance().timeInMillis
-//            dialog.show()
-//        }
+            rangeDatePickerPrimeCalendar()
+        }
+        // Affiche le calendrier pour choisir la date de retour
+        editv_dateRetour.setOnClickListener {
+            rangeDatePickerPrimeCalendar()
+        }
 
         editv_passengers_number.hint = nbvoyageur.toString()
         var nbpasager = findViewById<AutoCompleteTextView>(R.id.editv_passengers_number)
@@ -123,18 +93,50 @@ class EditVoyage() : AppCompatActivity() {
 
 
     }
+    // affichage du calendrier aller-retour
+    private fun rangeDatePickerPrimeCalendar() {
+        val rangeDaysPickCallback = RangeDaysPickCallback { startDate, endDate ->
+            // TODO
+            Log.d("Date", "${startDate.shortDateString} ${endDate.shortDateString}")
+            val parser =
+                SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+            val formatterDate =
+                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val parsedStartDate =
+                formatterDate.format(parser.parse(startDate.shortDateString)!!)
+            val parsedEndDate =
+                formatterDate.format(parser.parse(endDate.shortDateString)!!)
+            editv_dateDepart.setText(parsedStartDate)
+            editv_dateRetour.setText(parsedEndDate)
+        }
 
-//    private fun updatDatedepartInView() {
-//        val myFormat = "dd/MM/yyyy" // mention the format you need
-//        val sdf = SimpleDateFormat(myFormat, Locale.US)
-//        editv_dateDepart_editText!!.setText(sdf.format(cal.getTime()))
-//    }
-//
-//    private fun updatDateretourInView() {
-//        val myFormat = "dd/MM/yyyy" // mention the format you need
-//        val sdf = SimpleDateFormat(myFormat, Locale.US)
-//        editv_dateRetour_editText!!.setText(sdf.format(cal.getTime()))
-//    }
+        val today = CivilCalendar()
+
+        if (editv_dateDepart.text.toString() != "" && editv_dateRetour.text.toString() != "") {
+            val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val calStart = CivilCalendar()
+            calStart.timeInMillis = df.parse(editv_dateDepart.text.toString())!!.time
+            val calEnd = CivilCalendar()
+            calEnd.timeInMillis = df.parse(editv_dateRetour.text.toString())!!.time
+
+            val datePickerT = PrimeDatePicker.dialogWith(today)
+                .pickRangeDays(rangeDaysPickCallback)
+                .initiallyPickedRangeDays(calStart, calEnd)
+                .firstDayOfWeek(Calendar.MONDAY)
+                .minPossibleDate(today)
+                .build()
+
+            datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
+        } else {
+            val datePickerT = PrimeDatePicker.dialogWith(today)
+                .pickRangeDays(rangeDaysPickCallback)
+                .firstDayOfWeek(Calendar.MONDAY)
+                .minPossibleDate(today)
+                .build()
+
+            datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
+        }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_edit_voyage,menu)
@@ -147,13 +149,16 @@ class EditVoyage() : AppCompatActivity() {
                 if (editv_titre_editText.text.isNotEmpty()) {
                     titre = editv_titre_editText.text.toString()
                 }
-                if (editv_dateDepart_editText.text.isNotEmpty()) {
-                    dateDepart = editv_dateDepart_editText.text.toString()
+                if (editv_dateDepart.text.toString().isNotEmpty()) {
+                    dateDepart = editv_dateDepart.text.toString()
                 }
-                if (editv_dateRetour_editText.text.isNotEmpty()) {
-                    dateRetour = editv_dateRetour_editText.text.toString()
+                if (editv_dateRetour.text.toString().isNotEmpty()) {
+                    dateRetour = editv_dateRetour.text.toString()
                 }
-                nbvoyageur = editv_passengers_number.text.toString().toInt()
+                if(editv_passengers_number.text.toString().isNotEmpty()){
+                    nbvoyageur = editv_passengers_number.text.toString().toInt()
+                }
+
 
 
 
