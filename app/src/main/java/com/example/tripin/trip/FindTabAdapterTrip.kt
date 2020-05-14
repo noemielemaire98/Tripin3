@@ -4,14 +4,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
+
 class FindTabAdapterTrip (fm : FragmentManager): FragmentPagerAdapter(fm) {
 
 
     val fragment_list = arrayListOf<Fragment>()
     val fragment_title = arrayListOf<String>()
 
-
     override fun getItem(position: Int): Fragment {
+
         return fragment_list[position]
     }
 

@@ -13,6 +13,7 @@ import com.example.tripin.find.hotel.FindHotelFragment
 import com.example.tripin.find.voyage.FindVoyage
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.*
+import org.jetbrains.anko.toolbar
 
 
 /**
@@ -40,6 +41,10 @@ class FindFragment : Fragment() {
 
         return myfragment
 
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
     private fun setupViewPager(viewPager: ViewPager) {

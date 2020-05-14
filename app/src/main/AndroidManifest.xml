@@ -12,11 +12,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".find.activity.FindActivitesActivity" android:label="Rechercher des activites"></activity>
+        <activity
+            android:name=".find.activity.FindActivitesActivity"
+            android:label="Rechercher des activites" />
         <activity android:name=".find.hotel.FindHotelActivity" android:label="Recherche d'hôtels"/>
         <activity android:name=".find.flight.FindFlightActivity" android:label="Rechercher des vols"/>
-        <activity android:name=".find.hotel.DetailsHotel" android:label="Détail d'un hôtel"></activity>
-        <activity android:name=".profil.StarsActivity"></activity>
+        <activity
+            android:name=".find.hotel.DetailsHotel"
+            android:label="Détail d'un hôtel" />
+        <activity android:name=".profil.StarsActivity" />
         <activity android:name=".profil.SharingActivity" />
         <activity android:name=".profil.PreferencesActivity" />
         <activity android:name=".profil.ContactActivity" />
