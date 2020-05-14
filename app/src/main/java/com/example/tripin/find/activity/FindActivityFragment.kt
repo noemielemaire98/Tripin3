@@ -136,72 +136,81 @@ class FindActivityFragment : Fragment()  {
           }
 
           // récupère la ville saisie
-            val city_name = editText.text.toString()
-            val service = retrofit().create(ActivitybyCity::class.java)
-            runBlocking {
-                // Récupère les données des items du layout
-                val city = citydao?.getCity(city_name)
-                if (city != null) {
-                    city_id = city.id.toString()
-                }
-                query = et_query.text.toString()
-                categories = liste_cat_active(btn_museum,btn_food,btn_night,btn_fun,btn_other,btn_sport)
+          val city_name = editText.text.toString()
+          val service = retrofit().create(ActivitybyCity::class.java)
+          runBlocking {
+              // Récupère les données des items du layout
+              val city = citydao?.getCity(city_name)
+              if (city != null) {
+                  city_id = city.id.toString()
+              }
+              query = et_query.text.toString()
+              categories =
+                  liste_cat_active(btn_museum, btn_food, btn_night, btn_fun, btn_other, btn_sport)
 
-                //lancement de la requête api
-                val result = service.listAct(query,"AUTO","LEVEL-0","relevance-city",city_id,price_range,categories,"20",lang,monnaie)
+              //lancement de la requête api
+              val result = service.listAct(
+                  query,
+                  "AUTO",
+                  "LEVEL-0",
+                  "relevance-city",
+                  city_id,
+                  price_range,
+                  categories,
+                  "20",
+                  lang,
+                  monnaie
+              )
 
-                //Traitement du résultat
-                if (result.meta.count != 0L) {
-                    layoutNoActivities_frag.visibility = View.GONE
-                    val list_activities_bdd = activityDaoSaved?.getActivity()
-                    result.data.map {
-                        val titre = it.title
-                        var match_bdd = false
-                        list_activities_bdd?.forEach {
-                            if (it.title == titre) {
-                                list_favoris.add(true)
-                                match_bdd = true
-                            }
-                        }
-                        if (match_bdd == false) {
-                            list_favoris.add(false)
-                        }
-                        val list_cat =  it.categories.map {
-                            it.name
-                        }
+              //Traitement du résultat
+              if (result.meta.count != 0L) {
+                  layoutNoActivities_frag.visibility = View.GONE
+                  val list_activities_bdd = activityDaoSaved?.getActivity()
+                  result.data.map {
+                      val titre = it.title
+                      var match_bdd = false
+                      list_activities_bdd?.forEach {
+                          if (it.title == titre) {
+                              list_favoris.add(true)
+                              match_bdd = true
+                          }
+                      }
+                      if (match_bdd == false) {
+                          list_favoris.add(false)
+                      }
+                      val list_cat = it.categories.map {
+                          it.name
+                      }
 
 
-                        val activity = Activity(
-                            it.uuid,
-                            it.title,
-                            it.cover_image_url,
-                            it.retail_price.formatted_iso_value,
-                            it.operational_days,
-                            it.reviews_avg,
-                            list_cat,
-                            it.url,
-                            it.top_seller,
-                            it.must_see,
-                            it.description,
-                            it.about,
-                            it.latitude,
-                            it.longitude
-                        )
-                        activityDaoSearch?.addActivity(activity)
+                      val activity = Activity(
+                          it.uuid,
+                          it.title,
+                          it.cover_image_url,
+                          it.retail_price.formatted_iso_value,
+                          it.operational_days,
+                          it.reviews_avg,
+                          list_cat,
+                          it.url,
+                          it.top_seller,
+                          it.must_see,
+                          it.description,
+                          it.about,
+                          it.latitude,
+                          it.longitude
+                      )
+                      activityDaoSearch?.addActivity(activity)
 
-                    }
-
-                }
-                val activities = activityDaoSearch?.getActivity()
-                activities_recyclerview.adapter =
-                    ActivityAdapterGlobal(activities ?: emptyList(), list_favoris)
-            }
-                else {
-                    layoutNoActivities_frag.visibility = View.VISIBLE
-                }
-            }
-
+                  }
+                  val activities = activityDaoSearch?.getActivity()
+                  activities_recyclerview.adapter =
+                      ActivityAdapterGlobal(activities ?: emptyList(), list_favoris)
+              } else {
+                  layoutNoActivities_frag.visibility = View.VISIBLE
+              }
+          }
       }
+
 
         return view
     }
