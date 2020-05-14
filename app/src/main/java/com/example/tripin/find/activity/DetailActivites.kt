@@ -114,6 +114,7 @@ class DetailActivites : AppCompatActivity() {
 
 
 
+        // 3 - AU CLIC SUR LE BOUTON FAVORIS
         fab_fav.setOnClickListener {
             if (favoris == false) {
                 runBlocking {
@@ -135,6 +136,7 @@ class DetailActivites : AppCompatActivity() {
         }
 
 
+        // AU CLIC SUR LE BOUTON RESERVER
         booking_button.setOnClickListener {
             val u = ((activite?.url)?.split("sandbox."))?.get(1)
             val urll = "https://$u"
@@ -147,6 +149,7 @@ class DetailActivites : AppCompatActivity() {
         }
 
 
+        //AU CLIC SUR LE BOUTON AJOUT A UN VOYAGE
         fab_plus.setOnClickListener {
             voyageDao = databasesaved.getVoyageDao()
             var contenu = false
