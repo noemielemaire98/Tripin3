@@ -12,8 +12,12 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
+import com.aminography.primecalendar.civil.CivilCalendar
+import com.aminography.primedatepicker.picker.PrimeDatePicker
+import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
 import com.bumptech.glide.Glide
 import com.example.tripin.R
 import com.example.tripin.data.ActivityDao
@@ -26,11 +30,15 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.xw.repo.BubbleSeekBar
 import kotlinx.android.synthetic.main.activity_detail_activites.*
 import kotlinx.android.synthetic.main.createvoyage_popup.*
 import kotlinx.android.synthetic.main.createvoyage_popup.view.*
+import kotlinx.android.synthetic.main.fragment_find_flight2.*
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.anko.find
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -43,6 +51,8 @@ class DetailActivites : AppCompatActivity() {
     private var list_activities_bdd = emptyList<Activity>()
     private lateinit var mapFragment : SupportMapFragment
     private lateinit var googleMap: GoogleMap
+    var date_debut =""
+    var date_fin=""
 
 
 
@@ -96,8 +106,7 @@ class DetailActivites : AppCompatActivity() {
             layout_activity_must_see.visibility = View.VISIBLE
         }
 
-
-        if(activite?.reviews_avg != null){
+        if(activite?.reviews_avg != 0.0){
             layout_note_activity.visibility = View.VISIBLE
             tv_activity_rate.text = "${activite?.reviews_avg}"
         }
@@ -164,7 +173,7 @@ class DetailActivites : AppCompatActivity() {
             val selectedList = ArrayList<Int>()
             runBlocking {
                 if(voyageDao?.getVoyage() != null){
-                    voyageDao?.getVoyage()!!.map {list_voyage2.add(it.titre) }
+                    voyageDao?.getVoyage()!!.map {list_voyage2.add(it.titre!!) }
                     list_voyage = list_voyage2.toTypedArray()
                 }
             }
@@ -206,14 +215,19 @@ class DetailActivites : AppCompatActivity() {
 
                        AlertDialog.Builder(this).apply {
                            val view = layoutInflater.inflate(R.layout.createvoyage_popup,null)
+                           var editText = view.findViewById<EditText>(R.id.et_date)
                            setView(view)
                            setTitle("Créer")
+                           editText.setOnClickListener {
+                               rangeDatePickerPrimeCalendar(editText)
+                           }
+
                            setPositiveButton("OK"){_,_ ->
-                               val voyage = Voyage(0,view.et_titre.text.toString(),view.et_date1.text.toString(),view.et_date2.text.toString(),R.drawable.destination1,view.et_nb_voyageur.text.toString().toInt(), emptyList())
+                               val voyage = Voyage(0,view.et_titre.text.toString(),date_debut,date_fin,R.drawable.destination1,view.et_nb_voyageur.text.toString().toInt(), emptyList())
                                runBlocking {
                                    voyageDao?.addVoyage(voyage)
                                }
-                               list_voyage2.add(voyage.titre)
+                               list_voyage2.add(view.et_titre.text.toString())
                                list_voyage = list_voyage2.toTypedArray()
                                plusdialog.setMultiChoiceItems(list_voyage,null){ dialog, which: Int, isChecked ->
                                    // Update the current focused item's checked status
@@ -250,8 +264,6 @@ class DetailActivites : AppCompatActivity() {
                 show()
             }
         }
-
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -262,6 +274,38 @@ class DetailActivites : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    private fun rangeDatePickerPrimeCalendar(editText: EditText) {
+        val rangeDaysPickCallback = RangeDaysPickCallback { startDate, endDate ->
+            // TODO
+            Log.d("Date", "${startDate.shortDateString} ${endDate.shortDateString}")
+            val parser =
+                SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+            val formatterDate =
+                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val parsedStartDate =
+                formatterDate.format(parser.parse(startDate.shortDateString)!!)
+            val parsedEndDate =
+                formatterDate.format(parser.parse(endDate.shortDateString)!!)
+            editText.setText("Du $parsedStartDate au $parsedEndDate")
+            date_debut = parsedStartDate
+            date_fin = parsedEndDate
+        }
+
+        val today = CivilCalendar()
+
+            val datePickerT = PrimeDatePicker.dialogWith(today)
+                .pickRangeDays(rangeDaysPickCallback)
+                .firstDayOfWeek(Calendar.MONDAY)
+                .minPossibleDate(today)
+                .build()
+
+            datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
+
+
     }
 }
 

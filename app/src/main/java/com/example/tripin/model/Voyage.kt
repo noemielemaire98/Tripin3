@@ -5,11 +5,11 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "myvoyages")
         data class Voyage(@PrimaryKey(autoGenerate = true) val id:Int,
-                  val titre: String,
-                  val date:String,
-                  val dateRetour:String,
+                  val titre: String?,
+                  val date:String?,
+                  val dateRetour:String?,
                   val photo: Int,
-                  val nb_voyageur: Int,
+                  val nb_voyageur: Int?,
                   var list_activity : List<Activity>?
 ) {
 

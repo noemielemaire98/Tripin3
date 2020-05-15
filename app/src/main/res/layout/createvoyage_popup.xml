@@ -5,38 +5,85 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <EditText
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="Titre"
-        android:inputType="text"
-        android:id="@+id/et_titre"/>
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
 
-    <EditText
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:hint="Date de départ"
-        android:inputType="date"
-        android:id="@+id/et_date1"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_card_travel_black_24dp"
+            android:layout_gravity="center_vertical"/>
 
-    <EditText
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="20dp"
+            android:hint="Titre"
+            android:inputType="text"
+            android:id="@+id/et_titre"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="Date de retour"
-        android:inputType="date"
-        android:id="@+id/et_date2"/>
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
 
-    <EditText
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_date_range_black_24dp"
+            android:layout_gravity="center_vertical" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="20dp"
+            android:hint="Dates"
+            android:focusable="false"
+            android:clickable="true"
+            android:id="@+id/et_date"
+            android:inputType="none"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginEnd="50dp"
-        android:hint="Nombre de voyageur"
-        android:inputType="number"
-        android:id="@+id/et_nb_voyageur"/>
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_people_outline_black_24dp"
+            android:layout_gravity="center_vertical"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:inputType="number"
+            android:maxLength="9"
+            android:hint="Nombres de voyageur"
+            android:id="@+id/et_nb_voyageur"/>
+
+    </LinearLayout>
+
+
+
+
+
+
 
 
 

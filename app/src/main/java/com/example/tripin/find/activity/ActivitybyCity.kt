@@ -37,7 +37,7 @@ interface ActivitybyCity {
         @Header("x-musement-currency") monnaie: String
     ): ModelMusement.Welcome
 
-    @GET("api/v3/activities?")
+    @GET("api/v3/activities")
     suspend fun listAct(
         @Query("text") query: String,
         @Query("text_operator") text_operator: String,
@@ -47,6 +47,8 @@ interface ActivitybyCity {
         @Query("default_price_range") price_range : String,
         @Query("vertical_in") vertical_in: String,
         @Query("limit") limit: String,
+        @Query("available_from") available_from : String,
+        @Query("available_to") available_to : String,
         @Header("accept-language") lang: String,
         @Header("x-musement-currency") monnaie: String
     ): ModelMusement.Welcome

@@ -540,6 +540,7 @@ class FindFlightFragment : Fragment() {
                 formatterDate.format(parser.parse(endDate.shortDateString)!!)
             aller_date.setText(parsedStartDate)
             return_date.setText(parsedEndDate)
+            Log.d("RRR","${parsedStartDate},${parsedEndDate}")
         }
 
         val today = CivilCalendar()
@@ -568,6 +569,7 @@ class FindFlightFragment : Fragment() {
 
             datePickerT.show(childFragmentManager, "PrimeDatePickerBottomSheet")
         }
+
     }
 
     private fun Fragment.hideKeyboard() {

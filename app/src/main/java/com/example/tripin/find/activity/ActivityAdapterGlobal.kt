@@ -63,11 +63,11 @@ class ActivityAdapterGlobal(val list_activity: List<Activity>, val attribut_favo
             .into(holder.activtyView.activity_imageview)
 
         holder.activtyView.activity_price_textview.text = "Prix : ${activity.formatted_iso_value}"
-        if (activity.operational_days != null){
+        /*if (activity.operational_days != null){
             holder.activtyView.activity_days_textview.text = "Dispo : ${activity.operational_days}"
         }else {
             holder.activtyView.activity_days_textview.text = "Dispo : non communiquées"
-        }
+        }*/
 
         if(activity.reviews_avg != 0.0){
             holder.activtyView.layout_activity_rate.visibility = View.VISIBLE
