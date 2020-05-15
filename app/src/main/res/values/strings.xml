@@ -32,6 +32,7 @@
     <string name="autoCompleteTextView_lieu_depart">Lieu de départ</string>
     <string name="autoCompleteTextView_lieu_arrivee">Lieu d\'arrivée</string>
     <string name="textView_nombre_passagers">Passagers</string>
+    <string name="textView_nombre_voyageurs">Voyageurs</string>
     <string name="button_searchFlight">Rechercher</string>
     <string name="textView_aucun_vol_disponible">Aucun vol disponible</string>
     <string name="imageDescription_no_flights">Aucun vol trouvé</string>

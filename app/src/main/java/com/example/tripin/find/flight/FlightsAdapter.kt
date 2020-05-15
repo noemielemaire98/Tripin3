@@ -17,7 +17,9 @@ import com.example.tripin.R
 import com.example.tripin.saved.SavedFlight
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.FlightDao
+import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Flight
+import kotlinx.android.synthetic.main.activity_saved_flight.*
 import kotlinx.android.synthetic.main.flights_view.view.*
 import kotlinx.coroutines.runBlocking
 import java.io.IOException
@@ -30,6 +32,7 @@ import java.util.concurrent.TimeUnit
 class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) :
     RecyclerView.Adapter<FlightsAdapter.FlightsViewHolder>() {
 
+    private var voyageDaoSaved: VoyageDao? = null
     private var listFlightsBdd: MutableList<Flight>? = null
     private var flightDaoSaved: FlightDao? = null
     private lateinit var context: Context
@@ -46,9 +49,12 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
             .build()
 
         flightDaoSaved = databaseSaved.getFlightDao()
-        return FlightsViewHolder(
-            view
-        )
+        voyageDaoSaved = databaseSaved.getVoyageDao()
+
+        runBlocking {
+            listFlightsBdd = flightDaoSaved?.getFlights()
+        }
+        return FlightsViewHolder(view)
     }
 
     override fun getItemCount(): Int = flightsList.size
@@ -57,9 +63,7 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
     @SuppressLint("SimpleDateFormat", "SetTextI18n")
     override fun onBindViewHolder(holder: FlightsViewHolder, position: Int) {
         val view = holder.flightsView
-        runBlocking {
-            listFlightsBdd = flightDaoSaved?.getFlights()
-        }
+
         var favoris = false
         flightsList.map { itListFlight ->
 
@@ -239,9 +243,7 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
 
 
             view.fab_favFlight.setOnClickListener {
-                runBlocking {
-                    listFlightsBdd = flightDaoSaved?.getFlights()
-                }
+
                 if (!favoris) {
 
                     val row = listFlightsBdd?.size
@@ -295,14 +297,13 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
 
                     if (context.javaClass == SavedFlight::class.java) {
                         flightsList.remove(flights)
-                        //                      notifyItemRemoved(holder.adapterPosition)
-                        //                     if (flightsList.isNullOrEmpty()) {
-                        val i = Intent(context, SavedFlight::class.java)
-                        (context as SavedFlight).finish()
-                        (context as SavedFlight).overridePendingTransition(0, 0)
-                        (context as SavedFlight).startActivity(i)
-                        (context as SavedFlight).overridePendingTransition(0, 0)
-                        //                      }
+
+                        notifyItemRemoved(position)
+                        notifyItemRangeChanged(position, itemCount);
+
+                        if (flightsList.isNullOrEmpty()) {
+                            (context as SavedFlight).layoutNoSavedFlight.visibility = View.VISIBLE
+                        }
                     }
 
                     favoris = false
@@ -315,26 +316,49 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
                     ).show()
                 }
 
-
+                runBlocking {
+                    listFlightsBdd = flightDaoSaved?.getFlights()
+                }
             }
 
             view.fab_addFlight.setOnClickListener {
 
-                val builder: AlertDialog.Builder =
-                    AlertDialog.Builder(context, R.style.ThemeOverlay_MaterialComponents_Dialog)
-                builder.setTitle("Ajouter à un voyage")
+                var contenu = false
+                var listVoyage: Array<String> = arrayOf()
+                var listVoyage2: ArrayList<String> = arrayListOf()
+                val selectedList = ArrayList<Int>()
 
-//list of items
-                val items = arrayOf("Voyage 1", "Voyage 2", "Voyage 3")
-                // set single choice items
-                builder.setItems(items) { dialog, which ->
-                    Log.d("valog", items[which])
+                runBlocking {
+                    if (voyageDaoSaved?.getVoyage() != null) {
+                        voyageDaoSaved?.getVoyage()!!.map { listVoyage2.add(it.titre) }
+                        listVoyage = listVoyage2.toTypedArray()
+                        contenu = true
+
+                    }
                 }
-                val dialog: AlertDialog = builder.create()
-                // display dialog
-                dialog.show()
+                if (contenu) {
+                    val builder = AlertDialog.Builder(context)
+                    builder.setTitle("Choisissez un dossier de voyage")
 
 
+                    builder.setMultiChoiceItems(listVoyage, null) { dialog, which, isChecked ->
+                        // Update the current focused item's checked status
+                        if (isChecked) {
+                            selectedList.add(which)
+                        } else if (selectedList.contains(which)) {
+                            selectedList.remove(Integer.valueOf(which))
+                        }
+
+                    }
+                    builder.setPositiveButton(android.R.string.ok) { _, _ ->
+
+                    }
+
+                    builder.show()
+
+
+
+                }
             }
 
         }

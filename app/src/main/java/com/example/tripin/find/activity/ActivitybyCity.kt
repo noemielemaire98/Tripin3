@@ -23,11 +23,22 @@ interface ActivitybyCity {
     @GET("api/v3/cities/{city_id}/activities?limit=20")
     suspend fun listActivitybyCity(
         @Path("city_id") city_id: Int,
-        @Query("sort_by") sort_by : String,
+        @Query("sort_by") sort_by: String,
         @Query("vertical_in") vertical_in: String,
         @Header("accept-language") lang: String,
         @Header("x-musement-currency") monnaie: String
     ): ModelMusement.Welcome
+
+    @GET("api/v3/cities/{city_id}/activities")
+    suspend fun listActivitybyCityVoyage(
+        @Path("city_id") city_id: Int,
+        @Query("sort_by") sort_by: String,
+        @Query("vertical_in") vertical_in: String,
+        @Query("limit") limit: Int,
+        @Header("accept-language") lang: String,
+        @Header("x-musement-currency") monnaie: String
+    ): ModelMusement.Welcome
+
 
     @GET("api/v3/activities?limit=20")
     suspend fun listActivitybyCityandCategory(
@@ -39,7 +50,8 @@ interface ActivitybyCity {
 
 
 }
-    data class City(val id : Int = 0,val name : String="",val show_in_popular : Boolean=false)
+
+data class City(val id: Int = 0, val name: String = "", val show_in_popular: Boolean = false)
 
 
 

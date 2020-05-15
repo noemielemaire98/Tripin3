@@ -2,11 +2,10 @@ package com.example.tripin.find.flight
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -54,6 +53,9 @@ class FindFlightFragment : Fragment() {
     private var flightDao: FlightDao? = null
     private lateinit var flightsRecyclerView: RecyclerView
 
+    private var mBundleRecyclerViewState: Bundle? = null
+    private var mListState: Parcelable? = null
+
     //    private var listFlights = mutableListOf<Flight>()
     private var activityCreate = true
     private val amadeus: Amadeus = Amadeus
@@ -69,14 +71,15 @@ class FindFlightFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_find_flight2, container, false)
 
         flightsRecyclerView = view.findViewById(R.id.flights_recyclerview)
-        val simple_button = view.findViewById<Button>(R.id.simple_button)
-        val aller_date = view.findViewById<EditText>(R.id.aller_date)
-        val return_date = view.findViewById<EditText>(R.id.return_date)
-        val btn_search = view.findViewById<Button>(R.id.btn_search)
+        val hideInput = view.findViewById<Button>(R.id.hide_input)
+        val simpleButton = view.findViewById<Button>(R.id.simple_button)
+        val allerDate = view.findViewById<EditText>(R.id.aller_date)
+        val returnDate = view.findViewById<EditText>(R.id.return_date)
+        val btnSearch = view.findViewById<Button>(R.id.btn_search)
         val autoTextViewDepart = view.findViewById<AutoCompleteTextView>(R.id.autoTextViewDepart)
         val autoTextViewRetour = view.findViewById<AutoCompleteTextView>(R.id.autoTextViewRetour)
-        val allerType_radiogroup = view.findViewById<RadioGroup>(R.id.allerType_radiogroup)
-        val passengers_number = view.findViewById<AutoCompleteTextView>(R.id.passengers_number)
+        val allertypeRadiogroup = view.findViewById<RadioGroup>(R.id.allerType_radiogroup)
+        val passengersNumberTextView = view.findViewById<AutoCompleteTextView>(R.id.passengers_number)
         val travelClassEdit = view.findViewById<AutoCompleteTextView>(R.id.travelClassEdit)
         flightsRecyclerView.layoutManager = LinearLayoutManager(activity)
 
@@ -133,11 +136,11 @@ class FindFlightFragment : Fragment() {
 
                 autoTextViewDepart.setAdapter(adapterLieuDepart)
                 autoTextViewRetour.setAdapter(adapterLieuArrival)
-                passengers_number.setAdapter(adapterPassengers)
+                passengersNumberTextView.setAdapter(adapterPassengers)
                 travelClassEdit.setAdapter(adapterTravelClass)
 
                 // Affiche le calendrier pour choisir la date d'aller
-                aller_date.setOnClickListener {
+                allerDate.setOnClickListener {
                     hideKeyboard()
                     savedTopLevel_layout.requestFocus()
                     if (return_dateLayout.visibility == View.VISIBLE) { // Si c'est un voyage aller-retour
@@ -155,15 +158,15 @@ class FindFlightFragment : Fragment() {
                                 SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                             val parsedDate =
                                 formatterDate.format(parser.parse(date.shortDateString)!!)
-                            aller_date.setText(parsedDate)
+                            allerDate.setText(parsedDate)
                         }
 
                         val today = CivilCalendar()
 
-                        if (aller_date.text.toString() != "") { // Si une date a déjà été choisie
+                        if (allerDate.text.toString() != "") { // Si une date a déjà été choisie
                             val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                             val calStart = CivilCalendar()
-                            calStart.timeInMillis = df.parse(aller_date.text.toString())!!.time
+                            calStart.timeInMillis = df.parse(allerDate.text.toString())!!.time
 
                             val datePickerT = PrimeDatePicker.dialogWith(today)
                                 .pickSingleDay(singleDayPickCallback)
@@ -187,17 +190,17 @@ class FindFlightFragment : Fragment() {
                 }
 
                 // Affiche le calendrier pour choisir la date de retour
-                return_date.setOnClickListener {
+                returnDate.setOnClickListener {
                     hideKeyboard()
                     savedTopLevel_layout.requestFocus()
                     rangeDatePickerPrimeCalendar()
                 }
 
                 // Montre toute la liste déroulante à chaque fois
-                passengers_number.setOnClickListener {
+                passengersNumberTextView.setOnClickListener {
                     hideKeyboard()
                     savedTopLevel_layout.requestFocus()
-                    passengers_number.showDropDown()
+                    passengersNumberTextView.showDropDown()
                 }
 
                 // Montre toute la liste déroulante à chaque fois
@@ -207,8 +210,18 @@ class FindFlightFragment : Fragment() {
                     travelClassEdit.showDropDown()
                 }
 
+                hideInput.setOnClickListener {
+                    if (layout_search.visibility == View.VISIBLE) {
+                        layout_search.visibility = View.GONE
+                        //              button_newSearch.visibility = View.VISIBLE
+                    } else {
+                        layout_search.visibility = View.VISIBLE
+                        //              button_newSearch.visibility = View.GONE
+                    }
+                }
+
                 // Bouton pour lancer la recherche
-                btn_search.setOnClickListener {
+                btnSearch.setOnClickListener {
                     hideKeyboard()
                     savedTopLevel_layout.requestFocus()
                     if (autoTextViewDepart.text.toString() == "" || autoTextViewRetour.text.toString() == "") { // Si les lieux ne sont pas bien spécifiés
@@ -228,12 +241,12 @@ class FindFlightFragment : Fragment() {
                     val keptRetour = strRetour.substringAfterLast("(")
                     lieuRetour = keptRetour.substringBeforeLast(")")
 
-                    if (aller_date.text.toString() != "" && return_date.text.toString() != "") { // Si lieux bien spécifiés et voyage aller-retour
+                    if (allerDate.text.toString() != "" && returnDate.text.toString() != "") { // Si lieux bien spécifiés et voyage aller-retour
 
-                        dateRetour = return_date.text.toString()
+                        dateRetour = returnDate.text.toString()
                         beginSearchExported(dateRetour)
 
-                    } else if (aller_date.text.toString() != "" && return_dateLayout.visibility == View.GONE) { // Si voyage aller-simple
+                    } else if (allerDate.text.toString() != "" && return_dateLayout.visibility == View.GONE) { // Si voyage aller-simple
                         dateRetour = ""
                         beginSearchExported(dateRetour)
                     } else {
@@ -247,11 +260,11 @@ class FindFlightFragment : Fragment() {
                 }
 
                 // Choix du type de voyage (aller simple ou aller-retour)
-                allerType_radiogroup.setOnCheckedChangeListener { _, checkedId ->
+                allertypeRadiogroup.setOnCheckedChangeListener { _, checkedId ->
                     val radio: RadioButton = view.findViewById(checkedId)
-                    if (radio.id == simple_button.id) {
+                    if (radio.id == simpleButton.id) {
                         return_dateLayout.visibility = View.GONE
-                        return_date.setText("")
+                        returnDate.setText("")
 
                     } else {
                         return_dateLayout.visibility = View.VISIBLE
@@ -272,36 +285,6 @@ class FindFlightFragment : Fragment() {
         return view
     }
 
-
-    fun showDialog() {
-        val builder: AlertDialog.Builder = AlertDialog.Builder(context, R.style.ThemeOverlay_MaterialComponents_Dialog)
-        builder.setTitle("Test")
-
-//list of items
-        val items = resources.getStringArray(R.array.travelClass)
-        // set single choice items
-        builder.setSingleChoiceItems(
-            items, 2
-        ) { dialog, which ->
-            // item selected logic
-        }
-        val positiveText = getString(android.R.string.ok)
-        builder.setPositiveButton(
-            positiveText
-        ) { dialog, which ->
-            // positive button logic here
-            // dismiss dialog too
-        }
-        val negativeText = getString(android.R.string.cancel)
-        builder.setNegativeButton(
-            negativeText
-        ) { dialog, which -> // negative button logic
-            dialog.dismiss()
-        }
-        val dialog: AlertDialog = builder.create()
-        // display dialog
-        dialog.show()
-    }
 
     override fun onResume() {
         super.onResume()
@@ -334,12 +317,29 @@ class FindFlightFragment : Fragment() {
                 }
                 withContext(Dispatchers.Main) {
                     flightsRecyclerView.adapter = FlightsAdapter(flightsList)
+                    if (mBundleRecyclerViewState != null) {
+                        mListState = mBundleRecyclerViewState!!.getParcelable("keyR")
+                        flightsRecyclerView.layoutManager?.onRestoreInstanceState(mListState)
+                    }
                 }
             } else if (!activityCreate) { // S'il n'y a pas de vols et qu'une recherche a été effectuée, affiche l'image aucun vol dispo
-                layoutNoFlightAvailable.visibility = View.VISIBLE
+                withContext(Dispatchers.Main) {
+                    layoutNoFlightAvailable.visibility = View.VISIBLE
+                }
             }
-            loadingPanel.visibility = View.GONE // cache roue de chargement
+            withContext(Dispatchers.Main) {
+                loadingPanel.visibility = View.GONE // cache roue de chargement
+            }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        mBundleRecyclerViewState = Bundle()
+
+        mListState = flightsRecyclerView.layoutManager?.onSaveInstanceState()
+        mBundleRecyclerViewState!!.putParcelable("keyR", mListState)
     }
 
     // Lancement de la recherche
