@@ -23,7 +23,6 @@ import com.amadeus.Amadeus
 import com.amadeus.Params
 import com.amadeus.resources.FlightOfferSearch
 import com.aminography.primecalendar.civil.CivilCalendar
-import com.aminography.primedatepicker.calendarview.PrimeCalendarView
 import com.aminography.primedatepicker.picker.PrimeDatePicker
 import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
 import com.aminography.primedatepicker.picker.callback.SingleDayPickCallback

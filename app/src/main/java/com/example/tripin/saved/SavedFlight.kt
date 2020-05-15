@@ -46,7 +46,7 @@ class SavedFlight : AppCompatActivity() {
         flightDaoSaved = database.getFlightDao()
 
         runBlocking {
-            if (flightDaoSaved?.getFlights() != null) {
+            if (!flightDaoSaved?.getFlights().isNullOrEmpty()) {
                 layoutNoSavedFlight.visibility = View.GONE
             } else {
                 layoutNoSavedFlight.visibility = View.VISIBLE

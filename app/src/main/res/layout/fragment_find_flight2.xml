@@ -11,6 +11,14 @@
     android:orientation="vertical"
     tools:context=".find.flight.FindFlightActivity">
 
+    <Button
+        android:id="@+id/hide_input"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Afficher/cacher formulaire"
+        app:backgroundTint="@color/contrast_blue" />
+
     <LinearLayout
         android:id="@+id/layout_search"
         android:layout_width="match_parent"
@@ -53,8 +61,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:inputType="textCapCharacters"
-                android:completionThreshold="1"/>
+                android:completionThreshold="1"
+                android:inputType="textCapCharacters" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -70,6 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
+                android:completionThreshold="1"
                 android:inputType="textCapCharacters" />
         </com.google.android.material.textfield.TextInputLayout>
 
