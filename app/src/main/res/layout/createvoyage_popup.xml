@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginBottom="80dp"
+        android:layout_marginTop="10dp">
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingStart="10dp"
-        android:paddingEnd="10dp">
+        android:paddingEnd="10dp"
+        android:layout_marginBottom="10dp">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -22,8 +31,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:layout_marginBottom="20dp"
             android:hint="Titre"
+            android:layout_gravity="center_vertical"
             android:inputType="text"
             android:id="@+id/et_titre"/>
 
@@ -34,7 +43,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingStart="10dp"
-        android:paddingEnd="10dp">
+        android:paddingEnd="10dp"
+        android:layout_marginBottom="20dp">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -46,7 +56,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:layout_marginBottom="20dp"
             android:hint="Dates"
             android:focusable="false"
             android:clickable="true"
@@ -59,7 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingStart="10dp"
+        android:paddingStart="12dp"
         android:paddingEnd="10dp">
 
         <ImageView
@@ -68,18 +77,51 @@
             android:src="@drawable/ic_people_outline_black_24dp"
             android:layout_gravity="center_vertical"/>
 
-        <EditText
-            android:layout_width="match_parent"
+        <Spinner
+            android:layout_gravity="center_vertical"
+            android:id="@+id/et_nb_voyageur"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:inputType="number"
-            android:maxLength="9"
-            android:hint="Nombres de voyageur"
-            android:id="@+id/et_nb_voyageur"/>
+            android:layout_marginStart="10dp"
+            android:entries="@array/passengersNumber" />
 
     </LinearLayout>
 
 
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="start|bottom">
+        <Button
+            android:id="@+id/bt_retour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Retour"
+            android:background="@null"
+            android:textColor="@color/colorAccent"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="50dp"
+            android:enabled="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end|bottom">
+        <Button
+            android:id="@+id/bt_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ok"
+            android:background="@null"
+            android:textColor="@color/colorAccent"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="50dp"
+            android:enabled="true"/>
+
+    </RelativeLayout>
 
 
 
@@ -89,4 +131,4 @@
 
 
 
-</LinearLayout>
+</androidx.cardview.widget.CardView>

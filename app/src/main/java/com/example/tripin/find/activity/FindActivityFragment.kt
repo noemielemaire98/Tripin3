@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -38,6 +39,8 @@ import java.util.*
 
 class FindActivityFragment : Fragment()  {
 
+    private var mBundleRecyclerViewState: Bundle? = null
+    private var mListState: Parcelable? = null
     private var activityDaoSearch : ActivityDao? = null
     private var activityDaoSaved : ActivityDao? = null
     private lateinit var citydao : CityDao
@@ -288,6 +291,13 @@ class FindActivityFragment : Fragment()  {
 
         }
     }
+    override fun onPause() {
+        super.onPause()
+        mBundleRecyclerViewState = Bundle()
+
+        mListState = activities_recyclerview.layoutManager?.onSaveInstanceState()
+        mBundleRecyclerViewState!!.putParcelable("keyR", mListState)
+    }
 }
 
 private fun listener_bouton(bt : Button,context: Context) : Button{
@@ -344,12 +354,4 @@ private fun liste_cat_active(bt_musee : Button,bt_food : Button,bt_night : Butto
     }
 
     return string
-}
-
-private fun rangeDatePickerPrimeCalendar(fragmanager : FragmentManager,aller_date : String,retour_date : String) : String{
-
-
-
-    return aller_date
-
 }

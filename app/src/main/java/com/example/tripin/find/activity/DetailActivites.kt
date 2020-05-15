@@ -7,9 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
@@ -211,43 +209,58 @@ class DetailActivites : AppCompatActivity() {
                        }
                    }
 
+
                 plusdialog.setNeutralButton("Créer"){_, _ ->
 
-                       AlertDialog.Builder(this).apply {
+                    val createdialog = AlertDialog.Builder(this)
+                            val alert = createdialog.create()
                            val view = layoutInflater.inflate(R.layout.createvoyage_popup,null)
-                           var editText = view.findViewById<EditText>(R.id.et_date)
-                           setView(view)
-                           setTitle("Créer")
+                           val editText = view.findViewById<EditText>(R.id.et_date)
+                           val okbutton = view.findViewById<Button>(R.id.bt_ok)
+                           val returnbutton = view.findViewById<Button>(R.id.bt_retour)
+                           val editTitre = view.findViewById<EditText>(R.id.et_titre)
+                           val editDate = view.findViewById<EditText>(R.id.et_date)
+                           val editvoyageur = view.findViewById<Spinner>(R.id.et_nb_voyageur)
+                           createdialog.setView(view)
+                           createdialog.setTitle("Créer")
                            editText.setOnClickListener {
                                rangeDatePickerPrimeCalendar(editText)
                            }
-
-                           setPositiveButton("OK"){_,_ ->
-                               val voyage = Voyage(0,view.et_titre.text.toString(),date_debut,date_fin,R.drawable.destination1,view.et_nb_voyageur.text.toString().toInt(), emptyList())
-                               runBlocking {
-                                   voyageDao?.addVoyage(voyage)
-                               }
-                               list_voyage2.add(view.et_titre.text.toString())
-                               list_voyage = list_voyage2.toTypedArray()
-                               plusdialog.setMultiChoiceItems(list_voyage,null){ dialog, which: Int, isChecked ->
-                                   // Update the current focused item's checked status
-                                   if (isChecked) {
-                                       selectedList.add(which)
-                                       list_choix.add(list_voyage.get(which))
-                                   } else if (selectedList.contains(which)) {
-                                       selectedList.remove(Integer.valueOf(which))
-                                       list_choix.remove(list_voyage.get(which))
+                           okbutton.setOnClickListener {
+                               if(!editTitre.text.isEmpty() && !editDate.text.isEmpty()){
+                                   val voyage = Voyage(0,view.et_titre.text.toString(),date_debut,date_fin,R.drawable.destination1,view.et_nb_voyageur.selectedItem.toString().toInt(), emptyList())
+                                   runBlocking {
+                                       voyageDao?.addVoyage(voyage)
                                    }
+                                   list_voyage2.add(view.et_titre.text.toString())
+                                   list_voyage = list_voyage2.toTypedArray()
+                                   plusdialog.setMultiChoiceItems(list_voyage,null) { dialog, which: Int, isChecked ->
+                                       // Update the current focused item's checked status
+                                       if (isChecked) {
+                                           selectedList.add(which)
+                                           list_choix.add(list_voyage.get(which))
+                                       } else if (selectedList.contains(which)) {
+                                           selectedList.remove(Integer.valueOf(which))
+                                           list_choix.remove(list_voyage.get(which))
+                                       }
+                                   }
+                                   Toast.makeText(this,"Le dossier ${voyage.titre}  a bien été ajouté",Toast.LENGTH_SHORT).show()
+                                   alert.cancel()
+                                   plusdialog.show()
+                               }else {
+                                   Toast.makeText(this,"Veuillez saisir tous les champs",Toast.LENGTH_SHORT).show()
                                }
-                               Toast.makeText(this.context,"Le dossier ${voyage.titre}  a bien été ajouté",Toast.LENGTH_SHORT).show()
-                               plusdialog.show()
                            }
-                           setNeutralButton("Retour"){_,_ ->
-                               plusdialog.show()
-                           }
-                           show()
+                    returnbutton.setOnClickListener {
+                        alert.cancel()
+                        plusdialog.show()
+                    }
+
+                           createdialog.show()
+
+
                        }
-                   }
+
 
                     plusdialog.show()
                //}
