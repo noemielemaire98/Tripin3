@@ -166,63 +166,77 @@ class DetailActivites : AppCompatActivity() {
         //AU CLIC SUR LE BOUTON AJOUT A UN VOYAGE
         fab_plus.setOnClickListener {
             voyageDao = databasesaved.getVoyageDao()
-            var list_voyage: Array<String> = arrayOf<String>()
-            val list_voyage2: ArrayList<String> = arrayListOf<String>()
+            val list_voyage: ArrayList<String> = arrayListOf<String>()
+            val list_checkedItems = ArrayList<Boolean>()
             val selectedList = ArrayList<Int>()
+            // je récupère la liste des titres des dossiers de voyage et si oui ou non l'activité appartient à ce voyage
             runBlocking {
-                if(voyageDao?.getVoyage() != null){
-                    voyageDao?.getVoyage()!!.map {list_voyage2.add(it.titre!!) }
-                    list_voyage = list_voyage2.toTypedArray()
+                val voyages = voyageDao?.getVoyage()
+                if(voyages != null){
+                    voyages.map {
+                        var deja_ajoute = false
+                        list_voyage.add(it.titre!!)
+                        it.list_activity?.map {
+                            if(it.title == activite!!.title){
+                                deja_ajoute = true
+                            }
+                        }
+                        list_checkedItems.add(deja_ajoute)
+                    }
                 }
             }
+            // j'ouvre la pop-up
             val plusdialog = AlertDialog.Builder(this)
-            //AlertDialog.Builder(this).apply {
                    plusdialog.setTitle("Dossier de voyage")
                    val list_choix = arrayListOf<String>()
                    if(list_voyage.isEmpty()){
-                       plusdialog.setMessage("Vous n'avez constitué aucun dossier de voyage, cliquez sur ajouter")
+                       plusdialog.setMessage("Vous n'avez constitué aucun dossier de voyage, cliquez sur créer")
                    }else{
-                       plusdialog.setMultiChoiceItems(list_voyage,null){ dialog, which: Int, isChecked ->
+                       plusdialog.setMultiChoiceItems(list_voyage.toTypedArray(),list_checkedItems.toBooleanArray()){ dialog, which: Int, isChecked ->
                            // Update the current focused item's checked status
-                           if (isChecked) {
-                               selectedList.add(which)
+                           list_checkedItems[which] = isChecked
+                           if(isChecked){
                                list_choix.add(list_voyage.get(which))
-                           } else if (selectedList.contains(which)) {
-                               selectedList.remove(Integer.valueOf(which))
-                               list_choix.remove(list_voyage.get(which))
-                           }
-                       }
-                   }
-                  plusdialog.setPositiveButton(android.R.string.ok) { _, _ ->
-                       if(!list_choix.isEmpty()){
-                           list_choix.forEach {
                                runBlocking {
-                                   val voyage = voyageDao?.getVoyageByTitre(it)
+                                   val voyage = voyageDao?.getVoyageByTitre(list_voyage.get(which))
                                    val ancienne_list = voyage!!.list_activity?.toMutableList()
                                    ancienne_list?.add(activite!!)
                                    val nouvelle_liste = ancienne_list?.toList()
                                    voyage.list_activity = nouvelle_liste
+
                                    voyageDao?.updateVoyage(voyage)
                                }
-                         }
-                           Toast.makeText(this,"L'activité à bien été ajoutée",Toast.LENGTH_SHORT).show()
+                               Toast.makeText(this,"L'activité à bien été ajoutée à ${list_voyage.get(which)}",Toast.LENGTH_SHORT).show()
+                               Log.d("RRI","add")
+                           }else{
+                               list_choix.remove(list_voyage.get(which))
+                               runBlocking {
+                                   val voyage = voyageDao?.getVoyageByTitre(list_voyage.get(which))
+                                   var ancienne_list = voyage?.list_activity?.toMutableList()
+                                   ancienne_list?.remove(activite!!)
+                                    val nouvelle_liste = ancienne_list?.toList()
+                                   voyage!!.list_activity = nouvelle_liste
+                                   voyageDao?.updateVoyage(voyage!!)
+                               }
+                               Toast.makeText(this,"L'activité à bien été supprimée de ${list_voyage.get(which)}",Toast.LENGTH_SHORT).show()
+                           }
                        }
                    }
+                  plusdialog.setPositiveButton(android.R.string.ok) { _, _ ->  }
 
 
                 plusdialog.setNeutralButton("Créer"){_, _ ->
 
                     val createdialog = AlertDialog.Builder(this)
-                            val alert = createdialog.create()
                            val view = layoutInflater.inflate(R.layout.createvoyage_popup,null)
                            val editText = view.findViewById<EditText>(R.id.et_date)
                            val okbutton = view.findViewById<Button>(R.id.bt_ok)
                            val returnbutton = view.findViewById<Button>(R.id.bt_retour)
                            val editTitre = view.findViewById<EditText>(R.id.et_titre)
                            val editDate = view.findViewById<EditText>(R.id.et_date)
-                           val editvoyageur = view.findViewById<Spinner>(R.id.et_nb_voyageur)
                            createdialog.setView(view)
                            createdialog.setTitle("Créer")
+                           val alert = createdialog.show()
                            editText.setOnClickListener {
                                rangeDatePickerPrimeCalendar(editText)
                            }
@@ -232,40 +246,50 @@ class DetailActivites : AppCompatActivity() {
                                    runBlocking {
                                        voyageDao?.addVoyage(voyage)
                                    }
-                                   list_voyage2.add(view.et_titre.text.toString())
-                                   list_voyage = list_voyage2.toTypedArray()
-                                   plusdialog.setMultiChoiceItems(list_voyage,null) { dialog, which: Int, isChecked ->
+                                   list_voyage.add(view.et_titre.text.toString())
+                                   list_checkedItems.add(false)
+                                   plusdialog.setMultiChoiceItems(list_voyage.toTypedArray(),list_checkedItems.toBooleanArray()) { dialog, which: Int, isChecked ->
                                        // Update the current focused item's checked status
-                                       if (isChecked) {
-                                           selectedList.add(which)
+                                       list_checkedItems[which] = isChecked
+                                       if(isChecked){
                                            list_choix.add(list_voyage.get(which))
-                                       } else if (selectedList.contains(which)) {
-                                           selectedList.remove(Integer.valueOf(which))
+                                           runBlocking {
+                                               val voyage = voyageDao?.getVoyageByTitre(list_voyage.get(which))
+                                               val ancienne_list = voyage!!.list_activity?.toMutableList()
+                                               ancienne_list?.add(activite!!)
+                                               val nouvelle_liste = ancienne_list?.toList()
+                                               voyage.list_activity = nouvelle_liste
+                                               voyageDao?.updateVoyage(voyage)
+                                           }
+                                           Toast.makeText(this,"L'activité à bien été ajoutée à ${list_voyage.get(which)}",Toast.LENGTH_SHORT).show()
+                                           Log.d("RRI","add")
+                                       }else{
                                            list_choix.remove(list_voyage.get(which))
+                                           runBlocking {
+                                               val voyage = voyageDao?.getVoyageByTitre(list_voyage.get(which))
+                                               var ancienne_list = voyage?.list_activity?.toMutableList()
+                                               ancienne_list?.remove(activite!!)
+
+                                               val nouvelle_liste = ancienne_list?.toList()
+                                               voyage!!.list_activity = nouvelle_liste
+                                               voyageDao?.updateVoyage(voyage!!)
+                                           }
+                                           Toast.makeText(this,"L'activité à bien été supprimée de ${list_voyage.get(which)}",Toast.LENGTH_SHORT).show()
                                        }
                                    }
-                                   Toast.makeText(this,"Le dossier ${voyage.titre}  a bien été ajouté",Toast.LENGTH_SHORT).show()
-                                   alert.cancel()
+                                   alert.dismiss()
                                    plusdialog.show()
                                }else {
                                    Toast.makeText(this,"Veuillez saisir tous les champs",Toast.LENGTH_SHORT).show()
                                }
                            }
-                    returnbutton.setOnClickListener {
-                        alert.cancel()
-                        plusdialog.show()
-                    }
-
-                           createdialog.show()
-
-
-                       }
-
+                        returnbutton.setOnClickListener {
+                            alert.dismiss()
+                            plusdialog.show()
+                        }
+                     }
 
                     plusdialog.show()
-               //}
-
-
         }
 
         lire_plus_activity.setOnClickListener {
