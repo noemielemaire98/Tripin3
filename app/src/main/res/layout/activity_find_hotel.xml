@@ -26,24 +26,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-android:orientation="horizontal">
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="70dp"
-            android:layout_weight="1">
-
-            <LinearLayout
+        android:orientation="horizontal">
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Arrivée"
-                    android:textSize="18dp"
-                    android:gravity="center_horizontal"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/arriveeDate_dateLayout"
@@ -52,6 +40,7 @@ android:orientation="horizontal">
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="2dp"
                     android:layout_weight="1"
+                    android:hint="Date d'arrivée"
                     app:boxBackgroundColor="@color/colorBackground"
                     app:endIconMode="clear_text">
 
@@ -68,36 +57,20 @@ android:orientation="horizontal">
             </LinearLayout>
 
 
-
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="70dp"
-            android:layout_weight="1">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Départ"
-                android:textSize="18dp"
-                android:gravity="center_horizontal"/>
-
-
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/departDate_dateLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="2dp"
                     android:layout_weight="1"
+                    android:hint="Date de départ"
                     app:boxBackgroundColor="@color/colorBackground"
                     app:endIconMode="clear_text">
 
@@ -105,15 +78,13 @@ android:orientation="horizontal">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/departDate_date"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:background="@null"
-                        android:inputType="none"
                         android:focusable="false" />
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
     </LinearLayout>
 
     <LinearLayout
@@ -170,24 +141,36 @@ android:orientation="horizontal">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:layout_marginTop="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textSize="18dp"
             android:text="Prix : "/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textSize="18dp"
             android:id="@+id/price_min_textview"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" - "/>
+            android:textSize="18dp"
+            android:text=" € - "/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="18dp"
             android:id="@+id/price_max_textview"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text=" €"/>
 
     </LinearLayout>
 
@@ -226,11 +209,12 @@ android:orientation="horizontal">
 
 
     <Button
-        android:layout_width="150dp"
+        android:layout_width="match_parent"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:textColor="@color/colorAccent"
+        style="@style/Widget.MaterialComponents.Button"
+        app:backgroundTint="@color/contrast_blue"
         android:text="Rechercher"
         android:id="@+id/btn_search"/>
 
@@ -289,7 +273,8 @@ android:orientation="horizontal">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/hotelsFind_layout">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/hotels_recyclerview"

@@ -1,6 +1,7 @@
 package com.example.tripin.find.hotel
 
 import android.content.Context
+import android.graphics.Typeface
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,7 @@ import com.example.tripin.R
 import com.example.tripin.model.Offer
 import kotlinx.android.synthetic.main.offer_view.view.*
 
-class OffersAdapter (val offers : List<Offer>): RecyclerView.Adapter<OffersAdapter.OfferViewHolder>() {
+class OffersAdapter (val offers : List<Offer?>): RecyclerView.Adapter<OffersAdapter.OfferViewHolder>() {
 
     private lateinit var context: Context
 
@@ -28,9 +29,16 @@ class OffersAdapter (val offers : List<Offer>): RecyclerView.Adapter<OffersAdapt
     }
 
     override fun onBindViewHolder(holder: OfferViewHolder, position: Int) {
-        val offer = offers[position]
+        val offer = offers?.get(position)
         Log.d("offerAdapter", offer.toString())
-        holder.offerView.price_offer_recyclerview.text = "${offer.price}"
+        holder.offerView.price_offer_recyclerview.text = "${offer?.price} €"
+        holder.offerView.bed_recyclerview.setTypeface(null, Typeface.ITALIC)
+        if(offer?.nb_bed == 1){
+            holder.offerView.bed_recyclerview.text = " ${offer?.nb_bed} lit ${offer?.bed_Type} size"
+        }else {
+            holder.offerView.bed_recyclerview.text = " ${offer?.nb_bed} lits ${offer?.bed_Type} size"
+        }
+
     }
 
 }

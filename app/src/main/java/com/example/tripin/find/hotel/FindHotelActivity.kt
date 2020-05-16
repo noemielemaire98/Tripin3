@@ -2,6 +2,7 @@ package com.example.tripin.find.hotel
 
 import android.app.Activity
 import android.content.Context
+import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -22,22 +23,28 @@ import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.HotelDao
 import com.example.tripin.model.Hotel
+import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import io.apptik.widget.MultiSlider
 import io.apptik.widget.MultiSlider.SimpleChangeListener
 import kotlinx.android.synthetic.main.activity_find_hotel.*
 import kotlinx.android.synthetic.main.activity_find_hotel.btn_search
 import kotlinx.android.synthetic.main.activity_find_hotel.loadingPanel
-import kotlinx.android.synthetic.main.fragment_find_flight2.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
+
+// TODO : Récupérer les dates
 
 
 class FindHotelActivity : AppCompatActivity() {
-
 
     private var hotelDaoSearch: HotelDao? = null
     private var hotelDaoSaved: HotelDao? = null
@@ -45,13 +52,14 @@ class FindHotelActivity : AppCompatActivity() {
     val listCitiesFormatted = mutableListOf<List<String>>()
     val listEquipementFormatted = mutableListOf<List<String>>()
     private var cal: Calendar = Calendar.getInstance()
-    var rooms_number: Int = 0
+    var rooms_number: Int = 1
     private lateinit var dateArrivee: String
     private lateinit var dateDepart: String
     var priceMinFixed: Int = 0
     var priceMaxFixed: Int = 1000
     var priceMinChosen: Int = priceMinFixed
     var priceMaxChosen: Int = priceMaxFixed
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,11 +87,15 @@ class FindHotelActivity : AppCompatActivity() {
             .build()
 
 
+        room_number.text = rooms_number.toString()
+
+
         // Gestion Date d'arrivée
         arriveeDate_date.setOnClickListener {
             hideKeyboard()
             // savedTopLevel_layout.requestFocus()
             rangeDatePickerPrimeCalendar()
+
         }
 
         // Gestion Date de départ
@@ -185,6 +197,8 @@ class FindHotelActivity : AppCompatActivity() {
                     ).show()
                     return@setOnClickListener
                 }
+
+
                 runBlocking {
 
                     var equipementsCsv = resources.openRawResource(R.raw.equipements)
@@ -217,10 +231,7 @@ class FindHotelActivity : AppCompatActivity() {
                         val hotelOffersSearches =
                             amadeus.shopping.hotelOffers[Params.with("cityCode", cityCode)
                                 .and("roomQuantity", rooms_number)
-                                .and(
-                                    "priceRange",
-                                    priceMinChosen.toString() + "-" + priceMaxChosen.toString()
-                                )
+                                .and("priceRange", priceMinChosen.toString() + "-" + priceMaxChosen.toString())
                                 .and("currency", "EUR")
                                 .and("lang", "FR")]
 
@@ -236,18 +247,33 @@ class FindHotelActivity : AppCompatActivity() {
                                         favoris = true
                                     }
                                 }
-
+                                var listOfferId : MutableList<String> = mutableListOf()
                                 var description: String
                                 var tel: String
                                 var uri: String
-
+                                var adresse : MutableList<String> = mutableListOf()
+                                var price : Double  = -1.0
                                 var amenities : Array<out String>? = itHotelOffer.hotel.amenities
-                                Log.d("amenities", amenities.toString())
-                                var equipements = mutableListOf<String>()
-                                Log.d("Equipements 1", equipements.toString())
-                                equipements.clear()
-                                Log.d("Equipements 2", equipements.toString())
 
+                                var equipements = mutableListOf<String>()
+                                equipements.clear()
+
+                                val geocoder = Geocoder(this@FindHotelActivity)
+                                val adresseList = geocoder.getFromLocation(itHotelOffer.hotel.latitude, itHotelOffer.hotel.longitude, 1 )
+
+
+                                itHotelOffer.offers.map{
+                                    var offerId = it.id
+                                    listOfferId.add(offerId)
+                                }
+                                Log.d("adresse", adresseList.toString())
+                                adresseList.map {
+                                    adresse.add(it.featureName)
+                                    adresse.add(it.thoroughfare)
+                                    adresse.add(it.postalCode)
+                                    adresse.add(it.locality)
+                                    adresse.add(it.countryName)
+                                    }
 
                                 if(amenities.isNullOrEmpty()){}
                                 else {
@@ -263,6 +289,20 @@ class FindHotelActivity : AppCompatActivity() {
 
                                     }
                                 }
+
+                                val priceList  : MutableList<Double>? = null
+
+                                itHotelOffer.offers.map{
+                                    if (price<0){
+                                        price = it.price.total.toDouble()
+                                    } else if(price < it.price.total.toDouble()) {
+
+                                    }else if (price >it.price.total.toDouble() ) {
+                                        price = it.price.total.toDouble()
+                                    }
+
+                                }
+
 
                                 if (itHotelOffer.hotel.description == null) {
                                     description = "Description non disponible"
@@ -280,6 +320,7 @@ class FindHotelActivity : AppCompatActivity() {
                                     uri = itHotelOffer.hotel.media[0].uri
                                 }
 
+
                                 Log.d("Equipements 3", equipements.toString())
 
                                 val hotel = Hotel(
@@ -289,14 +330,18 @@ class FindHotelActivity : AppCompatActivity() {
                                     description,
                                     itHotelOffer.hotel.rating,
                                     uri,
-                                    itHotelOffer.hotel.address.lines.joinToString(),
+                                    adresse,
                                     tel,
                                     itHotelOffer.hotel.latitude,
                                     itHotelOffer.hotel.longitude,
-                                    itHotelOffer.offers[0].price.total.toDouble(),
+                                    price,
                                     equipements,
+                                    listOfferId,
                                     favoris
                                 )
+
+
+
                                 runBlocking {
                                     hotelDaoSearch?.addHotel(hotel)
                                 }
@@ -310,9 +355,11 @@ class FindHotelActivity : AppCompatActivity() {
 
                             if (!hotels_search_bdd.isNullOrEmpty()) {
                                 layoutNoHotelAvailable.visibility = View.GONE
+                                val favoris = arrayListOf<Boolean>()
+                                favoris.add(true)
                                 hotels_recyclerview.adapter =
                                     HotelsAdapter(
-                                        hotels_search_bdd ?: emptyList())
+                                        hotels_search_bdd ?: emptyList(), favoris)
 
                             } else {
                                 layoutNoHotelAvailable.visibility = View.VISIBLE
@@ -331,22 +378,10 @@ class FindHotelActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
-        val databasesearch =
-            Room.databaseBuilder(this, AppDatabase::class.java, "searchDatabaseHotels").build()
-        hotelDaoSearch = databasesearch.getHotelDao()
-        val databasesaved =
-            Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabaseHotels").build()
-        hotelDaoSaved = databasesaved.getHotelDao()
-
-        runBlocking {
-            val hotels_search_bdd = hotelDaoSearch?.getHotels()
-                hotels_recyclerview.adapter =
-                    HotelsAdapter(hotels_search_bdd ?: emptyList())
-            }
-
-
     }
+
+
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -361,7 +396,6 @@ class FindHotelActivity : AppCompatActivity() {
 
     private fun rangeDatePickerPrimeCalendar() {
         val rangeDaysPickCallback = RangeDaysPickCallback { startDate, endDate ->
-            // TODO
             Log.d("Date", "${startDate.shortDateString} ${endDate.shortDateString}")
             val parser =
                 SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
@@ -414,27 +448,9 @@ class FindHotelActivity : AppCompatActivity() {
     }
 
 
-    private fun clearFocusAutoTextView(autoCompleteTextView: AutoCompleteTextView) {
-        autoCompleteTextView.onFocusChangeListener = View.OnFocusChangeListener { _, b ->
-            if (!b) {
-                // on focus off
-                val str: String = autoCompleteTextView.text.toString()
-                val listAdapter: ListAdapter = autoCompleteTextView.adapter
-                for (i in 0 until listAdapter.count) {
-                    val temp: String = listAdapter.getItem(i).toString()
-                    if (str.compareTo(temp) == 0) {
-                        return@OnFocusChangeListener
-                    }
-                }
-                autoCompleteTextView.setText("")
-            }
-        }
-    }
-
 
     fun decreaseRooms(view: View) {
-        if (rooms_number == 0) {
-        } else {
+        if (rooms_number == 1) { } else {
             rooms_number = rooms_number.minus(1)
         }
 
@@ -442,7 +458,9 @@ class FindHotelActivity : AppCompatActivity() {
     }
 
     fun increaseRooms(view: View) {
-        rooms_number = rooms_number.plus(1)
+        if(rooms_number == 9){} else {
+            rooms_number = rooms_number.plus(1)
+        }
         room_number.text = rooms_number.toString()
     }
 }

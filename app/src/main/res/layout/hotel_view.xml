@@ -84,20 +84,33 @@
             android:layout_marginBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="20dp">
 
             <TextView
                 android:id="@+id/hotel_name_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:textSize="20dp" />
 
 
             <TextView
-                android:id="@+id/hotel_adresse_textview"
+                android:id="@+id/hotel_adresse1_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:textSize="18dp" />
+            <TextView
+                android:id="@+id/hotel_adresse2_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textSize="18dp" />
+            <TextView
+                android:id="@+id/hotel_adresse3_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:textSize="16dp" />
 
@@ -106,8 +119,9 @@
                 android:id="@+id/hotel_prix_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textSize="16dp" />
+                android:gravity="left"
+                android:layout_marginTop="20dp"
+                android:textSize="18dp" />
 
             </LinearLayout>
 

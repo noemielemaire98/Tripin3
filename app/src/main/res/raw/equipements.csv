@@ -7,17 +7,17 @@ RESTAURANT,Restaurant,restaurant
 PARKING,Parking,parking
 PETS_ALLOWED,Animaux acceptés,animal
 AIRPORT_SHUTTLE,Navette aéroport,aeroport_shuttle
-BUSINESS_CENTER,Business Center,wifi
+BUSINESS_CENTER,Business Center,business
 DISABLED_FACILITIES,Adapté aux handicapés,handicape
 WIFI,WIFI,wifi
-MEETING_ROOMS,Meeting Room,wifi
-NO_KID_ALLOWED,Pas d'enfant,wifi
+MEETING_ROOMS,Meeting Room,meeting
+NO_KID_ALLOWED,Pas d'enfant,nochild
 TENNIS,Cours de tennis,tennis
 GOLF,Parcours de golf,golf
-KITCHEN,Cuisine,wifi
-ANIMAL_WATCHING ,Garde d'animaux,wifi
-BABY-SITTING ,Garde d'enfants,wifi
-BEACH,Plage,wifi
+KITCHEN,Cuisine,kitchen
+ANIMAL_WATCHING ,Garde d'animaux,petwatching
+BABY-SITTING ,Garde d'enfants,babysitting
+BEACH,Plage,beach
 CASINO,Casino,casino
 JACUZZI,Jacuzzi,jacuzzi
 SAUNA,Sauna,wifi

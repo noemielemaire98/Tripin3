@@ -16,14 +16,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:textSize="17dp"
+            android:textSize="16dp"
             android:layout_weight="1"
             android:id="@+id/equiment_textview"/>
 
      <ImageView
-         android:layout_width="18dp"
-         android:layout_height="18dp"
+         android:layout_width="25dp"
+         android:layout_height="25dp"
          android:layout_gravity="center_vertical"
+         android:layout_marginRight="35dp"
          android:id="@+id/equiment_imageview"/>
     </LinearLayout>
 
