@@ -5,7 +5,53 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".saved.SavedHotel">
- 
+
+
+    <RelativeLayout
+        android:id="@+id/layoutNoSavedHotel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/noSavedHotelAvailable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Aucun hôtel favori"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/noSavedHotelDetail"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/noSavedHotelAvailable"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/noSavedFlights"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/noFlightsImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/noSavedHotelDetail"
+            android:layout_marginTop="30dp"
+            android:contentDescription="@string/imageDescription_no_favoriteFlight"
+            android:gravity="center"
+            android:src="@drawable/nosavedflights" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutRecyclerView_HotelsSaved"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/hotels_saved_recyclerview"
@@ -17,5 +63,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/hotel_view" />
+
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

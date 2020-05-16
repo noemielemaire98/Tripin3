@@ -1,35 +1,35 @@
 ﻿amenity_code,amenity_name,amenity_icon
-SWIMMING_POOL,Piscine,R.drawable.swimming_pool
-SPA,SPA,R.drawable.spa
-FITNESS_CENTER,Centre sportif,R.drawable.fitness
-AIR_CONDITIONING,Air conditionné,R.drawable.air_conditionne
-RESTAURANT,Restaurant,R.drawable.restaurant
-PARKING,Parking,R.drawable.parking
-PETS_ALLOWED,Animaux acceptés,R.drawable.animal
-AIRPORT_SHUTTLE,Navette aéroport,R.drawable.aeroport_shuttle
-BUSINESS_CENTER,Business Center,R.drawable.wifi
-DISABLED_FACILITIES,Adapté aux handicapés,R.drawable.handicape
-WIFI,WIFI,R.drawable.wifi
-MEETING_ROOMS,Meeting Room,R.drawable.wifi
-NO_KID_ALLOWED,Pas d'enfant,R.drawable.wifi
-TENNIS,Cours de tennis,R.drawable.wifi
-GOLF,Parcours de golf,R.drawable.wifi
-KITCHEN,Cuisine,R.drawable.wifi
-ANIMAL_WATCHING ,Garde d'animaux,R.drawable.wifi
-BABY-SITTING ,Garde d'enfants,R.drawable.wifi
-BEACH,Plage,R.drawable.wifi
-CASINO,Casino,R.drawable.wifi
-JACUZZI,Jacuzzi,R.drawable.wifi
-SAUNA,Sauna,R.drawable.wifi
-SOLARIUM,Solarium,R.drawable.wifi
-MASSAGE,Massage,R.drawable.wifi
-VALET_PARKING,Valet de parking,R.drawable.wifi
-BAR,Bar,R.drawable.wifi
-KIDS_WELCOME,Enfants autorisés,R.drawable.wifi
-NO_PORN_FILMS,Pas de film pornographique,R.drawable.wifi
-MINIBAR,Minibar,R.drawable.wifi
-TELEVISION,Télévision,R.drawable.wifi
-WI-FI_IN_ROOM,Chambre avec Wifi,R.drawable.wifi
-ROOM_SERVICE,Room service,R.drawable.wifi
-GUARDED_PARKG,Parking surveillé,R.drawable.wifi
-SERV_SPEC_MENU,Service menu spécial,R.drawable.wifi
+SWIMMING_POOL,Piscine,swimming_pool
+SPA,SPA,spa
+FITNESS_CENTER,Centre sportif,fitness
+AIR_CONDITIONING,Air conditionné,air_conditionne
+RESTAURANT,Restaurant,restaurant
+PARKING,Parking,parking
+PETS_ALLOWED,Animaux acceptés,animal
+AIRPORT_SHUTTLE,Navette aéroport,aeroport_shuttle
+BUSINESS_CENTER,Business Center,business
+DISABLED_FACILITIES,Adapté aux handicapés,handicape
+WIFI,WIFI,wifi
+MEETING_ROOMS,Meeting Room,meeting
+NO_KID_ALLOWED,Pas d'enfant,nochild
+TENNIS,Cours de tennis,tennis
+GOLF,Parcours de golf,golf
+KITCHEN,Cuisine,kitchen
+ANIMAL_WATCHING ,Garde d'animaux,petwatching
+BABY-SITTING ,Garde d'enfants,babysitting
+BEACH,Plage,beach
+CASINO,Casino,casino
+JACUZZI,Jacuzzi,jacuzzi
+SAUNA,Sauna,wifi
+SOLARIUM,Solarium,solarium
+MASSAGE,Massage,massage
+VALET_PARKING,Valet de parking,wifi
+BAR,Bar,bar
+KIDS_WELCOME,Enfants autorisés,kids
+NO_PORN_FILMS,Pas de film pornographique,wifi
+MINIBAR,Minibar,wifi
+TELEVISION,Télévision,television
+WI-FI_IN_ROOM,Chambre avec Wifi,wifi
+ROOM_SERVICE,Room service,wifi
+GUARDED_PARKG,Parking surveillé,wifi
+SERV_SPEC_MENU,Service menu spécial,wifi

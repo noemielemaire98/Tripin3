@@ -19,49 +19,68 @@ data class Hotel(
     val hotelDescription: String?,
     val rate: Int?,
     val image_url: String?,
-    val adresse: String?,
-    val email: String,
-    val telephone: String,
 
-    @TypeConverters(Converters :: class)
+    @TypeConverters(Converters:: class)
+    val adresse: MutableList<String>,
+
+    val telephone: String,
+    val latitude: Double,
+    val longitude: Double,
+    val prix: Double,
+
+    @TypeConverters(Converters:: class)
     val equipements: MutableList<String>,
 
-    var favoris: Boolean) : Parcelable
+    @TypeConverters (Converters :: class)
+    val listIdOffer : MutableList<String>,
 
-{ companion object {
+    var favoris: Boolean) : Parcelable {
+    companion object {
         val all = (1..20).map {
-            Hotel(it, "Id$it",
+            Hotel(
+                it, "Id$it",
                 "Name$it",
                 "Description$it",
                 it,
-                "R.drawable.activite1", //TODO a modifier
-                "adresse$it",
-                "email$it",
+                "R.drawable.activite1",
+                mutableListOf("A", "B", "C"),
                 "telephone$it",
-                mutableListOf("A","B","C"),
-                false) }.toMutableList()
+                0.1,
+                0.1,
+                0.1,
+                mutableListOf("A", "B", "C"),
+                mutableListOf("A", "B", "C"),
+                false
+            )
+        }.toMutableList()
     }
+
+
+
+
+
 }
+    public class Converters {
 
-public class Converters {
+        @TypeConverter
+        fun fromString(value: String?): MutableList<String>? {
+            if (value == null) return null
+            else {
+                val listType = object : TypeToken<MutableList<String?>?>() {}.type
+                return Gson().fromJson(value, listType)
+            }
 
-    @TypeConverter
-    fun fromString(value: String?): MutableList<String>? {
-        if (value == null) return null
-        else {
-            val listType = object : TypeToken<MutableList<String?>?>() {}.type
-            return Gson().fromJson(value,listType)
+        }
+
+        @TypeConverter
+        fun listToString(list: MutableList<String>?): String? {
+            val gson = Gson()
+            return gson.toJson(list)
         }
 
     }
 
-    @TypeConverter
-    fun listToString(list:MutableList<String>?) : String?{
-        val gson = Gson()
-        return gson.toJson(list)
-    }
 
-}
 
 
 
