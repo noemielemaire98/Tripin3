@@ -84,13 +84,13 @@ class FindHotelFragment : Fragment() {
             Room.databaseBuilder(
                 requireActivity().baseContext,
                 AppDatabase::class.java,
-                "searchDatabaseHotels"
+                "searchDatabase"
             ).build()
         val databasesaved =
             Room.databaseBuilder(
                 requireActivity().baseContext,
                 AppDatabase::class.java,
-                "savedDatabaseHotels"
+                "savedDatabase"
             ).build()
 
 

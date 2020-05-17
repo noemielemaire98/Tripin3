@@ -45,13 +45,12 @@ class DetailActivites : AppCompatActivity() {
     private var activite: Activity? = null
     private var activityDaoSaved: ActivityDao? = null
     private var voyageDao: VoyageDao? = null
-    private var favoris : Boolean = false
+    private var favoris: Boolean = false
     private var list_activities_bdd = emptyList<Activity>()
-    private lateinit var mapFragment : SupportMapFragment
+    private lateinit var mapFragment: SupportMapFragment
     private lateinit var googleMap: GoogleMap
-    var date_debut =""
-    var date_fin=""
-
+    var date_debut = ""
+    var date_fin = ""
 
 
     @SuppressLint("SetTextI18n")
@@ -64,8 +63,8 @@ class DetailActivites : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // ON RECUPERE L'ACTIVITE CHOISIT DANS LA RECYCLERVIEW
-       activite = intent.getParcelableExtra("activity")
-       favoris = intent.getBooleanExtra("attribut_fav",false)
+        activite = intent.getParcelableExtra("activity")
+        favoris = intent.getBooleanExtra("attribut_fav", false)
 
 
         // ON APPELLE LA BDD
@@ -76,10 +75,10 @@ class DetailActivites : AppCompatActivity() {
 
 
         // ON SET LES ATTRIBUTS
-            val url = activite?.cover_image_url
-            Glide.with(this@DetailActivites)
-                .load(url)
-                .into(detail_activity_imageview)
+        val url = activite?.cover_image_url
+        Glide.with(this@DetailActivites)
+            .load(url)
+            .into(detail_activity_imageview)
         runBlocking {
             list_activities_bdd = activityDaoSaved!!.getActivity()
         }
@@ -89,63 +88,71 @@ class DetailActivites : AppCompatActivity() {
             }
         }
 
-        if(favoris == true){
+        if (favoris == true) {
             fab_fav.setImageResource(R.drawable.ic_favorite_black_24dp)
 
-        }else if (favoris == false){
+        } else if (favoris == false) {
             fab_fav.setImageResource(R.drawable.ic_favorite_border_black_24dp)
 
         }
 
-        if(activite?.top_seller == true){
+        if (activite?.top_seller == true) {
             layout_activity_topseller.visibility = View.VISIBLE
         }
-        if(activite?.must_see == true){
+        if (activite?.must_see == true) {
             layout_activity_must_see.visibility = View.VISIBLE
         }
 
-        if(activite?.reviews_avg != 0.0){
+        if (activite?.reviews_avg != 0.0) {
             layout_note_activity.visibility = View.VISIBLE
             tv_activity_rate.text = "${activite?.reviews_avg}"
         }
 
-            detail_activity_titre_textview.text = activite?.title
-            detail_activity_dispo_textview.text = "Dispo : " + activite?.operational_days
-            detail_activity_prix_textview.text = "Prix : " + activite?.formatted_iso_value
-            detail_activity_about_textview.text = activite?.description
-            rv_categories.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-            rv_categories.adapter = CategoryAdapter(activite!!.category)
+        detail_activity_titre_textview.text = activite?.title
+        detail_activity_dispo_textview.text = "Dispo : " + activite?.operational_days
+        detail_activity_prix_textview.text = "Prix : " + activite?.formatted_iso_value
+        detail_activity_about_textview.text = activite?.description
+        rv_categories.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        rv_categories.adapter = CategoryAdapter(activite!!.category)
 
 
         mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync {
             googleMap = it
-            val location = LatLng(activite!!.latitude,activite!!.longitude)
+            val location = LatLng(activite!!.latitude, activite!!.longitude)
             googleMap.addMarker(MarkerOptions().position(location).title("Location"))
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,12f))
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12f))
 
         }
-
 
 
         // 3 - AU CLIC SUR LE BOUTON FAVORIS
         fab_fav.setOnClickListener {
             if (favoris == false) {
                 runBlocking {
-                        activityDaoSaved?.addActivity(activite!!)
+                    activityDaoSaved?.addActivity(activite!!)
                 }
                 favoris = true
                 fab_fav.setImageResource(R.drawable.ic_favorite_black_24dp)
-                Toast.makeText(this, "L'activité a bien été ajoutée aux favoris", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "L'activité a bien été ajoutée aux favoris",
+                    Toast.LENGTH_SHORT
+                ).show()
 
             } else if (favoris == true) {
 
                 runBlocking {
-                activityDaoSaved?.deleteActivity(activite!!.uuid)
+                    activityDaoSaved?.deleteActivity(activite!!.uuid)
                 }
                 favoris = false
                 fab_fav.setImageResource(R.drawable.ic_favorite_border_black_24dp)
-                Toast.makeText(this, "L'activité a bien été supprimé des favoris", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "L'activité a bien été supprimé des favoris",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -154,9 +161,9 @@ class DetailActivites : AppCompatActivity() {
         booking_button.setOnClickListener {
             val u = ((activite?.url)?.split("sandbox."))?.get(1)
             val urll = "https://$u"
-            val uri : Uri = Uri.parse(urll)
-            val intent : Intent = Intent(Intent.ACTION_VIEW,uri)
-            if(intent.resolveActivity(packageManager) != null){
+            val uri: Uri = Uri.parse(urll)
+            val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
+            if (intent.resolveActivity(packageManager) != null) {
                 startActivity(intent)
             }
 
@@ -172,12 +179,12 @@ class DetailActivites : AppCompatActivity() {
             // je récupère la liste des titres des dossiers de voyage et si oui ou non l'activité appartient à ce voyage
             runBlocking {
                 val voyages = voyageDao?.getVoyage()
-                if(voyages != null){
+                if (voyages != null) {
                     voyages.map {
                         var deja_ajoute = false
                         list_voyage.add(it.titre!!)
                         it.list_activity?.map {
-                            if(it.title == activite!!.title){
+                            if (it.title == activite!!.title) {
                                 deja_ajoute = true
                             }
                         }
@@ -187,109 +194,141 @@ class DetailActivites : AppCompatActivity() {
             }
             // j'ouvre la pop-up
             val plusdialog = AlertDialog.Builder(this)
-                   plusdialog.setTitle("Dossier de voyage")
-                   val list_choix = arrayListOf<String>()
-                   if(list_voyage.isEmpty()){
-                       plusdialog.setMessage("Vous n'avez constitué aucun dossier de voyage, cliquez sur créer")
-                   }else{
-                       plusdialog.setMultiChoiceItems(list_voyage.toTypedArray(),list_checkedItems.toBooleanArray()){ dialog, which: Int, isChecked ->
-                           // Update the current focused item's checked status
-                           list_checkedItems[which] = isChecked
-                           if(isChecked){
-                               list_choix.add(list_voyage.get(which))
-                               runBlocking {
-                                   val voyage = voyageDao?.getVoyageByTitre(list_voyage.get(which))
-                                   val ancienne_list = voyage!!.list_activity?.toMutableList()
-                                   ancienne_list?.add(activite!!)
-                                   val nouvelle_liste = ancienne_list?.toList()
-                                   voyage.list_activity = nouvelle_liste
+            plusdialog.setTitle("Dossier de voyage")
+            val list_choix = arrayListOf<String>()
+            if (list_voyage.isEmpty()) {
+                plusdialog.setMessage("Vous n'avez constitué aucun dossier de voyage, cliquez sur créer")
+            } else {
+                plusdialog.setMultiChoiceItems(
+                    list_voyage.toTypedArray(),
+                    list_checkedItems.toBooleanArray()
+                ) { dialog, which: Int, isChecked ->
+                    // Update the current focused item's checked status
+                    list_checkedItems[which] = isChecked
+                    if (isChecked) {
+                        list_choix.add(list_voyage.get(which))
+                        runBlocking {
+                            val voyage = voyageDao?.getVoyageByTitre(list_voyage.get(which))
+                            val ancienne_list = voyage!!.list_activity?.toMutableList()
+                            ancienne_list?.add(activite!!)
+                            val nouvelle_liste = ancienne_list?.toList()
+                            voyage.list_activity = nouvelle_liste
 
-                                   voyageDao?.updateVoyage(voyage)
-                               }
-                               Toast.makeText(this,"L'activité à bien été ajoutée à ${list_voyage.get(which)}",Toast.LENGTH_SHORT).show()
-                               Log.d("RRI","add")
-                           }else{
-                               list_choix.remove(list_voyage.get(which))
-                               runBlocking {
-                                   val voyage = voyageDao?.getVoyageByTitre(list_voyage.get(which))
-                                   var ancienne_list = voyage?.list_activity?.toMutableList()
-                                   ancienne_list?.remove(activite!!)
-                                    val nouvelle_liste = ancienne_list?.toList()
-                                   voyage!!.list_activity = nouvelle_liste
-                                   voyageDao?.updateVoyage(voyage!!)
-                               }
-                               Toast.makeText(this,"L'activité à bien été supprimée de ${list_voyage.get(which)}",Toast.LENGTH_SHORT).show()
-                           }
-                       }
-                   }
-                  plusdialog.setPositiveButton(android.R.string.ok) { _, _ ->  }
-
-
-                plusdialog.setNeutralButton("Créer"){_, _ ->
-
-                    val createdialog = AlertDialog.Builder(this)
-                           val view = layoutInflater.inflate(R.layout.createvoyage_popup,null)
-                           val editText = view.findViewById<EditText>(R.id.et_date)
-                           val okbutton = view.findViewById<Button>(R.id.bt_ok)
-                           val returnbutton = view.findViewById<Button>(R.id.bt_retour)
-                           val editTitre = view.findViewById<EditText>(R.id.et_titre)
-                           val editDate = view.findViewById<EditText>(R.id.et_date)
-                           createdialog.setView(view)
-                           createdialog.setTitle("Créer")
-                           val alert = createdialog.show()
-                           editText.setOnClickListener {
-                               rangeDatePickerPrimeCalendar(editText)
-                           }
-                           okbutton.setOnClickListener {
-                               if(!editTitre.text.isEmpty() && !editDate.text.isEmpty()){
-                                   val voyage = Voyage(0,view.et_titre.text.toString(),date_debut,date_fin,R.drawable.destination1,view.et_nb_voyageur.selectedItem.toString().toInt(), emptyList())
-                                   runBlocking {
-                                       voyageDao?.addVoyage(voyage)
-                                   }
-                                   list_voyage.add(view.et_titre.text.toString())
-                                   list_checkedItems.add(false)
-                                   plusdialog.setMultiChoiceItems(list_voyage.toTypedArray(),list_checkedItems.toBooleanArray()) { dialog, which: Int, isChecked ->
-                                       // Update the current focused item's checked status
-                                       list_checkedItems[which] = isChecked
-                                       if(isChecked){
-                                           list_choix.add(list_voyage.get(which))
-                                           runBlocking {
-                                               val voyage = voyageDao?.getVoyageByTitre(list_voyage.get(which))
-                                               val ancienne_list = voyage!!.list_activity?.toMutableList()
-                                               ancienne_list?.add(activite!!)
-                                               val nouvelle_liste = ancienne_list?.toList()
-                                               voyage.list_activity = nouvelle_liste
-                                               voyageDao?.updateVoyage(voyage)
-                                           }
-                                           Toast.makeText(this,"L'activité à bien été ajoutée à ${list_voyage.get(which)}",Toast.LENGTH_SHORT).show()
-                                           Log.d("RRI","add")
-                                       }else{
-                                           list_choix.remove(list_voyage.get(which))
-                                           runBlocking {
-                                               val voyage = voyageDao?.getVoyageByTitre(list_voyage.get(which))
-                                               var ancienne_list = voyage?.list_activity?.toMutableList()
-                                               ancienne_list?.remove(activite!!)
-
-                                               val nouvelle_liste = ancienne_list?.toList()
-                                               voyage!!.list_activity = nouvelle_liste
-                                               voyageDao?.updateVoyage(voyage!!)
-                                           }
-                                           Toast.makeText(this,"L'activité à bien été supprimée de ${list_voyage.get(which)}",Toast.LENGTH_SHORT).show()
-                                       }
-                                   }
-                                   alert.dismiss()
-                                   plusdialog.show()
-                               }else {
-                                   Toast.makeText(this,"Veuillez saisir tous les champs",Toast.LENGTH_SHORT).show()
-                               }
-                           }
-                        returnbutton.setOnClickListener {
-                            alert.dismiss()
-                            plusdialog.show()
+                            voyageDao?.updateVoyage(voyage)
                         }
-                     }
+                        Toast.makeText(
+                            this,
+                            "L'activité à bien été ajoutée à ${list_voyage.get(which)}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        Log.d("RRI", "add")
+                    } else {
+                        list_choix.remove(list_voyage.get(which))
+                        runBlocking {
+                            val voyage = voyageDao?.getVoyageByTitre(list_voyage.get(which))
+                            var ancienne_list = voyage?.list_activity?.toMutableList()
+                            ancienne_list?.remove(activite!!)
+                            val nouvelle_liste = ancienne_list?.toList()
+                            voyage!!.list_activity = nouvelle_liste
+                            voyageDao?.updateVoyage(voyage!!)
+                        }
+                        Toast.makeText(
+                            this,
+                            "L'activité à bien été supprimée de ${list_voyage.get(which)}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+            plusdialog.setPositiveButton(android.R.string.ok) { _, _ -> }
 
+
+            plusdialog.setNeutralButton("Créer") { _, _ ->
+
+                val createdialog = AlertDialog.Builder(this)
+                val view = layoutInflater.inflate(R.layout.createvoyage_popup, null)
+                val editText = view.findViewById<EditText>(R.id.et_date)
+                val okbutton = view.findViewById<Button>(R.id.bt_ok)
+                val returnbutton = view.findViewById<Button>(R.id.bt_retour)
+                val editTitre = view.findViewById<EditText>(R.id.et_titre)
+                val editDate = view.findViewById<EditText>(R.id.et_date)
+                createdialog.setView(view)
+                createdialog.setTitle("Créer")
+                val alert = createdialog.show()
+                editText.setOnClickListener {
+                    rangeDatePickerPrimeCalendar(editText)
+                }
+                okbutton.setOnClickListener {
+                    if (!editTitre.text.isEmpty() && !editDate.text.isEmpty()) {
+                        val voyage = Voyage(
+                            0,
+                            view.et_titre.text.toString(),
+                            date_debut,
+                            date_fin,
+                            R.drawable.destination1,
+                            view.et_nb_voyageur.selectedItem.toString().toInt(),
+                            emptyList(),
+                            emptyList()
+                        )
+                        runBlocking {
+                            voyageDao?.addVoyage(voyage)
+                        }
+                        list_voyage.add(view.et_titre.text.toString())
+                        list_checkedItems.add(false)
+                        plusdialog.setMultiChoiceItems(
+                            list_voyage.toTypedArray(),
+                            list_checkedItems.toBooleanArray()
+                        ) { dialog, which: Int, isChecked ->
+                            // Update the current focused item's checked status
+                            list_checkedItems[which] = isChecked
+                            if (isChecked) {
+                                list_choix.add(list_voyage.get(which))
+                                runBlocking {
+                                    val voyage = voyageDao?.getVoyageByTitre(list_voyage.get(which))
+                                    val ancienne_list = voyage!!.list_activity?.toMutableList()
+                                    ancienne_list?.add(activite!!)
+                                    val nouvelle_liste = ancienne_list?.toList()
+                                    voyage.list_activity = nouvelle_liste
+                                    voyageDao?.updateVoyage(voyage)
+                                }
+                                Toast.makeText(
+                                    this,
+                                    "L'activité à bien été ajoutée à ${list_voyage.get(which)}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                Log.d("RRI", "add")
+                            } else {
+                                list_choix.remove(list_voyage.get(which))
+                                runBlocking {
+                                    val voyage = voyageDao?.getVoyageByTitre(list_voyage.get(which))
+                                    var ancienne_list = voyage?.list_activity?.toMutableList()
+                                    ancienne_list?.remove(activite!!)
+
+                                    val nouvelle_liste = ancienne_list?.toList()
+                                    voyage!!.list_activity = nouvelle_liste
+                                    voyageDao?.updateVoyage(voyage!!)
+                                }
+                                Toast.makeText(
+                                    this,
+                                    "L'activité à bien été supprimée de ${list_voyage.get(which)}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                        alert.dismiss()
+                        plusdialog.show()
+                    } else {
+                        Toast.makeText(this, "Veuillez saisir tous les champs", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+                returnbutton.setOnClickListener {
+                    alert.dismiss()
                     plusdialog.show()
+                }
+            }
+
+            plusdialog.show()
         }
 
         lire_plus_activity.setOnClickListener {
@@ -334,13 +373,13 @@ class DetailActivites : AppCompatActivity() {
 
         val today = CivilCalendar()
 
-            val datePickerT = PrimeDatePicker.dialogWith(today)
-                .pickRangeDays(rangeDaysPickCallback)
-                .firstDayOfWeek(Calendar.MONDAY)
-                .minPossibleDate(today)
-                .build()
+        val datePickerT = PrimeDatePicker.dialogWith(today)
+            .pickRangeDays(rangeDaysPickCallback)
+            .firstDayOfWeek(Calendar.MONDAY)
+            .minPossibleDate(today)
+            .build()
 
-            datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
+        datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
 
 
     }

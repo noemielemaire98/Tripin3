@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
+import com.example.tripin.MainActivity
 import com.example.tripin.R
 import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
@@ -34,9 +35,10 @@ class SavedActivites : AppCompatActivity() {
                 .build()
 
         noActivityImage.setOnClickListener {
-            val intent = Intent(this, FindActivitesActivity::class.java)
-            finish()
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("switchView", 3)
             startActivity(intent)
+            finish()
         }
 
         activityDaoSaved = databasesaved.getActivityDao()

@@ -23,6 +23,7 @@ import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.find.flight.IgnoreAccentsArrayAdapter
 import com.example.tripin.model.Activity
+import com.example.tripin.model.Flight
 import com.example.tripin.model.Voyage
 import kotlinx.android.synthetic.main.activity_add_voyage.*
 import kotlinx.android.synthetic.main.activity_add_voyage.passengers_number
@@ -138,6 +139,7 @@ class AddVoyage : AppCompatActivity() {
                     val nombrevoyageur = passengers_number.text
 
                     val list_activities = listOf<Activity>()
+                    val list_flights =  listOf<Flight>()
                     val voyage = Voyage(
                         0,
                         titre.toString(),
@@ -145,7 +147,8 @@ class AddVoyage : AppCompatActivity() {
                         dateRetour.toString(),
                         R.drawable.destination1,
                         nombrevoyageur.toString().toInt(),
-                        list_activities
+                        list_activities,
+                        list_flights
                     )
                     val database: AppDatabase =
                         Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")

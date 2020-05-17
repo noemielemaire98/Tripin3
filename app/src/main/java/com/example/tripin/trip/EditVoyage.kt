@@ -16,6 +16,7 @@ import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.find.flight.IgnoreAccentsArrayAdapter
 import com.example.tripin.model.Activity
+import com.example.tripin.model.Flight
 import com.example.tripin.model.Voyage
 import com.example.tripin.trip.DetailVoyage
 import kotlinx.android.synthetic.main.activity_edit_voyage.*
@@ -167,9 +168,10 @@ class EditVoyage() : AppCompatActivity() {
 
             Log.d("EPF"," $id, $titre, $dateDepart, $dateRetour, $nbvoyageur")
                 val list_activities = listOf<Activity>()
+                val list_flights =  listOf<Flight>()
             val nvvoyage =
                 Voyage(id, titre, dateDepart, dateRetour,
-                    R.drawable.destination1, nbvoyageur,list_activities)
+                    R.drawable.destination1, nbvoyageur,list_activities, list_flights)
 
 
                 val database: AppDatabase =

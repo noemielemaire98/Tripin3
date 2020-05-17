@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.room.Room
 import androidx.viewpager.widget.ViewPager
@@ -100,7 +99,7 @@ class DetailVoyage2 : AppCompatActivity() {
         scope.launch {
             val adapter = FindTabAdapterTrip(supportFragmentManager)
             adapter.addFragment(FindVoyage(), "Aperçu")
-            adapter.addFragment(VolTripFragment(), "Vol")
+            adapter.addFragment(FlightTripFragment(), "Vol")
             adapter.addFragment(HotelTripFragment(), "Hotel")
             adapter.addFragment(ActivityTripFragment(), "Activites")
             withContext(Dispatchers.Main) {

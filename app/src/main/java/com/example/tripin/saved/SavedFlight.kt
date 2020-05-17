@@ -8,15 +8,14 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import com.example.tripin.MainActivity
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.FlightDao
-import com.example.tripin.find.flight.FindFlightActivity
 import com.example.tripin.find.flight.FlightsAdapter
 import com.example.tripin.model.Flight
 import kotlinx.android.synthetic.main.activity_saved_flight.*
 import kotlinx.android.synthetic.main.activity_saved_flight.noFlightsImage
-import kotlinx.android.synthetic.main.fragment_find_flight2.*
 import kotlinx.coroutines.runBlocking
 
 class SavedFlight : AppCompatActivity() {
@@ -34,9 +33,10 @@ class SavedFlight : AppCompatActivity() {
         savedFlightsRecyclerView.layoutManager = LinearLayoutManager(this)
 
         noFlightsImage.setOnClickListener {
-            val intent = Intent(this, FindFlightActivity::class.java)
-            finish()
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("switchView", 1)
             startActivity(intent)
+            finish()
         }
 
         val database =

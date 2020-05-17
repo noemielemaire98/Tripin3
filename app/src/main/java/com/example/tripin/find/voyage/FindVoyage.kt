@@ -2,6 +2,7 @@ package com.example.tripin.find.voyage
 
 import android.app.Activity as AppActivity
 import android.content.Context
+import android.location.Geocoder
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
@@ -27,7 +28,7 @@ import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
 import com.aminography.primedatepicker.picker.callback.SingleDayPickCallback
 import com.example.tripin.R
 import com.example.tripin.data.*
-import com.example.tripin.find.activity.ActivityAdapter
+import com.example.tripin.find.activity.ActivityAdapterGlobal
 import com.example.tripin.find.activity.ActivitybyCity
 import com.example.tripin.find.flight.FlightsAdapter
 import com.example.tripin.find.flight.IgnoreAccentsArrayAdapter
@@ -58,6 +59,7 @@ class FindVoyage : Fragment() {
     private lateinit var travelClass: String
 
     private var listFavoris = arrayListOf<Boolean>()
+    private var listFavorisHotels = arrayListOf<Boolean>()
     private val listHotels: MutableList<Hotel> = mutableListOf()
     private val listEquipementFormatted = mutableListOf<List<String>>()
     private var flightsList: MutableList<MutableList<Flight>> = mutableListOf()
@@ -73,7 +75,7 @@ class FindVoyage : Fragment() {
     private lateinit var globalRecyclerView: RecyclerView
     private var flightsAdapter: FlightsAdapter? = null
     private var hotelsAdapter: HotelsAdapter? = null
-    private var activityAdapter: ActivityAdapter? = null
+    private var activityAdapter: ActivityAdapterGlobal? = null
     private var mergeAdapter = MergeAdapter()
 
     private var flightsDone = false
@@ -191,7 +193,6 @@ class FindVoyage : Fragment() {
                     } else if (return_dateLayout.visibility == View.GONE) { // Si c'est un voyage avec aller simple
 
                         val singleDayPickCallback = SingleDayPickCallback { date ->
-                            Log.d("Date", date.shortDateString)
                             val parser =
                                 SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
                             val formatterDate =
@@ -328,6 +329,7 @@ class FindVoyage : Fragment() {
         super.onResume()
 
         val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+        mergeAdapter = MergeAdapter()
 
         scope.launch {
             val flights = flightDao?.getFlights()
@@ -359,8 +361,23 @@ class FindVoyage : Fragment() {
                 }
             }
             if (!hotels.isNullOrEmpty()) {
+                val listHotelsBdd = hotelDaoSaved?.getHotels()
+
+                hotels.map {
+                    val hotelId = it.hotelId
+                    var matchBdd = false
+                    listHotelsBdd?.forEach { itList ->
+                        if (itList.hotelId == hotelId) {
+                            listFavorisHotels.add(true)
+                            matchBdd = true
+                        }
+                    }
+                    if (!matchBdd) {
+                        listFavorisHotels.add(false)
+                    }
+                }
                 withContext(Dispatchers.Main) {
-                    hotelsAdapter = HotelsAdapter(hotels)
+                    hotelsAdapter = HotelsAdapter(hotels, listFavorisHotels)
                     mergeAdapter.addAdapter(hotelsAdapter!!)
                 }
             }
@@ -381,11 +398,12 @@ class FindVoyage : Fragment() {
                     }
                 }
                 withContext(Dispatchers.Main) {
-                    activityAdapter = ActivityAdapter(activities, listFavoris)
+                    activityAdapter = ActivityAdapterGlobal(activities, listFavoris)
                     mergeAdapter.addAdapter(activityAdapter!!)
                 }
             }
-            if (!activityCreate && flights.isNullOrEmpty() && hotels.isNullOrEmpty() && activities.isNullOrEmpty()) { // S'il n'y a pas de vols et qu'une recherche a été effectuée, affiche l'image aucun vol dispo
+            // S'il n'y a pas de vols et qu'une recherche a été effectuée, affiche l'image aucun vol dispo
+            if (!activityCreate && flights.isNullOrEmpty() && hotels.isNullOrEmpty() && activities.isNullOrEmpty()) {
                 withContext(Dispatchers.Main) {
                     layoutNoFlightAvailable.visibility = View.VISIBLE
                 }
@@ -619,9 +637,8 @@ class FindVoyage : Fragment() {
             listEquipements.map { itMap ->
                 val amenityCode = itMap["amenity_code"].toString()
                 val amenityName = itMap["amenity_name"].toString()
-                val amenityIcon = itMap["amenity_icon"].toString()
                 val listEquipement: List<String> =
-                    listOf(amenityCode, amenityName, amenityIcon)
+                    listOf(amenityCode, amenityName)
                 listEquipementFormatted.add(listEquipement)
 
             }
@@ -630,6 +647,7 @@ class FindVoyage : Fragment() {
         runBlocking {
 
             listHotels.clear()
+            listFavorisHotels.clear()
             hotelDaoSearch?.deleteHotels()
             val bddHotels = hotelDaoSaved?.getHotels()
 
@@ -642,7 +660,6 @@ class FindVoyage : Fragment() {
                 } catch (e: Exception) {
                     Log.d("Error", e.toString())
                 }
-                Log.d("ErrorNope", hotelOffersSearches.contentToString())
                 val hotelNb: MutableList<HotelOffer>? = mutableListOf()
 
                 try {
@@ -656,61 +673,98 @@ class FindVoyage : Fragment() {
                         var favoris = false
                         val idHotel = itHotelOffer.hotel.hotelId
 
-                        bddHotels?.forEach {
-                            if (it.hotelId == idHotel) {
-                                favoris = true
-                            }
-                        }
+                        val name = itHotelOffer.hotel.name
 
-                        val email: String
-                        val tel: String
-
-                        val amenities = try {
-                            itHotelOffer.hotel.amenities
-                        } catch (e: Exception) {
-                            emptyArray<String>()
-                        }
-                        val equipements = mutableListOf<String>()
-                        equipements.clear()
-
-                        amenities?.forEach { itAmenity ->
-                            listEquipementFormatted.forEach {
-                                if (itAmenity == it[0]) {
-                                    equipements.add(it[1])
-                                }
-                            }
-                        }
-
-                        val description: String = if (itHotelOffer.hotel.description == null) {
+                        val description = if (itHotelOffer.hotel.description == null) {
                             "Description non disponible"
                         } else {
                             itHotelOffer.hotel.description.text
                         }
-                        if (itHotelOffer.hotel.contact == null) {
-                            email = "Email non disponible"
-                            tel = "Téléphone non disponible"
-                        } else {
-                            //TODO : Résoudre problème récupération email
-                            email = "email@test.fr"
-                            tel = itHotelOffer.hotel.contact.phone
-                        }
+
+                        val rate = itHotelOffer.hotel.rating
+
                         val uri: String = if (itHotelOffer.hotel.media == null) {
                             "0"
                         } else {
                             itHotelOffer.hotel.media[0].uri
                         }
 
+                        val adresse: MutableList<String> = mutableListOf()
+                        val geocoder = Geocoder(activity)
+                        val adresseList = geocoder.getFromLocation(
+                            itHotelOffer.hotel.latitude,
+                            itHotelOffer.hotel.longitude,
+                            1
+                        )
+                        adresseList.map {
+                            adresse.add(it.featureName)
+                            adresse.add(it.thoroughfare)
+                            adresse.add(it.postalCode)
+                            adresse.add(it.locality)
+                            adresse.add(it.countryName)
+                        }
+
+                        val telephone: String = if (itHotelOffer.hotel.contact == null) {
+                            "Téléphone non disponible"
+                        } else {
+                            itHotelOffer.hotel.contact.phone
+                        }
+
+                        val latitude = itHotelOffer.hotel.latitude
+                        val longitude = itHotelOffer.hotel.longitude
+
+                        var price: Double = -1.0
+                        itHotelOffer.offers.map {
+                            if (price < 0) {
+                                price = it.price.total.toDouble()
+                            } else if (price > it.price.total.toDouble()) {
+                                price = it.price.total.toDouble()
+                            }
+                        }
+                        val equipements = mutableListOf<String>()
+                        if (!itHotelOffer.hotel.amenities.isNullOrEmpty()) {
+                            itHotelOffer.hotel.amenities.forEach { itAmenity ->
+                                listEquipementFormatted.forEach {
+                                    if (itAmenity == it[0]) {
+                                        equipements.add(it[1])
+                                    }
+                                }
+                            }
+                        }
+
+                        val listOfferId: MutableList<String> = mutableListOf()
+                        itHotelOffer.offers.map {
+                            val offerId = it.id
+                            listOfferId.add(offerId)
+                        }
+
+
+                        var matchBdd = false
+                        bddHotels?.forEach {
+                            if (it.hotelId == idHotel) {
+                                listFavorisHotels.add(true)
+                                matchBdd = true
+                                favoris = true
+                            }
+                        }
+                        if (!matchBdd) {
+                            listFavorisHotels.add(false)
+                        }
+
                         val hotel = Hotel(
                             0,
-                            itHotelOffer.hotel.hotelId,
-                            itHotelOffer.hotel.name,
+                            idHotel,
+                            name,
                             description,
-                            itHotelOffer.hotel.rating,
+                            rate,
                             uri,
-                            itHotelOffer.hotel.address.lines.joinToString(),
-                            email,
-                            tel,
+                            adresse,
+                            telephone,
+                            latitude,
+                            longitude,
+                            price,
                             equipements,
+                            listOfferId,
                             favoris
                         )
                         runBlocking {
@@ -720,7 +774,7 @@ class FindVoyage : Fragment() {
                     }
 
                     if (!listHotels.isNullOrEmpty()) {
-                        hotelsAdapter = HotelsAdapter(listHotels)
+                        hotelsAdapter = HotelsAdapter(listHotels, listFavorisHotels)
                         try {
                             mergeAdapter.addAdapter(1, hotelsAdapter!!)
                         } catch (e: Exception) {
@@ -794,7 +848,7 @@ class FindVoyage : Fragment() {
             activitiesList = activityDaoSearch?.getActivity()
 
             if (!activitiesList.isNullOrEmpty()) {
-                activityAdapter = ActivityAdapter(activitiesList!!, listFavoris)
+                activityAdapter = ActivityAdapterGlobal(activitiesList!!, listFavoris)
                 mergeAdapter.addAdapter(activityAdapter!!)
             }
 
@@ -824,7 +878,6 @@ class FindVoyage : Fragment() {
     // affichage du calendrier aller-retour
     private fun rangeDatePickerPrimeCalendar() {
         val rangeDaysPickCallback = RangeDaysPickCallback { startDate, endDate ->
-            Log.d("Date", "${startDate.shortDateString} ${endDate.shortDateString}")
             val parser =
                 SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
             val formatterDate =

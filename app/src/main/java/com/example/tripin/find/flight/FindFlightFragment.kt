@@ -6,7 +6,6 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
@@ -43,8 +42,6 @@ import java.util.concurrent.TimeUnit
 
 class FindFlightFragment : Fragment() {
 
-    //    private val apiKey = "TGvUHAv2qE6aoqa2Gg44ZZGpvDIEGwYs"
-//    private val apiSecret = "a16JGxtWdWBPtTGB"
     private lateinit var dateDepart: String
     private lateinit var dateRetour: String
     private lateinit var lieuDepart: String
@@ -56,7 +53,6 @@ class FindFlightFragment : Fragment() {
     private var mBundleRecyclerViewState: Bundle? = null
     private var mListState: Parcelable? = null
 
-    //    private var listFlights = mutableListOf<Flight>()
     private var activityCreate = true
     private val amadeus: Amadeus = Amadeus
         .builder("TGvUHAv2qE6aoqa2Gg44ZZGpvDIEGwYs", "a16JGxtWdWBPtTGB")
@@ -150,8 +146,6 @@ class FindFlightFragment : Fragment() {
                     } else if (return_dateLayout.visibility == View.GONE) { // Si c'est un voyage avec aller simple
 
                         val singleDayPickCallback = SingleDayPickCallback { date ->
-                            // TODO
-                            Log.d("Date", date.shortDateString)
                             val parser =
                                 SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
                             val formatterDate =
@@ -213,10 +207,8 @@ class FindFlightFragment : Fragment() {
                 hideInput.setOnClickListener {
                     if (layout_search.visibility == View.VISIBLE) {
                         layout_search.visibility = View.GONE
-                        //              button_newSearch.visibility = View.VISIBLE
                     } else {
                         layout_search.visibility = View.VISIBLE
-                        //              button_newSearch.visibility = View.GONE
                     }
                 }
 
@@ -292,11 +284,9 @@ class FindFlightFragment : Fragment() {
         val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
         scope.launch {
-            //       val flights = listFlights
             val flights = flightDao?.getFlights()
             if (!flights.isNullOrEmpty()) { // S'il y a des vols de trouvés
                 layoutNoFlightAvailable.visibility = View.GONE
-                //            val flights = listFlights
                 val flightsList: MutableList<MutableList<Flight>> = mutableListOf()
                 var testlist: MutableList<Flight> = mutableListOf()
                 var travelId = 1
@@ -402,9 +392,6 @@ class FindFlightFragment : Fragment() {
                 val airlinesNamesCsv = resources.openRawResource(R.raw.optd_airline)
                 val rows: List<Map<String, String>> =
                     csvReader().readAllWithHeader(airlinesNamesCsv)
-
-//                val testLogo = resources.openRawResource(R.raw.optd_airlines_websites_wkdt)
-//                val rowsLogo: List<Map<String, String>> = csvReader().readAllWithHeader(testLogo)
 
                 var id = 1 // pour incrémenter les id
                 var carrierName = ""
@@ -528,8 +515,6 @@ class FindFlightFragment : Fragment() {
     // affichage du calendrier aller-retour
     private fun rangeDatePickerPrimeCalendar() {
         val rangeDaysPickCallback = RangeDaysPickCallback { startDate, endDate ->
-            // TODO
-            Log.d("Date", "${startDate.shortDateString} ${endDate.shortDateString}")
             val parser =
                 SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
             val formatterDate =
@@ -540,7 +525,6 @@ class FindFlightFragment : Fragment() {
                 formatterDate.format(parser.parse(endDate.shortDateString)!!)
             aller_date.setText(parsedStartDate)
             return_date.setText(parsedEndDate)
-            Log.d("RRR","${parsedStartDate},${parsedEndDate}")
         }
 
         val today = CivilCalendar()

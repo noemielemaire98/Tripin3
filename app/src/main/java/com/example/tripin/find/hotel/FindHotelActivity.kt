@@ -75,10 +75,10 @@ class FindHotelActivity : AppCompatActivity() {
         hideKeyboard()
 
         val databasesearch =
-            Room.databaseBuilder(this, AppDatabase::class.java, "searchDatabaseHotels").build()
+            Room.databaseBuilder(this, AppDatabase::class.java, "searchDatabase").build()
         hotelDaoSearch = databasesearch.getHotelDao()
         val databasesaved =
-            Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabaseHotels").build()
+            Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase").build()
         hotelDaoSaved = databasesaved.getHotelDao()
 
         //création d'un client Amadeus

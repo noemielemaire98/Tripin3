@@ -34,10 +34,10 @@ class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>
         val view: View = layoutInflater.inflate(R.layout.hotel_view, parent, false)
 
         val databasesearch =
-            Room.databaseBuilder(parent.context, AppDatabase::class.java, "searchDatabaseHotels")
+            Room.databaseBuilder(parent.context, AppDatabase::class.java, "searchDatabase")
                 .build()
         val databasesaved =
-        Room.databaseBuilder(parent.context, AppDatabase::class.java, "savedDatabaseHotels")
+        Room.databaseBuilder(parent.context, AppDatabase::class.java, "savedDatabase")
             .build()
 
 

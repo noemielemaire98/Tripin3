@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
+import com.example.tripin.MainActivity
 import com.example.tripin.find.hotel.HotelsAdapter
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
@@ -40,14 +41,15 @@ class SavedHotel : AppCompatActivity() {
 
 
         noFlightsImage.setOnClickListener {
-            val intent = Intent(this, FindHotelFragment::class.java)
-            finish()
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("switchView", 2)
             startActivity(intent)
+            finish()
         }
 
 
         val databasesaved =
-            Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabaseHotels")
+            Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
                 .build()
 
 

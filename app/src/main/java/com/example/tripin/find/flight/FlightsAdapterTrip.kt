@@ -8,17 +8,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
-import com.aminography.primecalendar.civil.CivilCalendar
-import com.aminography.primedatepicker.picker.PrimeDatePicker
-import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
-import com.example.tripin.MainActivity
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.FlightDao
@@ -26,33 +19,33 @@ import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Flight
 import com.example.tripin.model.Voyage
 import com.example.tripin.saved.SavedFlight
+import com.example.tripin.trip.DetailVoyage2
 import kotlinx.android.synthetic.main.activity_saved_flight.*
-import kotlinx.android.synthetic.main.createvoyage_popup.view.*
-import kotlinx.android.synthetic.main.flights_view.view.*
+import kotlinx.android.synthetic.main.flightstrip_view.view.*
 import kotlinx.coroutines.runBlocking
 import java.io.IOException
 import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 
 
-class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) :
-    RecyclerView.Adapter<FlightsAdapter.FlightsViewHolder>() {
+class FlightsAdapterTrip(
+    private val flightsList: MutableList<MutableList<Flight>>,
+    private val voyage: Voyage
+) :
+    RecyclerView.Adapter<FlightsAdapterTrip.FlightsViewHolder>() {
 
     private var voyageDaoSaved: VoyageDao? = null
     private var listFlightsBdd: MutableList<Flight>? = null
     private var flightDaoSaved: FlightDao? = null
     private lateinit var context: Context
-    private var dateDebut = ""
-    private var dateFin = ""
 
     class FlightsViewHolder(val flightsView: View) : RecyclerView.ViewHolder(flightsView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlightsViewHolder {
         val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
-        val view: View = layoutInflater.inflate(R.layout.flights_view, parent, false)
+        val view: View = layoutInflater.inflate(R.layout.flightstrip_view, parent, false)
 
         context = parent.context
 
@@ -246,6 +239,7 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
 
             }
 
+
             view.fab_favFlight.setOnClickListener {
 
                 if (!favoris) {
@@ -325,190 +319,25 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
                 }
             }
 
-            //AU CLIC SUR LE BOUTON AJOUT A UN VOYAGE
-            view.fab_addFlight.setOnClickListener {
-                val listCheckeditems = ArrayList<Boolean>()
-                val listVoyage: ArrayList<String> = arrayListOf()
+            view.fab_deleteFlight.setOnClickListener {
+                flightsList.removeAt(position)
+                val list = mutableListOf<Flight>()
+                flightsList.map { itList ->
+                    itList.map {
+                        list.add(it)
+                    }
+                }
+                voyage.list_flights = list.toList()
                 runBlocking {
-                    val voyage = voyageDaoSaved?.getVoyage()
-                    voyage?.map {
-                        var dejaAjoute = false
-                        listVoyage.add(it.titre!!)
-                        it.list_flights?.map { itF ->
-                            if (itF.uuid == flights[0].uuid) {
-                                dejaAjoute = true
-                            }
-                        }
-                        listCheckeditems.add(dejaAjoute)
-                    }
-                }
-                val plusdialog = AlertDialog.Builder(context)
-                plusdialog.setTitle("Dossier de voyage")
-                val listChoix = arrayListOf<String>()
-
-                if (listVoyage.isNullOrEmpty()) {
-                    plusdialog.setMessage("Vous n'avez constitué aucun dossier de voyage, cliquez sur créer")
-                } else {
-                    hasVoyage(listVoyage, listCheckeditems, plusdialog, listChoix, flights)
-                }
-
-                plusdialog.setPositiveButton(android.R.string.ok) { _, _ ->
-                    plusdialog.show().dismiss()
-                }
-
-
-                plusdialog.setNeutralButton("Créer") { _, _ ->
-
-
-                    val createDialog = AlertDialog.Builder(context)
-
-                    val viewPop = LayoutInflater.from(context).inflate(
-                        R.layout.createvoyage_popup,
-                        view.findViewById(android.R.id.content),
-                        false
-                    )
-                    val editText = viewPop.findViewById<EditText>(R.id.et_date)
-                    val okButton = viewPop.findViewById<Button>(R.id.bt_ok)
-                    val returnButton = viewPop.findViewById<Button>(R.id.bt_retour)
-                    val editTitre = viewPop.findViewById<EditText>(R.id.et_titre)
-                    val editDate = viewPop.findViewById<EditText>(R.id.et_date)
-                    createDialog.setView(viewPop)
-                    createDialog.setTitle("Créer")
-                    val alert = createDialog.show()
-                    editText.setOnClickListener {
-                        rangeDatePickerPrimeCalendar(editText)
-                    }
-
-
-                    okButton.setOnClickListener {
-                        var exist = false
-                        listVoyage.map { itL ->
-                            if (editTitre.text.toString() == itL) {
-                                exist = true
-                            }
-                        }
-                        if (exist) {
-                            Toast.makeText(
-                                context,
-                                "Ce nom de voyage existe déjà, veuillez en chosir un autre",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            editTitre.setText("")
-                        } else if (editTitre.text.isNotEmpty() && editDate.text.isNotEmpty()) {
-                            val voyage = Voyage(
-                                0,
-                                viewPop.et_titre.text.toString(),
-                                dateDebut,
-                                dateFin,
-                                R.drawable.destination1,
-                                viewPop.et_nb_voyageur.selectedItem.toString().toInt(),
-                                emptyList(),
-                                emptyList()
-                            )
-                            runBlocking {
-                                voyageDaoSaved?.addVoyage(voyage)
-                            }
-                            listVoyage.add(viewPop.et_titre.text.toString())
-                            plusdialog.show().dismiss()
-                            view.fab_addFlight.performClick()
-                            alert.dismiss()
-                        } else {
-                            Toast.makeText(
-                                context,
-                                "Veuillez saisir tous les champs",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                    returnButton.setOnClickListener {
-                        alert.dismiss()
-                        plusdialog.show().dismiss()
-                        view.fab_addFlight.performClick()
-                    }
-                }
-                plusdialog.show()
-            }
-        }
-    }
-
-    private fun hasVoyage(
-        list_voyage: ArrayList<String>,
-        list_checkedItems: ArrayList<Boolean>,
-        plusdialog: AlertDialog.Builder,
-        list_choix: ArrayList<String>,
-        flights: MutableList<Flight>
-    ) {
-        plusdialog.setMultiChoiceItems(
-            list_voyage.toTypedArray(),
-            list_checkedItems.toBooleanArray()
-        ) { _, which: Int, isChecked ->
-            // Update the current focused item's checked status
-            list_checkedItems[which] = isChecked
-            if (isChecked) {
-                list_choix.add(list_voyage[which])
-                runBlocking {
-                    val voyage = voyageDaoSaved?.getVoyageByTitre(list_voyage[which])
-                    val ancienneList = voyage!!.list_flights?.toMutableList()
-                    ancienneList?.addAll(flights)
-                    val nouvelleListe = ancienneList?.toList()
-                    voyage.list_flights = nouvelleListe
-
                     voyageDaoSaved?.updateVoyage(voyage)
                 }
-                Toast.makeText(
-                    context,
-                    "Le vol à bien été ajouté à ${list_voyage[which]}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                list_choix.remove(list_voyage[which])
-                runBlocking {
-                    val voyage = voyageDaoSaved?.getVoyageByTitre(list_voyage[which])
-                    val ancienneList = voyage?.list_flights?.toMutableList()
-                    ancienneList?.removeAll(flights)
-                    val nouvelleListe = ancienneList?.toList()
-                    voyage!!.list_flights = nouvelleListe
-                    voyageDaoSaved?.updateVoyage(voyage)
+                notifyItemRemoved(position)
+                notifyItemRangeChanged(position, itemCount)
+
+                if (flightsList.isNullOrEmpty()) {
+                    (context as DetailVoyage2).layoutNoSavedFlight.visibility = View.VISIBLE
                 }
-                Toast.makeText(
-                    context,
-                    "Le vol à bien été supprimé de ${list_voyage[which]}",
-                    Toast.LENGTH_SHORT
-                ).show()
             }
         }
-    }
-
-
-    @SuppressLint("SetTextI18n")
-    private fun rangeDatePickerPrimeCalendar(editText: EditText) {
-        val rangeDaysPickCallback = RangeDaysPickCallback { startDate, endDate ->
-            // TODO
-            Log.d("Date", "${startDate.shortDateString} ${endDate.shortDateString}")
-            val parser =
-                SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
-            val formatterDate =
-                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val parsedStartDate =
-                formatterDate.format(parser.parse(startDate.shortDateString)!!)
-            val parsedEndDate =
-                formatterDate.format(parser.parse(endDate.shortDateString)!!)
-            editText.setText("Du $parsedStartDate au $parsedEndDate")
-            dateDebut = parsedStartDate
-            dateFin = parsedEndDate
-        }
-
-        val today = CivilCalendar()
-
-        val datePickerT = PrimeDatePicker.dialogWith(today)
-            .pickRangeDays(rangeDaysPickCallback)
-            .firstDayOfWeek(Calendar.MONDAY)
-            .minPossibleDate(today)
-            .build()
-
-        datePickerT.show(
-            (context as MainActivity).supportFragmentManager,
-            "PrimeDatePickerBottomSheet"
-        )
     }
 }
