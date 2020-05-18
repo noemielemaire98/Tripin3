@@ -283,6 +283,7 @@ class DetailActivites : AppCompatActivity() {
                             R.drawable.destination1,
                             view.et_nb_voyageur.selectedItem.toString().toInt(),
                             emptyList(),
+                            emptyList(),
                             emptyList()
                         )
                         runBlocking {

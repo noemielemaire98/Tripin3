@@ -12,6 +12,7 @@ import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Activity
 import com.example.tripin.model.Flight
+import com.example.tripin.model.Hotel
 import com.example.tripin.model.Voyage
 import kotlinx.android.synthetic.main.fragment_trip.*
 import kotlinx.coroutines.runBlocking
@@ -56,7 +57,8 @@ class TripFragment : Fragment() {
             voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
             val list_activities = listOf<Activity>()
             val list_flights = listOf<Flight>()
-            val voyage =Voyage(0,"titre","debut","fin",R.drawable.destination1,0,list_activities, list_flights)
+            val list_hotels = listOf<Hotel>()
+            val voyage =Voyage(0,"titre","debut","fin",R.drawable.destination1,0,list_activities, list_flights, list_hotels)
 
         }
     }

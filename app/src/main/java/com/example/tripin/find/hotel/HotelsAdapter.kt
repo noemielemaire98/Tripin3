@@ -64,9 +64,7 @@ class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>
         holder.hotelView.hotel_adresse1_textview.setTypeface(null, Typeface.ITALIC)
         holder.hotelView.hotel_adresse1_textview.text = "${hotel.adresse[0]}, ${hotel.adresse[1]} "
         holder.hotelView.hotel_adresse2_textview.setTypeface(null, Typeface.ITALIC)
-        holder.hotelView.hotel_adresse2_textview.text = "${hotel.adresse[2]}, ${hotel.adresse[3]} "
-        holder.hotelView.hotel_adresse3_textview.setTypeface(null, Typeface.ITALIC)
-        holder.hotelView.hotel_adresse3_textview.text = hotel.adresse[4].toUpperCase()
+        holder.hotelView.hotel_adresse2_textview.text = "${hotel.adresse[2]}, ${hotel.adresse[3]}, ${hotel.adresse[4].toUpperCase()}"
 
         //Definition de la note
 

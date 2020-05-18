@@ -13,7 +13,8 @@ data class Voyage(
     val photo: Int,
     val nb_voyageur: Int?,
     var list_activity: List<Activity>?,
-    var list_flights: List<Flight>?
+    var list_flights: List<Flight>?,
+    var list_hotels : List<Hotel>?
 ) {
 
 

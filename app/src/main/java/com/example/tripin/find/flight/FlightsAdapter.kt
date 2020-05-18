@@ -403,6 +403,7 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
                                 R.drawable.destination1,
                                 viewPop.et_nb_voyageur.selectedItem.toString().toInt(),
                                 emptyList(),
+                                emptyList(),
                                 emptyList()
                             )
                             runBlocking {

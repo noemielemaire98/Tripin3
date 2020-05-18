@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/noSavedHotelDetail"
             android:layout_marginTop="30dp"
-            android:contentDescription="@string/imageDescription_no_favoriteFlight"
+            android:contentDescription="Aucun hôtel favori"
             android:gravity="center"
             android:src="@drawable/nosavedflights" />
 
