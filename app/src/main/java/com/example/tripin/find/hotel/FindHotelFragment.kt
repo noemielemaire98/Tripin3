@@ -22,6 +22,7 @@ import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
 
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
+import com.example.tripin.data.CityDao
 import com.example.tripin.data.HotelDao
 import com.example.tripin.model.Hotel
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
@@ -41,6 +42,7 @@ class FindHotelFragment : Fragment() {
 
     private var hotelDaoSearch: HotelDao? = null
     private var hotelDaoSaved: HotelDao? = null
+    private var citydao: CityDao? = null
     private lateinit var cityCode: String
     val listCitiesFormatted = mutableListOf<List<String>>()
     val listEquipementFormatted = mutableListOf<List<String>>()
@@ -53,6 +55,7 @@ class FindHotelFragment : Fragment() {
     var priceMinChosen: Int = priceMinFixed
     var priceMaxChosen: Int = priceMaxFixed
     var list_favoris  = arrayListOf<Boolean>()
+    var list_cities_name = arrayListOf<String>()
 
 
     override fun onCreateView(
@@ -63,6 +66,7 @@ class FindHotelFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_find_hotel2, container, false)
         val recyclerViewHotels = view.findViewById<RecyclerView>(R.id.hotels_recyclerview)
         val bt_search = view.findViewById<Button>(R.id.btn_search)
+        val editText = view.findViewById<AutoCompleteTextView>(R.id.search_hotel)
         val roomNumber = view.findViewById<TextView>(R.id.room_number)
         val arriveeDate = view.findViewById<EditText>(R.id.arriveeDate_date)
         val departDate = view.findViewById<EditText>(R.id.departDate_date)
@@ -95,7 +99,9 @@ class FindHotelFragment : Fragment() {
 
 
         hotelDaoSaved = databasesaved.getHotelDao()
+        citydao = databasesaved.getCityDao()
         hotelDaoSearch = databasesearch.getHotelDao()
+
 
 
         //création d'un client Amadeus
@@ -103,6 +109,16 @@ class FindHotelFragment : Fragment() {
             .builder("TGvUHAv2qE6aoqa2Gg44ZZGpvDIEGwYs", "a16JGxtWdWBPtTGB")
             .build()
 
+        runBlocking {
+            val list_cities_bdd = citydao?.getCity()
+            list_cities_bdd?.map {
+                if(it.iataCode != null){
+                list_cities_name.add(it.name!!)
+            }
+            }
+        }
+        val adapter : ArrayAdapter<String> = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,list_cities_name)
+        editText.setAdapter(adapter)
 
         //Gestion nombre de chambres
         roomNumber.text = rooms_number.toString()
@@ -122,6 +138,7 @@ class FindHotelFragment : Fragment() {
         }
 
         decreaseButton.setOnClickListener {
+            hideKeyboard()
             if (rooms_number == 1) {
             } else {
                 rooms_number = rooms_number.minus(1)
@@ -131,6 +148,7 @@ class FindHotelFragment : Fragment() {
         }
 
         increaseButton.setOnClickListener {
+            hideKeyboard()
             if (rooms_number == 9) {
             } else {
                 rooms_number = rooms_number.plus(1)
@@ -155,6 +173,7 @@ class FindHotelFragment : Fragment() {
                 thumbIndex: Int,
                 value: Int
             ) {
+                hideKeyboard()
                 if (thumbIndex == 0) {
                     priceMin.text = value.toString()
                     priceMinChosen = value
@@ -170,44 +189,17 @@ class FindHotelFragment : Fragment() {
         bt_search.setOnClickListener {
             hideKeyboard()
             layoutNoHotelAvailable.visibility = View.GONE
-            search_hotel.clearFocus()
+            editText.clearFocus()
             loadingPanel.visibility = View.VISIBLE
 
             //Récupération de la liste des cityCode
             runBlocking {
-
-                val cityCsv = resources.openRawResource(R.raw.iata_airport_list)
-                val listCities: List<Map<String, String>> = csvReader().readAllWithHeader(cityCsv)
-                var verification: Boolean
-
-
-                listCities.map { itMap ->
-                    verification = false
-                    var city_code = itMap["city_code"].toString()
-                    var city_name = itMap["city_name"].toString().toUpperCase()
-                    var city: List<String> = listOf(city_code, city_name)
-
-                    if (listCitiesFormatted.isEmpty()) {
-                        listCitiesFormatted.add(city)
-                    } else {
-                        listCitiesFormatted.forEach() {
-                            if (it.get(1).equals(city_name)) {
-                                verification = true
-                            }
-                        }
-
-                        if (verification == false) {
-                            listCitiesFormatted.add(city)
-                        } else {
-                        }
+                val searchCity = editText.text.toString()
+                val list_cities_bdd = citydao?.getCity()
+                list_cities_bdd?.map {
+                    if (it.name == searchCity){
+                        cityCode = it.iataCode
                     }
-                }
-
-                //Récupération du cityCode
-                val searchCity = search_hotel.text.toString()
-                listCitiesFormatted.forEach() {
-                    if (searchCity.equals(it.get(1), ignoreCase = true))
-                        cityCode = it.get(0)
                 }
             }
 
@@ -400,7 +392,38 @@ class FindHotelFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        list_favoris.clear()
+        val databasesearch =
+            Room.databaseBuilder(requireActivity().baseContext, AppDatabase::class.java, "searchDatabase")
+                .build()
+        val databasesaved =
+            Room.databaseBuilder(requireActivity().baseContext, AppDatabase::class.java, "savedDatabase")
+                .build()
+        hotelDaoSaved = databasesaved.getHotelDao()
+        hotelDaoSearch = databasesearch.getHotelDao()
 
+        runBlocking {
+            val hotels = hotelDaoSearch?.getHotels()
+            val list_hotels_bdd = hotelDaoSaved?.getHotels()
+
+            hotels?.map {
+                val id = it.id
+                var match_bdd = false
+                list_hotels_bdd?.forEach {
+                    if (it.id == id) {
+                        list_favoris.add(true)
+                        match_bdd = true
+                    }
+                }
+                if (match_bdd == false) {
+                    list_favoris.add(false)
+                }
+                hotels_recyclerview.adapter =
+                    HotelsAdapter(hotels ?: emptyList(), list_favoris)
+            }
+
+
+        }
 
     }
 

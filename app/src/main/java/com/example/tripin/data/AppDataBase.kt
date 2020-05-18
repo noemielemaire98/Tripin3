@@ -16,7 +16,8 @@ import com.example.tripin.model.*
 @TypeConverters(
     Converters::class,
     ListActivityConverter::class,
-    ListFlightsConverter::class
+    ListFlightsConverter::class,
+    ListHotelsConverter::class
 )
 
 
@@ -125,6 +126,61 @@ class ListFlightsConverter {
                 items[18]
             )
             arrayList.add(flight)
+        }
+
+        return arrayList.toList()
+    }
+}
+class ListHotelsConverter {
+    @TypeConverter
+    fun fromListHotels(listHotels: List<Hotel>): List<String> {
+        val arrayList: ArrayList<String> = arrayListOf()
+        listHotels.map {
+
+            val string =
+                "${it.id};${it.hotelId};${it.hotelName};${it.hotelDescription};${it.rate};${it.image_url};${it.adresse};${it.telephone};${it.latitude};${it.longitude};${it.prix};${it.equipements};${it.listIdOffer};${it.favoris}"
+
+            arrayList.add(string)
+
+        }
+        return arrayList.toList()
+    }
+
+    @TypeConverter
+    fun toListHotels(listString: List<String>): List<Hotel> {
+        val arrayList: ArrayList<Hotel> = arrayListOf()
+        listString.map {
+            val items = it.split(";")
+            var cat = items[6].substring(1, items[6].length - 1)
+            val adresse: MutableList<String> = cat.split(",") as MutableList<String>
+
+            cat = items[11].substring(1, items[11].length - 1)
+            val equipements: MutableList<String> = cat.split(",") as MutableList<String>
+
+            cat = items[12].substring(1, items[12].length - 1)
+            val offers: MutableList<String> = cat.split(",") as MutableList<String>
+
+            var rate: Int? = null
+            if(items[4] != null){
+                rate = items[4]?.toInt()
+            }
+            val hotel = Hotel(
+                items[0].toInt(),
+                items[1],
+                items[2],
+                items[3],
+                items[4]?.toInt(),
+                items[5],
+                adresse,
+                items[7],
+                items[8].toDouble(),
+                items[9].toDouble(),
+                items[10].toDouble(),
+                equipements,
+                offers,
+                items[13].toBoolean()
+            )
+            arrayList.add(hotel)
         }
 
         return arrayList.toList()
