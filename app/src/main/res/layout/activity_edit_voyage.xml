@@ -57,9 +57,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="2dp"
                 android:layout_weight="1"
-                android:hint="Du"
                 app:boxBackgroundColor="@color/colorBackground"
                 app:endIconMode="clear_text">
+<!--                android:hint="Du"-->
 
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -80,9 +80,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
                 android:layout_weight="1"
-                android:hint="Au"
                 app:boxBackgroundColor="@color/colorBackground"
                 app:endIconMode="clear_text">
+<!--                android:hint="Au"-->
 
 
                 <com.google.android.material.textfield.TextInputEditText
