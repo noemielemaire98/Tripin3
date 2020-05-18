@@ -130,7 +130,7 @@ class HomeFragment : Fragment() {
                 }
                 val activities = activityDaoSearch?.getActivity()
                 recyclerview_home.adapter =
-                    ActivityAdapterGlobal(activities ?: emptyList(), list_favoris)
+                    ActivityAdapterGlobal(activities!!.toMutableList(), list_favoris)
             } else {
                 noActivity_home.visibility = View.VISIBLE
             }

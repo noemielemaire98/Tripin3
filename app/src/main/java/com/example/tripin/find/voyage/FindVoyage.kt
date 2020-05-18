@@ -398,7 +398,7 @@ class FindVoyage : Fragment() {
                     }
                 }
                 withContext(Dispatchers.Main) {
-                    activityAdapter = ActivityAdapterGlobal(activities, listFavoris)
+                    activityAdapter = ActivityAdapterGlobal(activities.toMutableList(), listFavoris)
                     mergeAdapter.addAdapter(activityAdapter!!)
                 }
             }
@@ -848,7 +848,7 @@ class FindVoyage : Fragment() {
             activitiesList = activityDaoSearch?.getActivity()
 
             if (!activitiesList.isNullOrEmpty()) {
-                activityAdapter = ActivityAdapterGlobal(activitiesList!!, listFavoris)
+                activityAdapter = ActivityAdapterGlobal(activitiesList!!.toMutableList(), listFavoris)
                 mergeAdapter.addAdapter(activityAdapter!!)
             }
 

@@ -32,6 +32,7 @@ import com.xw.repo.BubbleSeekBar
 import kotlinx.android.synthetic.main.activity_detail_activites.*
 import kotlinx.android.synthetic.main.createvoyage_popup.*
 import kotlinx.android.synthetic.main.createvoyage_popup.view.*
+import kotlinx.android.synthetic.main.flights_view.view.*
 import kotlinx.android.synthetic.main.fragment_find_flight2.*
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.anko.find
@@ -259,7 +260,21 @@ class DetailActivites : AppCompatActivity() {
                     rangeDatePickerPrimeCalendar(editText)
                 }
                 okbutton.setOnClickListener {
-                    if (!editTitre.text.isEmpty() && !editDate.text.isEmpty()) {
+                    var exist = false
+                    list_voyage.map { itL ->
+                        if (editTitre.text.toString() == itL) {
+                            exist = true
+                        }
+                    }
+                    if (exist) {
+                        Toast.makeText(
+                            this,
+                            "Ce nom de voyage existe déjà, veuillez en chosir un autre",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        editTitre.setText("")
+                    }
+                    else if (!editTitre.text.isEmpty() && !editDate.text.isEmpty()) {
                         val voyage = Voyage(
                             0,
                             view.et_titre.text.toString(),
@@ -316,7 +331,8 @@ class DetailActivites : AppCompatActivity() {
                             }
                         }
                         alert.dismiss()
-                        plusdialog.show()
+                        plusdialog.show().dismiss()
+                        fab_plus.performClick()
                     } else {
                         Toast.makeText(this, "Veuillez saisir tous les champs", Toast.LENGTH_SHORT)
                             .show()

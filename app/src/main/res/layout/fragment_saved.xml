@@ -4,31 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
     android:orientation="vertical"
     tools:context=".saved.SavedFragment">
 
-    <Button
+    <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.Button"
-        app:backgroundTint="@color/contrast_blue"
-        android:text="VOlS SAVED"
-        android:id="@+id/bt_flight_saved"/>
-    <Button
+        app:tabMode="fixed"
+        android:id="@+id/tablayout_saved"
+        android:background="@color/colorPrimary"
+        app:tabTextColor="#fff"/>
+
+    <androidx.viewpager.widget.ViewPager
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.Button"
-        app:backgroundTint="@color/contrast_blue"
-        android:text="HOTELS SAVED"
-        android:id="@+id/bt_hotel_saved"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.Button"
-        app:backgroundTint="@color/contrast_blue"
-        android:text="ACTIVITES SAVED"
-        android:id="@+id/bt_activities_saved"/>
+        android:layout_height="match_parent"
+        android:id="@+id/fragment_rechercheinterne_saved" />
 
 
 </LinearLayout>

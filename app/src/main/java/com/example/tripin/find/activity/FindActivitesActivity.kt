@@ -94,7 +94,7 @@ class FindActivitesActivity : AppCompatActivity() {
 
                 }
                 val activities = activityDaoSearch?.getActivity()
-                activities_recyclerview.adapter = ActivityAdapterGlobal(activities ?: emptyList(),list_favoris)
+                activities_recyclerview.adapter = ActivityAdapterGlobal(activities!!.toMutableList(),list_favoris)
 
             }
 

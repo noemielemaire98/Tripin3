@@ -241,9 +241,9 @@ class FindActivityFragment : Fragment()  {
                       activityDaoSearch?.addActivity(activity)
 
                   }
-                  val activities = activityDaoSearch?.getActivity()
+                  val activities = (activityDaoSearch?.getActivity())?.toMutableList()
                   activities_recyclerview.adapter =
-                      ActivityAdapterGlobal(activities ?: emptyList(), list_favoris)
+                      ActivityAdapterGlobal(activities!!, list_favoris)
               } else {
                   layoutNoActivities_frag.visibility = View.VISIBLE
               }
@@ -285,7 +285,7 @@ class FindActivityFragment : Fragment()  {
                         list_favoris.add(false)
                     }
                 activities_recyclerview.adapter =
-                    ActivityAdapterGlobal(activities ?: emptyList(), list_favoris)
+                    ActivityAdapterGlobal(activities.toMutableList(), list_favoris)
             }
 
 

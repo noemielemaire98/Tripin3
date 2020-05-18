@@ -18,7 +18,7 @@ import com.example.tripin.model.Activity
 import kotlinx.android.synthetic.main.activities_view.view.*
 import kotlinx.coroutines.runBlocking
 
-class ActivityAdapterGlobal(val list_activity: List<Activity>, val attribut_favoris : ArrayList<Boolean>) : RecyclerView.Adapter<ActivityAdapterGlobal.ActivityViewHolder>() {
+class ActivityAdapterGlobal(val list_activity: MutableList<Activity>, val attribut_favoris : ArrayList<Boolean>) : RecyclerView.Adapter<ActivityAdapterGlobal.ActivityViewHolder>() {
 
     class ActivityViewHolder(val activtyView : View) : RecyclerView.ViewHolder(activtyView)
 
@@ -89,6 +89,7 @@ class ActivityAdapterGlobal(val list_activity: List<Activity>, val attribut_favo
 
 
 
+        // Listener sur les favoris
 
         holder.activtyView.fab_favActivity.setOnClickListener {
             if(attribut_favoris[position] == true){
@@ -97,6 +98,10 @@ class ActivityAdapterGlobal(val list_activity: List<Activity>, val attribut_favo
                     activityDaoSaved?.deleteActivity(activity.uuid)
                 }
                 attribut_favoris[position] = false
+                list_activity.removeAt(position)
+                notifyItemRemoved(position)
+                notifyItemRangeChanged(position,list_activity.size)
+
                 Toast.makeText(context, "L'activité a bien été supprimé des favoris", Toast.LENGTH_SHORT).show()
 
             }else {
