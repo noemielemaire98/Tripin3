@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="Aucune activité ne correspond à votre recherche... Essayer autre chose !"
+            android:text="Veuillez définir une destination valable dans les préférences utilisateurs"
             android:layout_below="@+id/iv_noactivityfind"
             android:layout_marginTop="10dp"
             android:textSize="20dp"

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".profil.PreferencesActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_margin="5dp">
 
     <TextView
         android:id="@+id/textView"
@@ -33,15 +34,16 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="80dp"
+                android:layout_width="120dp"
                 android:layout_height="30dp"
-                android:text="Ville : "
+                android:text="Votre ville : "
                 android:textStyle="bold"/>
 
             <EditText
                 android:id="@+id/ville_edit_preferences"
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="50dp"
+                android:layout_marginStart="5dp"
                 />
         </LinearLayout>
         <LinearLayout
@@ -49,13 +51,15 @@
             android:layout_height="50dp"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="80dp"
+                android:layout_width="120dp"
                 android:layout_height="30dp"
-                android:text="Destination : "
+                android:text="Votre Destination : "
                 android:textStyle="bold"/>
             <EditText
-                android:layout_width="100dp"
+                android:id="@+id/destination_edit_preferences"
+                android:layout_width="120dp"
                 android:layout_height="50dp"
+                android:layout_marginStart="5dp"
                 />
         </LinearLayout>
         <LinearLayout
@@ -63,14 +67,23 @@
             android:layout_height="50dp"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="80dp"
+                android:layout_width="120dp"
                 android:layout_height="30dp"
-                android:text="Budget : "
+                android:text="Votre budget : "
                 android:textStyle="bold"/>
             <EditText
-                android:layout_width="100dp"
+                android:id="@+id/budget_edit_preferences"
+                android:layout_width="120dp"
                 android:layout_height="50dp"
+                android:layout_marginStart="5dp"
+                android:inputType="numberSigned"
                 />
         </LinearLayout>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sauvegarder" />
 </LinearLayout>

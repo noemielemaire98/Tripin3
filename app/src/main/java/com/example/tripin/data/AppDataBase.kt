@@ -9,7 +9,7 @@ import com.example.tripin.model.*
 
 
 @Database(
-    entities = [Voyage::class, Flight::class, Activity::class, Hotel::class, City::class, Offer::class],
+    entities = [Voyage::class, Flight::class, Activity::class, Hotel::class, City::class, Offer::class, Preference::class],
     version = 1
 )
 
@@ -35,7 +35,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getOfferDao(): OfferDao
 
-
+    abstract fun getPreferenceDao(): PreferenceDao
 }
 
 
