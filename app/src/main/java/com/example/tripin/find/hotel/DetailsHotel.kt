@@ -57,6 +57,8 @@ class DetailsHotel : AppCompatActivity() {
     lateinit var googleMap: GoogleMap
     var date_debut = ""
     var date_fin = ""
+    private var destination = ""
+    private var budget = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -348,7 +350,9 @@ class DetailsHotel : AppCompatActivity() {
                             view.et_nb_voyageur.selectedItem.toString().toInt(),
                             emptyList(),
                             emptyList(),
-                            emptyList()
+                            emptyList(),
+                            destination,
+                            budget
                         )
                         runBlocking {
                             voyageDao?.addVoyage(voyage)

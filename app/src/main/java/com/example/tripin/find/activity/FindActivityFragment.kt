@@ -119,6 +119,7 @@ class FindActivityFragment : Fragment()  {
 
             val dialog = AlertDialog.Builder(activity)
             val dialogView = layoutInflater.inflate(R.layout.layout_dialog_price,null)
+
             var seekbar = dialogView.findViewById<BubbleSeekBar>(R.id.seekbar)
             seekbar.setProgress(price_max.toFloat())
             dialog.setView(dialogView)

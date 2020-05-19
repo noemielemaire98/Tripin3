@@ -34,6 +34,8 @@ class EditVoyage() : AppCompatActivity() {
     var dateDepart: String = "000"
     var dateRetour: String = "000"
     var nbvoyageur: Int = 0
+    var destination = ""
+    var budget = ""
     private var voyageDao: VoyageDao? = null
     var cal: Calendar = Calendar.getInstance()
 
@@ -173,7 +175,9 @@ class EditVoyage() : AppCompatActivity() {
                 val list_hotels = listOf<Hotel>()
             val nvvoyage =
                 Voyage(id, titre, dateDepart, dateRetour,
-                    R.drawable.destination1, nbvoyageur,list_activities, list_flights, list_hotels)
+                    R.drawable.destination1, nbvoyageur,list_activities, list_flights, list_hotels,
+                    destination,
+                    budget)
 
 
                 val database: AppDatabase =

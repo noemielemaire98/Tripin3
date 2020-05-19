@@ -52,6 +52,8 @@ class DetailActivites : AppCompatActivity() {
     private lateinit var googleMap: GoogleMap
     var date_debut = ""
     var date_fin = ""
+    private var destination = ""
+    private var budget = ""
 
 
     @SuppressLint("SetTextI18n")
@@ -284,7 +286,9 @@ class DetailActivites : AppCompatActivity() {
                             view.et_nb_voyageur.selectedItem.toString().toInt(),
                             emptyList(),
                             emptyList(),
-                            emptyList()
+                            emptyList(),
+                            destination,
+                            budget
                         )
                         runBlocking {
                             voyageDao?.addVoyage(voyage)

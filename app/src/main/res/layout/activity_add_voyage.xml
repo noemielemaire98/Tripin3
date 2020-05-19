@@ -36,25 +36,32 @@
             android:layout_marginBottom="20dp"
             android:inputType="text" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="Destination"
-            android:textSize="20dp" />
-
-        <EditText
-            android:id="@+id/addv_destination_editText"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="20dp"
-            android:inputType="text" />
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="Destination"
+                android:textSize="20dp" />
+
+            <AutoCompleteTextView
+                android:id="@+id/addv_destination"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp"
+                android:inputType="text" />
+        </LinearLayout>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
             android:text="Dates du voyage"
             android:textSize="20dp" />
 
@@ -116,7 +123,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -143,6 +151,58 @@
                     android:inputType="none"
                     android:text="1" />
             </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/addv_valeur_budget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="Budget : 100"
+                android:textSize="20dp" />
+
+<!--            <TextView-->
+<!--                android:id="@+id/addv_valeur_budget"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:hint="100" />-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="100 - 10000" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp">
+
+                <androidx.appcompat.widget.AppCompatSeekBar
+                    android:id="@+id/addv_budget"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="10000"
+                    android:min="100"
+                    android:progress="100" />
+            </LinearLayout>
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginEnd="10dp"-->
+<!--                android:hint="10000" />-->
+
         </LinearLayout>
 
 

@@ -1,5 +1,6 @@
 package com.example.tripin.trip
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
@@ -9,9 +10,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.AutoCompleteTextView
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.fragment.app.Fragment
 import androidx.room.Room
 import com.aminography.primecalendar.civil.CivilCalendar
@@ -19,7 +19,9 @@ import com.aminography.primedatepicker.picker.PrimeDatePicker
 import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
 import com.aminography.primedatepicker.picker.callback.SingleDayPickCallback
 import com.example.tripin.R
+import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
+import com.example.tripin.data.CityDao
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.find.flight.IgnoreAccentsArrayAdapter
 import com.example.tripin.model.Activity
@@ -37,6 +39,10 @@ import java.util.*
 class AddVoyage : AppCompatActivity() {
 
     var cal: Calendar = Calendar.getInstance()
+    private lateinit var citydao: CityDao
+    private var voyageDao : VoyageDao? = null
+    var list_cities_name = arrayListOf<String>()
+    var budget= "100"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,12 +55,31 @@ class AddVoyage : AppCompatActivity() {
         // Affiche le calendrier
         addv_dateDepart.setOnClickListener {
 
-                rangeDatePickerPrimeCalendar()
+            rangeDatePickerPrimeCalendar()
         }
         // Affiche le calendrier pour choisir la date de retour
         addv_dateRetour.setOnClickListener {
             rangeDatePickerPrimeCalendar()
         }
+
+        //selection de la ville
+        val databasesaved =
+            Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
+                .build()
+
+
+        citydao = databasesaved.getCityDao()
+
+        runBlocking {
+            val list_cities_bdd = citydao?.getCity()
+            list_cities_bdd.map {
+                list_cities_name.add(it.name!!)
+            }
+        }
+        val adapter: ArrayAdapter<String> =
+            ArrayAdapter(this, android.R.layout.simple_list_item_1, list_cities_name)
+        addv_destination.setAdapter(adapter)
+
 
         //liste nombre de participant
         var nbpasager = findViewById<AutoCompleteTextView>(R.id.passengers_number)
@@ -64,6 +89,31 @@ class AddVoyage : AppCompatActivity() {
             IgnoreAccentsArrayAdapter(this, android.R.layout.simple_list_item_1, passengersNumber)
 
         nbpasager.setAdapter(adapterPassengers)
+
+        var seekbar =  findViewById<SeekBar>(R.id.addv_budget)
+
+        seekbar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekbarView: SeekBar, progress: Int, fromUser: Boolean) {
+                budget = seekbarView.progress.toString()
+                addv_valeur_budget.text = "Budget : ${budget} "
+            }
+
+            override fun onStartTrackingTouch(seekbarView: SeekBar) {
+                // Write code to perform some action when touch is started.
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                // Write code to perform some action when touch is stopped.
+            }
+        })
+//        val dialog = AlertDialog.Builder(activity)
+//        seekbar.setProgress(price_max.toFloat())
+//        dialog.setView(dialogView)
+//        dialog.setCancelable(false)
+//        dialog.setPositiveButton(android.R.string.ok) { dialog, which ->
+//            price_range = "0,${seekbar.progress}"
+//            price_max = seekbar.progress
+//        }
 
 
     }
@@ -123,46 +173,75 @@ class AddVoyage : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.ic_menu_add_voyage -> {
-                if (addv_titre_editText.text.isEmpty() || addv_dateDepart.text.toString()
-                        .isEmpty() || addv_dateRetour.text.toString().isEmpty()
-                ) {
-                    Toast.makeText(
-                        this@AddVoyage,
-                        "Tous les champs ne sont pas rempli",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    
+                val database =
+                    Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
+                        .build()
 
-                } else {
-                    val titre = addv_titre_editText.text
-                    val dateDepart = addv_dateDepart.text
-                    val dateRetour = addv_dateRetour.text
-                    val nombrevoyageur = passengers_number.text
+                voyageDao = database.getVoyageDao()
+                Log.d("aaa", addv_titre_editText.text.toString())
+                runBlocking {
+                    val voyages = voyageDao?.getVoyageByTitre(addv_titre_editText.text.toString())
+                    val v = voyages
 
-                    val list_activities = listOf<Activity>()
-                    val list_flights =  listOf<Flight>()
-                    val list_hotels = listOf<Hotel>()
-                    val voyage = Voyage(
-                        0,
-                        titre.toString(),
-                        dateDepart.toString(),
-                        dateRetour.toString(),
-                        R.drawable.destination1,
-                        nombrevoyageur.toString().toInt(),
-                        list_activities,
-                        list_flights,
-                        list_hotels)
-                    val database: AppDatabase =
-                        Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
-                            .build()
-                    val voyageDao: VoyageDao = database.getVoyageDao()
 
-                    runBlocking {
-                        voyageDao.addVoyage(voyage)// Reference aux co-routines Kotlin
+
+
+                    if (addv_titre_editText.text.isEmpty() || addv_dateDepart.text.toString()
+                            .isEmpty() || addv_dateRetour.text.toString()
+                            .isEmpty() || addv_destination.text.toString().isEmpty()
+                    ) {
+                        Toast.makeText(
+                            this@AddVoyage,
+                            "Tous les champs ne sont pas remplis",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+
+                    } else if (voyages != null ) {
+                        Toast.makeText(
+                            this@AddVoyage,
+                            "Titre du voyage deja utilisé",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                    } else {
+                        val titre = addv_titre_editText.text
+                        val dateDepart = addv_dateDepart.text
+                        val dateRetour = addv_dateRetour.text
+                        val nombrevoyageur = passengers_number.text
+                        val destination = addv_destination.text
+                        val budget = budget
+
+                        val list_activities = listOf<Activity>()
+                        val list_flights = listOf<Flight>()
+                        val list_hotels = listOf<Hotel>()
+
+                        val voyage = Voyage(
+                            0,
+                            titre.toString(),
+                            dateDepart.toString(),
+                            dateRetour.toString(),
+                            R.drawable.destination1,
+                            nombrevoyageur.toString().toInt(),
+                            list_activities,
+                            list_flights,
+                            list_hotels,
+                            destination.toString(),
+                            budget
+
+                        )
+
+//                        val database: AppDatabase =
+//                            Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
+//                                .build()
+                        val voyageDao: VoyageDao = database.getVoyageDao()
+
+                        runBlocking {
+                            voyageDao.addVoyage(voyage)// Reference aux co-routines Kotlin
+                        }
+                        finish()
                     }
-                    finish()
                 }
-
                 true
 
             }

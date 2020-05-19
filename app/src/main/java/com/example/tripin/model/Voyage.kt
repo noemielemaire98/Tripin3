@@ -14,7 +14,10 @@ data class Voyage(
     val nb_voyageur: Int?,
     var list_activity: List<Activity>?,
     var list_flights: List<Flight>?,
-    var list_hotels : List<Hotel>?
+    var list_hotels : List<Hotel>?,
+    val destination : String?,
+    val budget : String?
+
 ) {
 
 

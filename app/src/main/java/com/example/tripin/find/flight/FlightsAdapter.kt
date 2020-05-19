@@ -47,6 +47,8 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
     private lateinit var context: Context
     private var dateDebut = ""
     private var dateFin = ""
+    private var destination = ""
+    private var budget = ""
 
     class FlightsViewHolder(val flightsView: View) : RecyclerView.ViewHolder(flightsView)
 
@@ -404,7 +406,9 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
                                 viewPop.et_nb_voyageur.selectedItem.toString().toInt(),
                                 emptyList(),
                                 emptyList(),
-                                emptyList()
+                                emptyList(),
+                                destination,
+                                budget
                             )
                             runBlocking {
                                 voyageDaoSaved?.addVoyage(voyage)

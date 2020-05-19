@@ -23,6 +23,9 @@ class TripFragment : Fragment() {
 
     private var voyageDao : VoyageDao? = null
 
+    private var destination = ""
+    private var budget = ""
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,7 +61,7 @@ class TripFragment : Fragment() {
             val list_activities = listOf<Activity>()
             val list_flights = listOf<Flight>()
             val list_hotels = listOf<Hotel>()
-            val voyage =Voyage(0,"titre","debut","fin",R.drawable.destination1,0,list_activities, list_flights, list_hotels)
+//            val voyage =Voyage(0,"titre","debut","fin",R.drawable.destination1,0,list_activities, list_flights, list_hotels, destination, budget)
 
         }
     }
