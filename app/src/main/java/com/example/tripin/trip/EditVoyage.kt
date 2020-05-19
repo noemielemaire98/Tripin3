@@ -6,13 +6,17 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.SeekBar
+import android.widget.Toast
 import androidx.room.Room
 import com.aminography.primecalendar.civil.CivilCalendar
 import com.aminography.primedatepicker.picker.PrimeDatePicker
 import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
+import com.example.tripin.data.CityDao
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.find.flight.IgnoreAccentsArrayAdapter
 import com.example.tripin.model.Activity
@@ -28,12 +32,14 @@ import java.util.*
 class EditVoyage() : AppCompatActivity() {
 
 
-    private var voyage: Voyage? = null
+    private lateinit var citydao: CityDao
+    var list_cities_name = arrayListOf<String>()
+    private var voyage: Voyage ?= null
     private var id: Int = 0
     var titre: String = "a"
-    var dateDepart: String = "000"
-    var dateRetour: String = "000"
-    var nbvoyageur: Int = 0
+    var dateDepart: String ?= "000"
+    var dateRetour: String ?= "000"
+    var nbvoyageur: Int ?= 0
     var destination = ""
     var budget = ""
     private var voyageDao: VoyageDao? = null
@@ -50,30 +56,37 @@ class EditVoyage() : AppCompatActivity() {
         dateDepart = intent.getStringExtra("dateDepart")
         dateRetour = intent.getStringExtra("dateRetour")
         nbvoyageur = intent.getIntExtra("nbvoyager", 0)
+        destination = intent.getStringExtra("destination")
+        budget = intent.getStringExtra("budget")
 
         Log.d("EPF"," $id, $titre, $dateDepart, $dateRetour, $nbvoyageur")
 
         editv_titre_editText.hint = titre
         editv_dateDepart.hint = dateDepart
         editv_dateRetour.hint = dateRetour
+        editv_destination.hint = destination
+        editv_budget.progress = budget.toInt()
+        editv_valeur_budget.text = "Budget : $budget "
+
         //editv_nbvoyageur_editText.hint = nbvoyageur.toString()
 
+        val database =
+            Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
+                .build()
 
-//        val database =
-//            Room.databaseBuilder(this, AppDatabase::class.java, "gestionvoyages")
-//                .build()
-//
 //        voyageDao = database.getVoyageDao()
-//
+
 //        var titre:String?= "zz"
 //        var dateDepart:String?= "000"
-//
+
 //        runBlocking {
 //            voyage = voyageDao!!.getVoyage(id) // Référence aux coroutines Kotlin
-//            titre = voyage?.titre
-//            var dateDepart = voyage?.date
-//            var dateRetour = voyage?.dateRetour
-//            var nb_voyageur = voyage?.nb_voyageur.toString()
+//            titre = voyage.titre
+//            var dateDepart = voyage.date
+//            var dateRetour = voyage.dateRetour
+//            var nb_voyageur = voyage.nb_voyageur.toString()
+//            var destination = voyage.destination
+//
 //            Log.d("EPF", "ancien voyage:$titre , $dateDepart, $dateRetour, $nb_voyageur")
 //        }
 
@@ -87,6 +100,21 @@ class EditVoyage() : AppCompatActivity() {
             rangeDatePickerPrimeCalendar()
         }
 
+        //selection de la ville
+
+        citydao = database.getCityDao()
+
+        runBlocking {
+            val list_cities_bdd = citydao.getCity()
+            list_cities_bdd.map {
+                list_cities_name.add(it.name!!)
+            }
+        }
+        val adapter: ArrayAdapter<String> =
+            ArrayAdapter(this, android.R.layout.simple_list_item_1, list_cities_name)
+        editv_destination.setAdapter(adapter)
+
+
         editv_passengers_number.hint = nbvoyageur.toString()
         var nbpasager = findViewById<AutoCompleteTextView>(R.id.editv_passengers_number)
 
@@ -95,6 +123,23 @@ class EditVoyage() : AppCompatActivity() {
             IgnoreAccentsArrayAdapter(this, android.R.layout.simple_list_item_1, passengersNumber)
 
         nbpasager.setAdapter(adapterPassengers)
+
+        var seekbar =  findViewById<SeekBar>(R.id.editv_budget)
+
+        seekbar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekbarView: SeekBar, progress: Int, fromUser: Boolean) {
+                budget = seekbarView.progress.toString()
+                editv_valeur_budget.text = "Budget : $budget €"
+            }
+
+            override fun onStartTrackingTouch(seekbarView: SeekBar) {
+                // Write code to perform some action when touch is started.
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                // Write code to perform some action when touch is stopped.
+            }
+        })
 
 
     }
@@ -151,41 +196,70 @@ class EditVoyage() : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.ic_menu_modifier_voyage ->{
-                if (editv_titre_editText.text.isNotEmpty()) {
-                    titre = editv_titre_editText.text.toString()
-                }
-                if (editv_dateDepart.text.toString().isNotEmpty()) {
-                    dateDepart = editv_dateDepart.text.toString()
-                }
-                if (editv_dateRetour.text.toString().isNotEmpty()) {
-                    dateRetour = editv_dateRetour.text.toString()
-                }
-                if(editv_passengers_number.text.toString().isNotEmpty()){
-                    nbvoyageur = editv_passengers_number.text.toString().toInt()
-                }
 
+                val database =
+                    Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
+                        .build()
 
-
-
-                // finish dépile l'activité et revient à la page d'en dessous
-
-            Log.d("EPF"," $id, $titre, $dateDepart, $dateRetour, $nbvoyageur")
-                val list_activities = listOf<Activity>()
-                val list_flights =  listOf<Flight>()
-                val list_hotels = listOf<Hotel>()
-            val nvvoyage =
-                Voyage(id, titre, dateDepart, dateRetour,
-                    R.drawable.destination1, nbvoyageur,list_activities, list_flights, list_hotels,
-                    destination,
-                    budget)
-
-
-                val database: AppDatabase =
-                    Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase").build()
-                val voyageDao: VoyageDao = database.getVoyageDao()
-
+                voyageDao = database.getVoyageDao()
+                Log.d("aaa", editv_titre_editText.text.toString())
                 runBlocking {
-                    voyageDao.updateVoyage(nvvoyage)
+                    val voyages = voyageDao?.getVoyageByTitre(editv_titre_editText.text.toString())
+
+                    if (voyages != null) {
+                        Toast.makeText(
+                            this@EditVoyage,
+                            "Titre du voyage deja utilisé",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                    } else {
+
+                        if (editv_titre_editText.text.isNotEmpty()) {
+                            titre = editv_titre_editText.text.toString()
+                        }
+                        if (editv_dateDepart.text.toString().isNotEmpty()) {
+                            dateDepart = editv_dateDepart.text.toString()
+                        }
+                        if (editv_dateRetour.text.toString().isNotEmpty()) {
+                            dateRetour = editv_dateRetour.text.toString()
+                        }
+                        if (editv_passengers_number.text.toString().isNotEmpty()) {
+                            nbvoyageur = editv_passengers_number.text.toString().toInt()
+                        }
+                        if (editv_destination.text.toString().isNotEmpty()) {
+                            destination = editv_destination.text.toString()
+                        }
+
+
+
+                        // finish dépile l'activité et revient à la page d'en dessous
+
+                        Log.d("EPF", " $id, $titre, $dateDepart, $dateRetour, $nbvoyageur")
+                        val list_activities = listOf<Activity>()
+                        val list_flights = listOf<Flight>()
+                        val list_hotels = listOf<Hotel>()
+                        val nvvoyage =
+                            Voyage(
+                                id,
+                                titre,
+                                dateDepart,
+                                dateRetour,
+                                R.drawable.destination1,
+                                nbvoyageur,
+                                list_activities,
+                                list_flights,
+                                list_hotels,
+                                destination,
+                                budget
+                            )
+
+                        val voyageDao: VoyageDao = database.getVoyageDao()
+
+                        runBlocking {
+                            voyageDao.updateVoyage(nvvoyage)
+                        }
+                    }
                 }
                 finish()
 //                val intent= Intent(it.context, DetailVoyage::class.java)

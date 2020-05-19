@@ -63,12 +63,12 @@ class AddVoyage : AppCompatActivity() {
         }
 
         //selection de la ville
-        val databasesaved =
+        val database =
             Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
                 .build()
 
 
-        citydao = databasesaved.getCityDao()
+        citydao = database.getCityDao()
 
         runBlocking {
             val list_cities_bdd = citydao?.getCity()
@@ -95,7 +95,7 @@ class AddVoyage : AppCompatActivity() {
         seekbar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekbarView: SeekBar, progress: Int, fromUser: Boolean) {
                 budget = seekbarView.progress.toString()
-                addv_valeur_budget.text = "Budget : ${budget} "
+                addv_valeur_budget.text = "Budget : $budget €"
             }
 
             override fun onStartTrackingTouch(seekbarView: SeekBar) {
@@ -106,15 +106,6 @@ class AddVoyage : AppCompatActivity() {
                 // Write code to perform some action when touch is stopped.
             }
         })
-//        val dialog = AlertDialog.Builder(activity)
-//        seekbar.setProgress(price_max.toFloat())
-//        dialog.setView(dialogView)
-//        dialog.setCancelable(false)
-//        dialog.setPositiveButton(android.R.string.ok) { dialog, which ->
-//            price_range = "0,${seekbar.progress}"
-//            price_max = seekbar.progress
-//        }
-
 
     }
 
@@ -181,9 +172,6 @@ class AddVoyage : AppCompatActivity() {
                 Log.d("aaa", addv_titre_editText.text.toString())
                 runBlocking {
                     val voyages = voyageDao?.getVoyageByTitre(addv_titre_editText.text.toString())
-                    val v = voyages
-
-
 
 
                     if (addv_titre_editText.text.isEmpty() || addv_dateDepart.text.toString()

@@ -2,7 +2,12 @@ package com.example.tripin.trip
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
+import android.util.Log
 import android.view.*
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +27,10 @@ import java.util.ArrayList
 class TripFragment : Fragment() {
 
     private var voyageDao : VoyageDao? = null
+    private var mBundleRecyclerViewState: Bundle? = null
+    private var mListState: Parcelable? = null
+    var list_voyage_title = arrayListOf<String>()
+    var voyages = arrayListOf<Voyage>()
 
     private var destination = ""
     private var budget = ""
@@ -32,6 +41,10 @@ class TripFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val view = inflater.inflate(R.layout.fragment_trip, container, false)
+        val bt_search = view.findViewById<Button>(R.id.bt_recherche)
+
         val root : View = inflater.inflate(R.layout.fragment_trip, container, false)
         var voyage_recyclerview = root.findViewById<View>(R.id.voyage_recyclerview) as RecyclerView
         voyage_recyclerview.layoutManager = LinearLayoutManager(this.context)
@@ -49,6 +62,28 @@ class TripFragment : Fragment() {
 
         voyageDao = database.getVoyageDao()
         //voyage_recyclerview.adapter = VoyageAdapter(Voyage.all)
+
+
+
+        runBlocking {
+            val list_voyage = voyageDao?.getVoyage()
+            list_voyage?.map {
+                list_voyage_title?.add(it.titre)
+            }
+        }
+//        val adapter : ArrayAdapter<String> = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,list_voyage_title)
+//        Log.d("epf",adapter.toString())
+//        search_voyage.setAdapter(adapter)
+
+        bt_search.setOnClickListener {
+                runBlocking {
+                    val voyage = voyageDao?.getVoyageByTitre(search_voyage.text.toString())
+                    voyages.add(voyage!!)
+                    voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
+                }
+
+        }
+
         return root
     }
 
@@ -62,16 +97,18 @@ class TripFragment : Fragment() {
             val list_flights = listOf<Flight>()
             val list_hotels = listOf<Hotel>()
 //            val voyage =Voyage(0,"titre","debut","fin",R.drawable.destination1,0,list_activities, list_flights, list_hotels, destination, budget)
-
         }
+
     }
 
-    //menu
 
+    override fun onPause() {
+        super.onPause()
+        mBundleRecyclerViewState = Bundle()
 
-
-
-
+        mListState = voyage_recyclerview.layoutManager?.onSaveInstanceState()
+        mBundleRecyclerViewState!!.putParcelable("keyR", mListState)
+    }
 
 
 
