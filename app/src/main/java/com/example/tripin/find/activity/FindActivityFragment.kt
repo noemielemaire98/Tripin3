@@ -21,10 +21,7 @@ import com.aminography.primedatepicker.picker.PrimeDatePicker
 import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
 import com.example.tripin.MainActivity
 import com.example.tripin.R
-import com.example.tripin.data.ActivityDao
-import com.example.tripin.data.AppDatabase
-import com.example.tripin.data.CityDao
-import com.example.tripin.data.retrofit
+import com.example.tripin.data.*
 import com.example.tripin.model.Activity
 import com.xw.repo.BubbleSeekBar
 import kotlinx.android.synthetic.main.activity_find_activites.activities_recyclerview
@@ -43,6 +40,7 @@ class FindActivityFragment : Fragment()  {
     private var mListState: Parcelable? = null
     private var activityDaoSearch : ActivityDao? = null
     private var activityDaoSaved : ActivityDao? = null
+    private var userDao: UserDao? = null
     private lateinit var citydao : CityDao
     val lang : String = "fr-FR"
     val monnaie :String = "EUR"
@@ -55,6 +53,7 @@ class FindActivityFragment : Fragment()  {
     var price_range = "0,100"
     var aller_date= ""
     var retour_date= ""
+    var username: String = "Inconnu"
 
 
     @SuppressLint("ResourceAsColor")
@@ -77,7 +76,7 @@ class FindActivityFragment : Fragment()  {
         val bt_price = view.findViewById<ImageButton>(R.id.bt_price_filter)
         val bt_date = view.findViewById<ImageButton>(R.id.bt_date_filter)
 
-
+        val users = emptyList<String>()
 
     // initialisation recyclerview activités
         rv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
@@ -90,9 +89,15 @@ class FindActivityFragment : Fragment()  {
             Room.databaseBuilder(requireActivity().baseContext, AppDatabase::class.java, "savedDatabase")
                 .build()
 
+        val databaseuser = Room.databaseBuilder(
+            requireActivity(),
+            AppDatabase::class.java,
+            "allusers"
+        ).build()
+
         activityDaoSearch = databasesearch.getActivityDao()
         activityDaoSaved = databasesaved.getActivityDao()
-
+        userDao = databaseuser.getUserDao()
         // récupération des villes possibles
         citydao = databasesaved.getCityDao()
 
@@ -101,6 +106,7 @@ class FindActivityFragment : Fragment()  {
             val list_cities_bdd = citydao?.getCity()
             list_cities_bdd.map {
                 list_cities_name.add(it.name!!)
+                username = userDao?.getUser()?.uid ?: "Inconnu"
             }
         }
         val adapter : ArrayAdapter<String> = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,list_cities_name)
@@ -236,14 +242,15 @@ class FindActivityFragment : Fragment()  {
                           it.description,
                           it.about,
                           it.latitude,
-                          it.longitude
+                          it.longitude,
+                          users
                       )
                       activityDaoSearch?.addActivity(activity)
 
                   }
                   val activities = (activityDaoSearch?.getActivity())?.toMutableList()
                   activities_recyclerview.adapter =
-                      ActivityAdapterGlobal(activities!!, list_favoris)
+                      ActivityAdapterGlobal(activities!!, list_favoris, username)
               } else {
                   layoutNoActivities_frag.visibility = View.VISIBLE
               }
@@ -285,7 +292,7 @@ class FindActivityFragment : Fragment()  {
                         list_favoris.add(false)
                     }
                 activities_recyclerview.adapter =
-                    ActivityAdapterGlobal(activities.toMutableList(), list_favoris)
+                    ActivityAdapterGlobal(activities.toMutableList(), list_favoris, username)
             }
 
 

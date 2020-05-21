@@ -14,6 +14,7 @@ import androidx.room.Room
 import com.example.tripin.R
 import com.example.tripin.data.*
 import com.example.tripin.find.activity.ActivityAdapterGlobal
+import com.example.tripin.find.activity.ActivityAdapterGlobalFormatted
 import com.example.tripin.find.activity.ActivitybyCity
 import com.example.tripin.model.Activity
 import kotlinx.coroutines.runBlocking
@@ -24,9 +25,11 @@ class HomeFragment : Fragment() {
     private var activityDaoSearch: ActivityDao? = null
     private var activityDaoSaved: ActivityDao? = null
     private var preferenceDao: PreferenceDao? = null
+    private var userDao: UserDao? = null
     val lang: String = "fr-FR"
     val monnaie: String = "EUR"
     var city_query: String = "Madrid"
+    var username: String = "Inconnu"
     private lateinit var citydao: CityDao
     var list_favoris = arrayListOf<Boolean>()
 
@@ -63,11 +66,17 @@ class HomeFragment : Fragment() {
             "allpreferences"
         ).build()
 
+        val databaseuser = Room.databaseBuilder(
+            requireActivity(),
+            AppDatabase::class.java,
+            "allusers"
+        ).build()
+
         preferenceDao = database.getPreferenceDao()
         activityDaoSearch = databasesearch.getActivityDao()
         activityDaoSaved = databasesaved.getActivityDao()
         citydao = databasesaved.getCityDao()
-
+        userDao = databaseuser.getUserDao()
 
         runBlocking {
             val city_pref = preferenceDao?.getPreference()
@@ -75,10 +84,11 @@ class HomeFragment : Fragment() {
             list_favoris.clear()
             Log.d("KLM", "${city_pref?.destination}")
             city_query = city_pref?.destination ?: "Madrid"
-
+            username = userDao?.getUser()?.uid ?: "Inconnu"
         }
 
         // récupère la ville saisie
+        val users = emptyList<String>()
         val city_name = city_query
         val service = retrofit().create(ActivitybyCity::class.java)
         runBlocking {
@@ -134,14 +144,15 @@ class HomeFragment : Fragment() {
                         it.description,
                         it.about,
                         it.latitude,
-                        it.longitude
+                        it.longitude,
+                        users
                     )
                     activityDaoSearch?.addActivity(activity)
 
                 }
                 val activities = activityDaoSearch?.getActivity()
                 recyclerview_home.adapter =
-                    ActivityAdapterGlobal(activities!!.toMutableList(), list_favoris)
+                    ActivityAdapterGlobalFormatted(activities!!.toMutableList(), list_favoris, username)
             } else {
                 noActivity_home.visibility = View.VISIBLE
                 Toast.makeText(requireContext(), "La ville que vous avez saisie n'est pas reconnue", Toast.LENGTH_SHORT).show()

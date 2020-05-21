@@ -1,10 +1,8 @@
 package com.example.tripin.data
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.example.tripin.model.Activity
+import com.example.tripin.model.User
 import com.example.tripin.model.Voyage
 
 @Dao
@@ -28,5 +26,9 @@ interface ActivityDao {
     @Query("delete from allActivities where uuid = :id")
     suspend fun deleteActivity(id : String)
 
+//    @Query("select * from allActivities where users = :users")
+//    suspend fun deleteActivityByName(users : List<String>)
 
+    @Update
+    suspend fun updateActivity(activity: Activity)
 }

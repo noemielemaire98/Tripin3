@@ -20,7 +20,8 @@ data class Activity (@PrimaryKey val uuid:String,
                      val description : String?,
                      val about : String?,
                      val latitude: Double,
-                     val longitude: Double
+                     val longitude: Double,
+                     val users: List<String>
 
                         ) : Parcelable {
 
@@ -28,8 +29,9 @@ data class Activity (@PrimaryKey val uuid:String,
         val all = (1..10).map {
 
             val ll = listOf<String>("aa","bb")
+            val oo = listOf<String>("")
 
-            Activity("id$it","Titre$it", "R.drawable.activite1","10€", "tous les jours",5.5,ll,"url",false,false,"description","about",7.3,88.77)
+            Activity("id$it","Titre$it", "R.drawable.activite1","10€", "tous les jours",5.5,ll,"url",false,false,"description","about",7.3,88.77, oo)
         }.toMutableList()
 
     }

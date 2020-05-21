@@ -47,7 +47,7 @@ class FindActivitesActivity : AppCompatActivity() {
         activityDaoSearch = databasesearch.getActivityDao()
         activityDaoSaved = databasesaved.getActivityDao()
 
-
+        val users = emptyList<String>()
 
         search_activity_bar.setOnClickListener { search_activity_bar.isIconified = false }
 
@@ -89,7 +89,7 @@ class FindActivitesActivity : AppCompatActivity() {
                     }
 
 
-                    val activity = Activity(it.uuid, it.title, it.cover_image_url,it.retail_price.formatted_iso_value,it.operational_days,it.reviews_avg,list_cat,it.url,it.top_seller,it.must_see,it.description,it.about,it.latitude,it.longitude)
+                    val activity = Activity(it.uuid, it.title, it.cover_image_url,it.retail_price.formatted_iso_value,it.operational_days,it.reviews_avg,list_cat,it.url,it.top_seller,it.must_see,it.description,it.about,it.latitude,it.longitude, users)
                     activityDaoSearch?.addActivity(activity)
 
                 }

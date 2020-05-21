@@ -11,14 +11,19 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.example.tripin.R
+import com.example.tripin.data.AppDatabase
+import com.example.tripin.data.UserDao
+import com.example.tripin.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_profil.*
+import kotlinx.coroutines.runBlocking
 import java.lang.RuntimeException
 
 
@@ -26,6 +31,7 @@ class ProfilFragment : Fragment() {
 
 
     private lateinit var username: TextView
+    private var userDaoSearch : UserDao? = null
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -39,6 +45,12 @@ class ProfilFragment : Fragment() {
         val profilbutton: Button = root.findViewById(R.id.auth_button_profil)
         val signoutbutton: Button = root.findViewById(R.id.signout_button_profil)
         val username : TextView = root.findViewById(R.id.username_profil)
+
+        val database =
+            Room.databaseBuilder(requireContext(), AppDatabase::class.java, "savedDatabase")
+                .build()
+
+        userDaoSearch = database.getUserDao()
 
         if(uid != null){
             val database = FirebaseDatabase.getInstance()
@@ -65,6 +77,10 @@ class ProfilFragment : Fragment() {
                     if(p0.key == "username"){
                         //Log.d("toto", "${p0.getValue(String::class.java)}")
                         username.setText("${p0.getValue(String::class.java)}")
+                        runBlocking {
+                            val newUser = User(0, "${p0.getValue(String::class.java)}")
+                            userDaoSearch?.addUser(newUser)
+                        }
                     }
                 }
                 override fun onChildRemoved(p0: DataSnapshot) {

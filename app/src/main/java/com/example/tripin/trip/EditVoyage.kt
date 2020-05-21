@@ -78,6 +78,8 @@ class EditVoyage() : AppCompatActivity() {
         // Affiche le calendrier
         editv_dateDepart.setOnClickListener {
 
+
+
             rangeDatePickerPrimeCalendar()
         }
         // Affiche le calendrier pour choisir la date de retour

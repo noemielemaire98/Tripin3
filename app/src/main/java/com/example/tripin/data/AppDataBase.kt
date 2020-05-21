@@ -9,7 +9,7 @@ import com.example.tripin.model.*
 
 
 @Database(
-    entities = [Voyage::class, Flight::class, Activity::class, Hotel::class, City::class, Offer::class, Preference::class],
+    entities = [Voyage::class, Flight::class, Activity::class, Hotel::class, City::class, Offer::class, Preference::class, User::class],
     version = 1
 )
 
@@ -36,6 +36,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getOfferDao(): OfferDao
 
     abstract fun getPreferenceDao(): PreferenceDao
+
+    abstract fun getUserDao(): UserDao
 }
 
 
@@ -45,7 +47,7 @@ class ListActivityConverter {
         val arrayList = arrayListOf<String>()
         listActivity.map {
             val string =
-                "${it.uuid};${it.title};${it.cover_image_url};${it.formatted_iso_value};${it.operational_days};${it.reviews_avg};${it.category};${it.url};${it.top_seller};${it.must_see};${it.description};${it.about};${it.latitude};${it.longitude}"
+                "${it.uuid};${it.title};${it.cover_image_url};${it.formatted_iso_value};${it.operational_days};${it.reviews_avg};${it.category};${it.url};${it.top_seller};${it.must_see};${it.description};${it.about};${it.latitude};${it.longitude};${it.users}"
             arrayList.add(string)
         }
 
@@ -60,6 +62,7 @@ class ListActivityConverter {
             Log.d("RRR", "$items")
             val cat = items[6].substring(1, items[6].length - 1)
             val categories: List<String> = cat.split(",")
+            val users: List<String> = cat.split(",")
             val activity = Activity(
                 items[0],
                 items[1],
@@ -74,7 +77,8 @@ class ListActivityConverter {
                 items[10],
                 items[11],
                 items[12].toDouble(),
-                items[13].toDouble()
+                items[13].toDouble(),
+                users
             )
 
             arrayList.add(activity)

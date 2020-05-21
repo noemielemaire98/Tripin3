@@ -792,6 +792,8 @@ class FindVoyage : Fragment() {
 
     private fun searchActivities(searchCity: String) {
         // supression des anciens éléments (list_fav + list_activité
+
+        val users = emptyList<String>()
         runBlocking {
             activityDaoSearch?.deleteActivity()
             listFavoris.clear()
@@ -840,7 +842,8 @@ class FindVoyage : Fragment() {
                     it.description,
                     it.about,
                     it.latitude,
-                    it.longitude
+                    it.longitude,
+                    users
                 )
                 activityDaoSearch?.addActivity(activity)
 
