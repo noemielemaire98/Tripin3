@@ -95,24 +95,24 @@ class ActivityAdapterGlobal(val list_activity: MutableList<Activity>, val attrib
             if(attribut_favoris[position] == true){
                 holder.activtyView.fab_favActivity.setImageResource(R.drawable.ic_favorite_border_black_24dp)
                 runBlocking {
-                    val activity = activityDaoSaved?.getActivity(activity.uuid)
-                    val list_users = activity?.users
+                    val activitybis = activityDaoSaved?.getActivity(activity.uuid)
+                    val list_users = activitybis?.users
                     val newList = list_users?.minus(username) ?: emptyList()
 
-                    val id = activity?.uuid ?: ""
-                    val title = activity?.title ?: ""
-                    val cover_image_url = activity?.cover_image_url
-                    val formatted_iso_value = activity?.formatted_iso_value
-                    val operational_days = activity?.operational_days
-                    val reviews_avg = activity?.reviews_avg
-                    val category = activity?.category ?: emptyList()
-                    val url = activity?.url
-                    val top_seller = activity?.top_seller ?: false
-                    val must_see = activity?.must_see ?: false
-                    val description = activity?.description
-                    val about = activity?.about
-                    val latitude= activity?.latitude ?: 0.0
-                    val longitude = activity?.longitude ?: 0.0
+                    val id = activitybis?.uuid ?: ""
+                    val title = activitybis?.title ?: ""
+                    val cover_image_url = activitybis?.cover_image_url
+                    val formatted_iso_value = activitybis?.formatted_iso_value
+                    val operational_days = activitybis?.operational_days
+                    val reviews_avg = activitybis?.reviews_avg
+                    val category = activitybis?.category ?: emptyList()
+                    val url = activitybis?.url
+                    val top_seller = activitybis?.top_seller ?: false
+                    val must_see = activitybis?.must_see ?: false
+                    val description = activitybis?.description
+                    val about = activitybis?.about
+                    val latitude= activitybis?.latitude ?: 0.0
+                    val longitude = activitybis?.longitude ?: 0.0
 
                     val newActivity = Activity(id, title, cover_image_url, formatted_iso_value, operational_days, reviews_avg, category, url, top_seller, must_see, description, about, latitude, longitude, newList)
                     activityDaoSaved?.updateActivity(newActivity)
@@ -127,24 +127,24 @@ class ActivityAdapterGlobal(val list_activity: MutableList<Activity>, val attrib
             }else {
                 holder.activtyView.fab_favActivity.setImageResource(R.drawable.ic_favorite_black_24dp)
                 runBlocking {
-                    val activity = activityDaoSaved?.getActivity(activity.uuid)
-                    val list_users = activity?.users
+                    val activitybis = activityDaoSaved?.getActivity(activity.uuid)
+                    val list_users = activitybis?.users
                     val newList = list_users?.plus(username) ?: emptyList()
 
-                    val id = activity?.uuid ?: ""
-                    val title = activity?.title ?: ""
-                    val cover_image_url = activity?.cover_image_url
-                    val formatted_iso_value = activity?.formatted_iso_value
-                    val operational_days = activity?.operational_days
-                    val reviews_avg = activity?.reviews_avg
-                    val category = activity?.category ?: emptyList()
-                    val url = activity?.url
-                    val top_seller = activity?.top_seller ?: false
-                    val must_see = activity?.must_see ?: false
-                    val description = activity?.description
-                    val about = activity?.about
-                    val latitude= activity?.latitude ?: 0.0
-                    val longitude = activity?.longitude ?: 0.0
+                    val id = activitybis?.uuid ?: ""
+                    val title = activitybis?.title ?: ""
+                    val cover_image_url = activitybis?.cover_image_url
+                    val formatted_iso_value = activitybis?.formatted_iso_value
+                    val operational_days = activitybis?.operational_days
+                    val reviews_avg = activitybis?.reviews_avg
+                    val category = activitybis?.category ?: emptyList()
+                    val url = activitybis?.url
+                    val top_seller = activitybis?.top_seller ?: false
+                    val must_see = activitybis?.must_see ?: false
+                    val description = activitybis?.description
+                    val about = activitybis?.about
+                    val latitude= activitybis?.latitude ?: 0.0
+                    val longitude = activitybis?.longitude ?: 0.0
 
                     val newActivity = Activity(id, title, cover_image_url, formatted_iso_value, operational_days, reviews_avg, category, url, top_seller, must_see, description, about, latitude, longitude, newList)
                     activityDaoSaved?.updateActivity(newActivity)

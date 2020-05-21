@@ -78,8 +78,12 @@ class ProfilFragment : Fragment() {
                         //Log.d("toto", "${p0.getValue(String::class.java)}")
                         username.setText("${p0.getValue(String::class.java)}")
                         runBlocking {
+                            Log.d("tyui", "avant creation : ${p0.getValue(String::class.java)}")
                             val newUser = User(0, "${p0.getValue(String::class.java)}")
+                            Log.d("tyui", "newuser : ${newUser.username}")
                             userDaoSearch?.addUser(newUser)
+                            val stock = userDaoSearch?.getUser()?.username
+                            Log.d("tyui", "$stock")
                         }
                     }
                 }

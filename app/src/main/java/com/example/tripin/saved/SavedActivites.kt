@@ -13,7 +13,6 @@ import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.UserDao
 import com.example.tripin.find.activity.ActivityAdapterGlobal
-import com.example.tripin.find.activity.FindActivitesActivity
 import kotlinx.android.synthetic.main.activity_saved_activites.*
 import kotlinx.coroutines.runBlocking
 
@@ -54,7 +53,7 @@ class SavedActivites : AppCompatActivity() {
 
         activityDaoSaved = databasesaved.getActivityDao()
         runBlocking {
-            username = userDao?.getUser()?.uid ?: "Inconnu"
+            username = userDao?.getUser()?.username ?: "Inconnu"
             val list_users = emptyList<String>().plus(username)
             val activities = activityDaoSaved?.getActivityByUser(list_users)
             activities?.map {
@@ -83,7 +82,7 @@ class SavedActivites : AppCompatActivity() {
         super.onResume()
 
         runBlocking {
-            username = userDao?.getUser()?.uid ?: "Inconnu"
+            username = userDao?.getUser()?.username ?: "Inconnu"
             val list_users = emptyList<String>().plus(username)
             val activities = activityDaoSaved?.getActivityByUser(list_users)
             activities?.map {

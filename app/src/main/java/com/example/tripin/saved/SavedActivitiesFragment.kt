@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +18,6 @@ import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.UserDao
 import com.example.tripin.find.activity.ActivityAdapterGlobal
-import com.example.tripin.model.User
 import kotlinx.android.synthetic.main.activity_saved_activites.*
 import kotlinx.coroutines.runBlocking
 
@@ -64,7 +62,7 @@ class SavedActivitiesFragment : Fragment() {
 
         activityDaoSaved = databasesaved.getActivityDao()
         runBlocking {
-            username = userDao?.getUser()?.uid ?: "Inconnu"
+            username = userDao?.getUser()?.username ?: "Inconnu"
             val activities = activityDaoSaved?.getActivity()
             activities?.map {
                 list_fav.add(true)

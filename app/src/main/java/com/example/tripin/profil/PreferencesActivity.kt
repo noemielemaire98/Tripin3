@@ -53,7 +53,7 @@ class PreferencesActivity : AppCompatActivity() {
             Log.d("KLM", "$budget")
             runBlocking {
                 preferenceDao?.deletePreferences()
-                val pref = Preference("", ville, destination, budget)
+                val pref = Preference(0, ville, destination, budget)
                 preferenceDao?.addPreference(pref)
             }
             val intent = Intent(this, MainActivity::class.java)

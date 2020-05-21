@@ -17,7 +17,7 @@ interface UserDao {
     @Insert
     suspend fun addUser(preference: User)
 
-    @Query("select * from allusers where uid = :uid")
+    @Query("select * from allusers where username = :uid")
     suspend fun getUser(uid: String) : User
 
 }

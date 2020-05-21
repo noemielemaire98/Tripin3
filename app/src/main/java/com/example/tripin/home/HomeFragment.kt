@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.example.tripin.R
 import com.example.tripin.data.*
-import com.example.tripin.find.activity.ActivityAdapterGlobal
 import com.example.tripin.find.activity.ActivityAdapterGlobalFormatted
 import com.example.tripin.find.activity.ActivitybyCity
 import com.example.tripin.model.Activity
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.runBlocking
 
 
@@ -29,7 +29,7 @@ class HomeFragment : Fragment() {
     val lang: String = "fr-FR"
     val monnaie: String = "EUR"
     var city_query: String = "Madrid"
-    var username: String = "Inconnu"
+    lateinit var username : String
     private lateinit var citydao: CityDao
     var list_favoris = arrayListOf<Boolean>()
 
@@ -84,7 +84,8 @@ class HomeFragment : Fragment() {
             list_favoris.clear()
             Log.d("KLM", "${city_pref?.destination}")
             city_query = city_pref?.destination ?: "Madrid"
-            username = userDao?.getUser()?.uid ?: "Inconnu"
+            username = userDao?.getUser()?.username ?: "Inconnu"
+            Log.d("tyui", "$username")
         }
 
         // récupère la ville saisie
@@ -161,6 +162,52 @@ class HomeFragment : Fragment() {
 
         return root
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//
+//        list_favoris.clear()
+//
+//        val databasesearch =
+//            Room.databaseBuilder(requireActivity().baseContext, AppDatabase::class.java, "searchDatabase")
+//                .build()
+//        val databasesaved =
+//            Room.databaseBuilder(requireActivity().baseContext, AppDatabase::class.java, "savedDatabase")
+//                .build()
+//        val databaseuser = Room.databaseBuilder(
+//            requireActivity(),
+//            AppDatabase::class.java,
+//            "allusers"
+//        ).build()
+//        activityDaoSearch = databasesearch.getActivityDao()
+//        activityDaoSaved = databasesaved.getActivityDao()
+//        userDao = databaseuser.getUserDao()
+//
+//        runBlocking {
+//            username = userDao?.getUser()?.username ?: "Inconnu"
+//            val list_users = emptyList<String>().plus(username)
+//            val activities = activityDaoSearch?.getActivity()
+//            val list_activities_bdd = activityDaoSaved?.getActivityByUser(list_users)
+//
+//            activities?.map {
+//                val titre = it.title
+//                var match_bdd = false
+//                list_activities_bdd?.forEach {
+//                    if (it.title == titre) {
+//                        list_favoris.add(true)
+//                        match_bdd = true
+//                    }
+//                }
+//                if (match_bdd == false) {
+//                    list_favoris.add(false)
+//                }
+//                activities_recyclerview_home.adapter =
+//                    ActivityAdapterGlobalFormatted(activities.toMutableList(), list_favoris, username)
+//            }
+//
+//
+//        }
+//    }
 
 }
 

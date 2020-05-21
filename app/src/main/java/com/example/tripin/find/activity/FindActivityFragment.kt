@@ -3,7 +3,6 @@ package com.example.tripin.find.activity
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
@@ -12,24 +11,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.aminography.primecalendar.civil.CivilCalendar
 import com.aminography.primedatepicker.picker.PrimeDatePicker
 import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
-import com.example.tripin.MainActivity
 import com.example.tripin.R
 import com.example.tripin.data.*
 import com.example.tripin.model.Activity
 import com.xw.repo.BubbleSeekBar
 import kotlinx.android.synthetic.main.activity_find_activites.activities_recyclerview
 import kotlinx.android.synthetic.main.fragment_find_activity2.*
-import kotlinx.android.synthetic.main.fragment_find_flight2.*
 import kotlinx.coroutines.runBlocking
-import org.jetbrains.anko.themedToolbar
-import org.jetbrains.anko.toolbar
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -106,7 +100,7 @@ class FindActivityFragment : Fragment()  {
             val list_cities_bdd = citydao?.getCity()
             list_cities_bdd.map {
                 list_cities_name.add(it.name!!)
-                username = userDao?.getUser()?.uid ?: "Inconnu"
+                username = userDao?.getUser()?.username ?: "Inconnu"
             }
         }
         val adapter : ArrayAdapter<String> = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,list_cities_name)
