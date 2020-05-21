@@ -27,6 +27,7 @@ class FindActivitesActivity : AppCompatActivity() {
     val lang : String = "fr-FR"
     val monnaie :String = "EUR"
     var list_favoris  = arrayListOf<Boolean>()
+    val username: String = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,7 +95,7 @@ class FindActivitesActivity : AppCompatActivity() {
 
                 }
                 val activities = activityDaoSearch?.getActivity()
-                activities_recyclerview.adapter = ActivityAdapterGlobal(activities!!.toMutableList(),list_favoris)
+                activities_recyclerview.adapter = ActivityAdapterGlobal(activities!!.toMutableList(),list_favoris, username)
 
             }
 

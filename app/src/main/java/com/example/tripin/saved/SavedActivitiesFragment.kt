@@ -17,7 +17,9 @@ import com.example.tripin.MainActivity
 import com.example.tripin.R
 import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
+import com.example.tripin.data.UserDao
 import com.example.tripin.find.activity.ActivityAdapterGlobal
+import com.example.tripin.model.User
 import kotlinx.android.synthetic.main.activity_saved_activites.*
 import kotlinx.coroutines.runBlocking
 
@@ -27,7 +29,9 @@ import kotlinx.coroutines.runBlocking
 class SavedActivitiesFragment : Fragment() {
 
     private var activityDaoSaved : ActivityDao? = null
+    private var userDao: UserDao? = null
     private var list_fav = arrayListOf<Boolean>()
+    private var username : String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +49,13 @@ class SavedActivitiesFragment : Fragment() {
             Room.databaseBuilder(requireActivity().baseContext, AppDatabase::class.java, "savedDatabase")
                 .build()
 
+        val databaseuser = Room.databaseBuilder(
+            requireActivity(),
+            AppDatabase::class.java,
+            "allusers"
+        ).build()
+
+        userDao = databaseuser.getUserDao()
         iv_noacivity.setOnClickListener {
             val intent = Intent(requireActivity().baseContext, MainActivity::class.java)
             intent.putExtra("switchView", 3)
@@ -53,6 +64,7 @@ class SavedActivitiesFragment : Fragment() {
 
         activityDaoSaved = databasesaved.getActivityDao()
         runBlocking {
+            username = userDao?.getUser()?.uid ?: "Inconnu"
             val activities = activityDaoSaved?.getActivity()
             activities?.map {
                 list_fav.add(true)
@@ -60,7 +72,7 @@ class SavedActivitiesFragment : Fragment() {
 
             layout_noactivities.isVisible = activities!!.isEmpty()
 
-            rv.adapter = ActivityAdapterGlobal(activities.toMutableList(),list_fav)
+            rv.adapter = ActivityAdapterGlobal(activities.toMutableList(),list_fav, username)
         }
 
 
@@ -79,7 +91,7 @@ class SavedActivitiesFragment : Fragment() {
             layout_nosavedActivities.isVisible = activities!!.isEmpty()
 
             activitiessaved_recyclerview.adapter =
-                ActivityAdapterGlobal(activities.toMutableList(),list_fav)
+                ActivityAdapterGlobal(activities.toMutableList(),list_fav, username)
         }
     }
 

@@ -88,6 +88,8 @@ class FindVoyage : Fragment() {
     private var mBundleRecyclerViewState: Bundle? = null
     private var mListState: Parcelable? = null
 
+    private val username: String = ""
+
     private val amadeus: Amadeus = Amadeus
         .builder("TGvUHAv2qE6aoqa2Gg44ZZGpvDIEGwYs", "a16JGxtWdWBPtTGB")
         .build()
@@ -398,7 +400,8 @@ class FindVoyage : Fragment() {
                     }
                 }
                 withContext(Dispatchers.Main) {
-                    activityAdapter = ActivityAdapterGlobal(activities.toMutableList(), listFavoris)
+                    activityAdapter =
+                        ActivityAdapterGlobal(activities.toMutableList(), listFavoris, username)
                     mergeAdapter.addAdapter(activityAdapter!!)
                 }
             }
@@ -851,7 +854,8 @@ class FindVoyage : Fragment() {
             activitiesList = activityDaoSearch?.getActivity()
 
             if (!activitiesList.isNullOrEmpty()) {
-                activityAdapter = ActivityAdapterGlobal(activitiesList!!.toMutableList(), listFavoris)
+                activityAdapter =
+                    ActivityAdapterGlobal(activitiesList!!.toMutableList(), listFavoris, username)
                 mergeAdapter.addAdapter(activityAdapter!!)
             }
 
