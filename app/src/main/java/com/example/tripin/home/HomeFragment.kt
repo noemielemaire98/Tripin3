@@ -1,19 +1,18 @@
 package com.example.tripin.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.example.tripin.R
-import com.example.tripin.data.ActivityDao
-import com.example.tripin.data.AppDatabase
-import com.example.tripin.data.CityDao
-import com.example.tripin.data.retrofit
+import com.example.tripin.data.*
 import com.example.tripin.find.activity.ActivityAdapterGlobal
 import com.example.tripin.find.activity.ActivitybyCity
 import com.example.tripin.model.Activity
@@ -24,9 +23,10 @@ class HomeFragment : Fragment() {
 
     private var activityDaoSearch: ActivityDao? = null
     private var activityDaoSaved: ActivityDao? = null
+    private var preferenceDao: PreferenceDao? = null
     val lang: String = "fr-FR"
     val monnaie: String = "EUR"
-    val city_query: String = "Madrid"
+    var city_query: String = "Madrid"
     private lateinit var citydao: CityDao
     var list_favoris = arrayListOf<Boolean>()
 
@@ -57,14 +57,25 @@ class HomeFragment : Fragment() {
             )
                 .build()
 
+        val database = Room.databaseBuilder(
+            requireActivity(),
+            AppDatabase::class.java,
+            "allpreferences"
+        ).build()
+
+        preferenceDao = database.getPreferenceDao()
         activityDaoSearch = databasesearch.getActivityDao()
         activityDaoSaved = databasesaved.getActivityDao()
-
         citydao = databasesaved.getCityDao()
 
+
         runBlocking {
+            val city_pref = preferenceDao?.getPreference()
             activityDaoSearch?.deleteActivity()
             list_favoris.clear()
+            Log.d("KLM", "${city_pref?.destination}")
+            city_query = city_pref?.destination ?: "Madrid"
+
         }
 
         // récupère la ville saisie
@@ -133,6 +144,7 @@ class HomeFragment : Fragment() {
                     ActivityAdapterGlobal(activities!!.toMutableList(), list_favoris)
             } else {
                 noActivity_home.visibility = View.VISIBLE
+                Toast.makeText(requireContext(), "La ville que vous avez saisie n'est pas reconnue", Toast.LENGTH_SHORT).show()
             }
         }
 
