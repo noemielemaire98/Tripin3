@@ -67,7 +67,7 @@ interface ActivitybyCity {
 
 }
 
-data class City(val id: Int = 0, val name: String = "", val show_in_popular: Boolean = false)
+data class City(val id: Int = 0, val name: String = "", val show_in_popular: Boolean = false,  val cover_image_url: String ="")
 
 
 

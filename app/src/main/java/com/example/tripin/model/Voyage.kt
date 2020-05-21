@@ -10,7 +10,7 @@ data class Voyage(
     val titre: String,
     val date: String?,
     val dateRetour: String?,
-    val photo: Int,
+    val photo: String?,
     val nb_voyageur: Int?,
     var list_activity: List<Activity>?,
     var list_flights: List<Flight>?,

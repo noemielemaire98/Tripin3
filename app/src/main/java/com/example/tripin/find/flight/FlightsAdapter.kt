@@ -49,6 +49,7 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
     private var dateFin = ""
     private var destination = ""
     private var budget = ""
+    var image = ""
 
     class FlightsViewHolder(val flightsView: View) : RecyclerView.ViewHolder(flightsView)
 
@@ -402,7 +403,7 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
                                 viewPop.et_titre.text.toString(),
                                 dateDebut,
                                 dateFin,
-                                R.drawable.destination1,
+                                image,
                                 viewPop.et_nb_voyageur.selectedItem.toString().toInt(),
                                 emptyList(),
                                 emptyList(),

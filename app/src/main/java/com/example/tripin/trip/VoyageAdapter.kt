@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.tripin.R
 import com.example.tripin.model.Voyage
 import kotlinx.android.synthetic.main.voyage_view.view.*
@@ -31,7 +32,13 @@ class VoyageAdapter(val voyages:List<Voyage>) : RecyclerView.Adapter<VoyageAdapt
         holder.voyageView.voyage_date_textview.text = "Du ${voyage.date}"
         holder.voyageView.voyage_dateRetour_textview.text = "Au ${voyage.dateRetour}"
         holder.voyageView.voyage_nb_voyageur_textview.text = "Nombre de voyageurs : ${voyage.nb_voyageur}"
-        holder.voyageView.voyage_imageview.setImageResource(voyage.photo)
+//        holder.voyageView.voyage_imageview.setImageResource(voyage.photo.toString().toInt())
+
+        val url = voyage.photo
+        Glide.with(holder.voyageView)
+            .load(url)
+            .centerCrop()
+            .into(holder.voyageView.voyage_imageview)
 
         holder.voyageView.setOnClickListener {
             val intent= Intent(it.context, DetailVoyage2::class.java)

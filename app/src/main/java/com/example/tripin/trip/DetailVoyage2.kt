@@ -8,6 +8,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.room.Room
 import androidx.viewpager.widget.ViewPager
+import com.bumptech.glide.Glide
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
@@ -39,7 +40,12 @@ class DetailVoyage2 : AppCompatActivity() {
         setupViewPager(viewpager_detail_voyage)
         viewpager_detail_voyage.offscreenPageLimit = 3
         tablayout_detail_voyage.setupWithViewPager(viewpager_detail_voyage)
+//        val url = voyage?.photo
+//        Glide.with(this@DetailVoyage2)
+//            .load(url)
+//            .into(imageView)
         if(viewpager_detail_voyage.currentItem != 0 ){
+
             imageView.setImageResource(R.drawable.destination1)
         }
 

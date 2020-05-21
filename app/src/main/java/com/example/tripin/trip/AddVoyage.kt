@@ -200,6 +200,11 @@ class AddVoyage : AppCompatActivity() {
                         val destination = addv_destination.text
                         val budget = budget
 
+                        val citie = citydao.getCity(destination.toString())
+                        var image = citie.cover_image_url
+
+//                        Log.d("oc", image)
+
                         val list_activities = listOf<Activity>()
                         val list_flights = listOf<Flight>()
                         val list_hotels = listOf<Hotel>()
@@ -209,7 +214,8 @@ class AddVoyage : AppCompatActivity() {
                             titre.toString(),
                             dateDepart.toString(),
                             dateRetour.toString(),
-                            R.drawable.destination1,
+                            image,
+//                            R.drawable.destination1,
                             nombrevoyageur.toString().toInt(),
                             list_activities,
                             list_flights,

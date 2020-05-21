@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.util.Log.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.example.tripin.data.AppDatabase
@@ -44,6 +43,9 @@ class SplashActivity : AppCompatActivity() {
 
             val result = service.listcities("fr-FR")
             //           val list: MutableList<City> = mutableListOf()
+
+
+
             var iataCode = ""
             result.map {
                 listAirports.map itMap@{ itMap ->
@@ -54,8 +56,9 @@ class SplashActivity : AppCompatActivity() {
                         }
                     }
                 }
-                val row = City(it.id, it.name, it.show_in_popular, iataCode)
+                val row = City(it.id, it.name, it.show_in_popular, iataCode, it.cover_image_url)
 //                list.add(row)
+                Log.d("epf", "$row")
                 citydao?.addCity(row)
             }
 

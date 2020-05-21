@@ -11,8 +11,8 @@ data class City(
     val id: Int,
     val name: String?,
     val show_in_popular: Boolean?,
-    val iataCode: String
-
+    val iataCode: String,
+    val cover_image_url:String?
 )
 
 

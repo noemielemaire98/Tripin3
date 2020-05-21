@@ -239,13 +239,16 @@ class EditVoyage() : AppCompatActivity() {
                         val list_activities = listOf<Activity>()
                         val list_flights = listOf<Flight>()
                         val list_hotels = listOf<Hotel>()
+                        val citie = citydao.getCity(destination.toString())
+                        var image = citie.cover_image_url
+
                         val nvvoyage =
                             Voyage(
                                 id,
                                 titre,
                                 dateDepart,
                                 dateRetour,
-                                R.drawable.destination1,
+                                image,
                                 nbvoyageur,
                                 list_activities,
                                 list_flights,

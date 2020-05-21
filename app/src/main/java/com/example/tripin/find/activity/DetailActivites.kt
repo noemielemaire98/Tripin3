@@ -54,7 +54,7 @@ class DetailActivites : AppCompatActivity() {
     var date_fin = ""
     private var destination = ""
     private var budget = ""
-
+    var image = ""
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -282,7 +282,7 @@ class DetailActivites : AppCompatActivity() {
                             view.et_titre.text.toString(),
                             date_debut,
                             date_fin,
-                            R.drawable.destination1,
+                            image,
                             view.et_nb_voyageur.selectedItem.toString().toInt(),
                             emptyList(),
                             emptyList(),
