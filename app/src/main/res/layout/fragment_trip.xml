@@ -13,27 +13,32 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <AutoCompleteTextView
-            android:id="@+id/search_voyage"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/cutom_search"
-            android:completionThreshold="1"
-            android:drawableLeft="@drawable/ic_search"
-            android:elevation="1dp"
-            android:focusable="true"
-            android:hint="Cherchez un voyage"
-            android:imeOptions="actionSearch"
-            android:inputType="textAutoComplete"/>
-
-        <Button
-            android:id="@+id/bt_recherche"
-            style="@style/Widget.MaterialComponents.Button"
+        <androidx.appcompat.widget.SearchView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Rechercher"
-            app:backgroundTint="@color/contrast_blue" />
+            android:id="@+id/searchview"/>
+
+<!--        <AutoCompleteTextView-->
+<!--            android:id="@+id/search_voyage"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="35dp"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:background="@drawable/cutom_search"-->
+<!--            android:completionThreshold="1"-->
+<!--            android:drawableLeft="@drawable/ic_search"-->
+<!--            android:elevation="1dp"-->
+<!--            android:focusable="true"-->
+<!--            android:hint="Cherchez un voyage"-->
+<!--            android:imeOptions="actionSearch"-->
+<!--            android:inputType="textAutoComplete"/>-->
+
+<!--        <Button-->
+<!--            android:id="@+id/bt_recherche"-->
+<!--            style="@style/Widget.MaterialComponents.Button"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Rechercher"-->
+<!--            app:backgroundTint="@color/contrast_blue" />-->
 
     </LinearLayout>
 
