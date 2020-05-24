@@ -49,8 +49,9 @@ class TripFragment : Fragment() {
         var voyage_recyclerview = root.findViewById<View>(R.id.voyage_recyclerview) as RecyclerView
         voyage_recyclerview.layoutManager = LinearLayoutManager(this.context)
 
-//        val bt_search = root.findViewById<Button>(R.id.bt_recherche)
-//        val searchText = root.findViewById<AutoCompleteTextView>(R.id.search_voyage)
+        val bt_search = root.findViewById<Button>(R.id.bt_recherche)
+        val searchText = root.findViewById<AutoCompleteTextView>(R.id.search_voyage)
+
         val fab: FloatingActionButton = root.findViewById(R.id.fab_add)
 
         fab.setOnClickListener {
@@ -81,28 +82,28 @@ class TripFragment : Fragment() {
         Log.d("epf","aaaaaa")
 
 
-//        searchText.setAdapter(adapter)
-//
-//        bt_search.setOnClickListener {
-//            hideKeyboard()
-//                runBlocking {
-//                    val voyage = voyageDao?.getVoyageByTitre(search_voyage.text.toString())
-//                    if(voyage !=null){
-//                        voyages.add(voyage!!)
-//                        Log.d("epf",voyages.toString())
-//                        voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
-//                        voyage_recyclerview.layoutManager = LinearLayoutManager(requireContext())
-//                    }else{
-//                        Toast.makeText(
-//                            requireContext(),
-//                            "Voyage introuvable",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//
-//                }
-//
-//        }
+        searchText.setAdapter(adapter)
+
+        bt_search.setOnClickListener {
+            hideKeyboard()
+                runBlocking {
+                    val voyage = voyageDao?.getVoyageByTitre(search_voyage.text.toString())
+                    if(voyage !=null){
+                        voyages.add(voyage!!)
+                        Log.d("epf",voyages.toString())
+                        voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
+                        voyage_recyclerview.layoutManager = LinearLayoutManager(requireContext())
+                    }else{
+                        Toast.makeText(
+                            requireContext(),
+                            "Voyage introuvable",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                }
+
+        }
 
         return root
     }

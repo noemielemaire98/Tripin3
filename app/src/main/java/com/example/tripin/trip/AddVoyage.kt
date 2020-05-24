@@ -43,6 +43,7 @@ class AddVoyage : AppCompatActivity() {
     private var voyageDao : VoyageDao? = null
     var list_cities_name = arrayListOf<String>()
     var budget= "100"
+    var image =""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -201,9 +202,8 @@ class AddVoyage : AppCompatActivity() {
                         val budget = budget
 
                         val citie = citydao.getCity(destination.toString())
-                        var image = citie.cover_image_url
+                        image = citie.cover_image_url.toString()
 
-//                        Log.d("oc", image)
 
                         val list_activities = listOf<Activity>()
                         val list_flights = listOf<Flight>()

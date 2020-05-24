@@ -32,13 +32,16 @@ class VoyageAdapter(val voyages:List<Voyage>) : RecyclerView.Adapter<VoyageAdapt
         holder.voyageView.voyage_date_textview.text = "Du ${voyage.date}"
         holder.voyageView.voyage_dateRetour_textview.text = "Au ${voyage.dateRetour}"
         holder.voyageView.voyage_nb_voyageur_textview.text = "Nombre de voyageurs : ${voyage.nb_voyageur}"
-//        holder.voyageView.voyage_imageview.setImageResource(voyage.photo.toString().toInt())
 
-        val url = voyage.photo
-        Glide.with(holder.voyageView)
-            .load(url)
-            .centerCrop()
-            .into(holder.voyageView.voyage_imageview)
+        if (voyage.photo != null) {
+            val url = voyage.photo
+            Glide.with(holder.voyageView)
+                .load(url)
+                .centerCrop()
+                .into(holder.voyageView.voyage_imageview)
+        }else {
+            holder.voyageView.voyage_imageview.setImageResource(R.drawable.destination1)
+        }  
 
         holder.voyageView.setOnClickListener {
             val intent= Intent(it.context, DetailVoyage2::class.java)
