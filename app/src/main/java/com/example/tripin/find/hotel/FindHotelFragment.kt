@@ -131,6 +131,7 @@ class FindHotelFragment : Fragment() {
 
         }
 
+
         // Gestion Date de départ
         departDate.setOnClickListener {
             hideKeyboard()
@@ -220,6 +221,8 @@ class FindHotelFragment : Fragment() {
                 }
             }
 
+            dateArrivee = arriveeDate.text.toString()
+            dateDepart = departDate.text.toString()
 
             runBlocking {
 
@@ -231,13 +234,13 @@ class FindHotelFragment : Fragment() {
 
                 //Récupération des données
                 GlobalScope.launch {
+                    Log.d("price",  priceMinChosen.toString() + "-" + priceMaxChosen.toString())
                     val hotelOffersSearches =
                         amadeus.shopping.hotelOffers[Params.with("cityCode", cityCode)
                             .and("roomQuantity", rooms_number)
-                            .and(
-                                "priceRange",
-                                priceMinChosen.toString() + "-" + priceMaxChosen.toString()
-                            )
+                            .and("priceRange", priceMinChosen.toString() + "-" + priceMaxChosen.toString())
+                            .and("checkInDate", dateArrivee)
+                            .and("checkOutDate", dateDepart)
                             .and("currency", "EUR")
                             .and("lang", "FR")]
 
@@ -246,7 +249,7 @@ class FindHotelFragment : Fragment() {
 
                     runOnUiThread {
                         hotelOffersSearches.map { itHotelOffer ->
-
+                            Log.d("Hotel", itHotelOffer.toString())
                             var idHotel = itHotelOffer.hotel.hotelId
 
                             var name = itHotelOffer.hotel.name
@@ -314,8 +317,16 @@ class FindHotelFragment : Fragment() {
                                 itHotelOffer.hotel.amenities.forEach { itAmenity ->
                                     val amenity = itAmenity
                                     listEquipementFormatted.forEach {
-                                        if (amenity == it.get(0)) {
-                                            equipements.add(it.get(1))
+                                        if (amenity == it[0]) {
+                                            val nom = it[1]
+                                            var test = true
+                                            equipements.forEach {
+                                                if(it == amenity){
+                                                    test = false }
+                                            }
+                                            if(test){
+                                                equipements.add(it[1])
+                                            }
                                         } else {
                                         }
                                     }
@@ -358,6 +369,8 @@ class FindHotelFragment : Fragment() {
                                 listOfferId,
                                 favori
                             )
+
+
 
 
                             runBlocking {

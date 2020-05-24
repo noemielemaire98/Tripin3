@@ -104,7 +104,7 @@ tools:context=".find.hotel.FindHotelFragment">
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:textSize="18dp"
-                android:text="Nombres de chambres : "/>
+                android:text="Nombre de chambre(s) : "/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -153,7 +153,7 @@ tools:context=".find.hotel.FindHotelFragment">
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:textSize="18dp"
-                android:text="Prix : "/>
+                android:text="Prix par nuit : "/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -222,6 +222,9 @@ tools:context=".find.hotel.FindHotelFragment">
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 
 
 

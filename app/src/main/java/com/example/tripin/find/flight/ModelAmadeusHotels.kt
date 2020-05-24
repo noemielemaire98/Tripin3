@@ -3,7 +3,7 @@ package com.example.tripin.ui.find
 import androidx.annotation.Nullable
 
 
-object ModelAmadeusHotels2 {
+object ModelAmadeusHotels {
     data class Result(
         val type: String,
         val hotel: Hotel,
