@@ -28,7 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class TripFragment : Fragment() {
 
-    private var voyageDao : VoyageDao? = null
+    private var voyageDao: VoyageDao? = null
     private var mBundleRecyclerViewState: Bundle? = null
     private var mListState: Parcelable? = null
     var list_voyage_title = arrayListOf<String>()
@@ -45,7 +45,7 @@ class TripFragment : Fragment() {
     ): View? {
 
 
-        val root : View = inflater.inflate(R.layout.fragment_trip, container, false)
+        val root: View = inflater.inflate(R.layout.fragment_trip, container, false)
         var voyage_recyclerview = root.findViewById<View>(R.id.voyage_recyclerview) as RecyclerView
         voyage_recyclerview.layoutManager = LinearLayoutManager(this.context)
 
@@ -60,12 +60,15 @@ class TripFragment : Fragment() {
 
         }
         val database =
-            Room.databaseBuilder(requireActivity().baseContext, AppDatabase::class.java, "savedDatabase")
+            Room.databaseBuilder(
+                requireActivity().baseContext,
+                AppDatabase::class.java,
+                "savedDatabase"
+            )
                 .build()
 
         voyageDao = database.getVoyageDao()
         //voyage_recyclerview.adapter = VoyageAdapter(Voyage.all)
-
 
 
         runBlocking {
@@ -77,31 +80,38 @@ class TripFragment : Fragment() {
             }
         }
 
+
         Log.d("epf", "$list_voyage_title")
-        val adapter : ArrayAdapter<String> = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,list_voyage_title)
-        Log.d("epf","aaaaaa")
+        val adapter: ArrayAdapter<String> =
+            ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, list_voyage_title)
+        Log.d("epf", "aaaaaa")
 
 
         searchText.setAdapter(adapter)
 
         bt_search.setOnClickListener {
+            voyages.clear()
             hideKeyboard()
+            if (search_voyage.text.isNotEmpty()){
                 runBlocking {
                     val voyage = voyageDao?.getVoyageByTitre(search_voyage.text.toString())
-                    if(voyage !=null){
-                        voyages.add(voyage!!)
-                        Log.d("epf",voyages.toString())
+                    if (voyage != null) {
+                        voyages.add(voyage)
+                        Log.d("epf", voyages.toString())
                         voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
-                        voyage_recyclerview.layoutManager = LinearLayoutManager(requireContext())
-                    }else{
+                        voyage_recyclerview.layoutManager =
+                            LinearLayoutManager(requireContext())
+                    } else {
                         Toast.makeText(
                             requireContext(),
                             "Voyage introuvable",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-
                 }
+            }else{
+            }
+            search_voyage.text = null
 
         }
 
@@ -112,12 +122,28 @@ class TripFragment : Fragment() {
         super.onResume()
 
         runBlocking {
-            val voyages  = voyageDao?.getVoyage()
+            val voyages = voyageDao?.getVoyage()
             voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
 //            val list_activities = listOf<Activity>()
 //            val list_flights = listOf<Flight>()
 //            val list_hotels = listOf<Hotel>()
 //            val voyage =Voyage(0,"titre","debut","fin",R.drawable.destination1,0,list_activities, list_flights, list_hotels, destination, budget)
+        }
+        runBlocking {
+            val voyage = voyageDao?.getVoyageByTitre(search_voyage.text.toString())
+            if (voyage != null) {
+                voyages.add(voyage)
+                Log.d("epf", voyages.toString())
+                voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
+                voyage_recyclerview.layoutManager =
+                    LinearLayoutManager(requireContext())
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Voyage introuvable",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
     }
@@ -125,10 +151,12 @@ class TripFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
+
         mBundleRecyclerViewState = Bundle()
 
         mListState = voyage_recyclerview.layoutManager?.onSaveInstanceState()
         mBundleRecyclerViewState!!.putParcelable("keyR", mListState)
+
     }
 
 
