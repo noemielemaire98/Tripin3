@@ -48,11 +48,13 @@ class SplashActivity : AppCompatActivity() {
 
             var iataCode = ""
             result.map {
-                listAirports.map itMap@{ itMap ->
-                    itMap.map { itIn ->
-                        if (itIn.value == it.name) {
-                            iataCode = itMap["city_code"].toString()
-                            return@itMap
+                run loop@{
+                    listAirports.map { itMap ->
+                        itMap.map { itIn ->
+                            if (itIn.value == it.name) {
+                                iataCode = itMap["city_code"].toString()
+                                return@loop
+                            }
                         }
                     }
                 }
@@ -69,7 +71,7 @@ class SplashActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
-        }, 1500)
+        }, 1000)
     }
 
     private fun writeToFile(data: List<City>, context: Context) {

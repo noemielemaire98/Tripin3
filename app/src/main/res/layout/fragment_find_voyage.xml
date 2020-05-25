@@ -1,267 +1,297 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/voyageTopLevel_layout"
+    android:id="@+id/voyageTopLevel_Layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="10dp"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:orientation="vertical"
     tools:context=".find.voyage.FindVoyage">
 
-    <Button
-        android:id="@+id/hide_input"
-        style="@style/Widget.MaterialComponents.Button"
+    <ScrollView
+        android:id="@+id/voyageTopLevel_ScrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Afficher/cacher formulaire"
-        app:backgroundTint="@color/contrast_blue" />
-
-    <LinearLayout
-        android:id="@+id/layout_search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-
-        <RadioGroup
-            android:id="@+id/allerType_radiogroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checkedButton="@+id/retour_button"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/retour_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/radioButton_aller_retour" />
-
-            <RadioButton
-                android:id="@+id/simple_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/radioButton_aller_simple" />
-        </RadioGroup>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/autoCompleteTextView_lieu_depart"
-            app:boxBackgroundColor="@color/colorBackground"
-            app:endIconMode="clear_text">
-
-            <AutoCompleteTextView
-                android:id="@+id/autoTextViewDepart"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:completionThreshold="1"
-                android:inputType="textCapCharacters" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/autoCompleteTextView_lieu_arrivee"
-            app:boxBackgroundColor="@color/colorBackground"
-            app:endIconMode="clear_text">
-
-            <AutoCompleteTextView
-                android:id="@+id/autoTextViewRetour"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:completionThreshold="1"
-                android:inputType="textCapCharacters" />
-        </com.google.android.material.textfield.TextInputLayout>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/aller_dateLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+            <Button
+                android:id="@+id/hide_input"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="2dp"
-                android:layout_weight="1"
-                android:hint="@string/editText_date_depart"
-                app:boxBackgroundColor="@color/colorBackground"
-                app:endIconMode="clear_text">
+                android:text="Afficher/cacher formulaire"
+                android:visibility="gone"
+                app:backgroundTint="@color/contrast_blue" />
 
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/aller_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:focusable="false"
-                    android:inputType="none" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/return_dateLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+            <LinearLayout
+                android:id="@+id/layout_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:layout_weight="1"
-                android:hint="@string/editText_date_retour"
-                app:boxBackgroundColor="@color/colorBackground"
-                app:endIconMode="clear_text">
+                android:orientation="vertical">
 
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/return_date"
+                <RadioGroup
+                    android:id="@+id/allerType_radiogroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:focusable="false"
-                    android:inputType="none" />
+                    android:checkedButton="@+id/retour_button"
+                    android:orientation="horizontal">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <RadioButton
+                        android:id="@+id/retour_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/radioButton_aller_retour" />
+
+                    <RadioButton
+                        android:id="@+id/simple_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/radioButton_aller_simple" />
+                </RadioGroup>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/autoCompleteTextView_lieu_depart"
+                    app:boxBackgroundColor="@color/colorBackground"
+                    app:endIconMode="clear_text">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/autoTextViewDepart"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:completionThreshold="1"
+                        android:inputType="textCapCharacters" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/autoCompleteTextView_lieu_arrivee"
+                    app:boxBackgroundColor="@color/colorBackground"
+                    app:endIconMode="clear_text">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/autoTextViewRetour"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:completionThreshold="1"
+                        android:inputType="textCapCharacters" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/aller_dateLayout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="2dp"
+                        android:layout_weight="1"
+                        android:hint="@string/editText_date_depart"
+                        app:boxBackgroundColor="@color/colorBackground"
+                        app:endIconMode="clear_text">
+
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/aller_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:focusable="false"
+                            android:inputType="none" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/return_dateLayout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:layout_weight="1"
+                        android:hint="@string/editText_date_retour"
+                        app:boxBackgroundColor="@color/colorBackground"
+                        app:endIconMode="clear_text">
+
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/return_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:focusable="false"
+                            android:inputType="none" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="2dp"
+                        android:layout_weight="8"
+                        android:hint="@string/textView_nombre_voyageurs"
+                        app:boxBackgroundColor="@color/colorBackground">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/passengers_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:focusable="false"
+                            android:inputType="none"
+                            android:text="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:layout_weight="5"
+                        android:hint="@string/travelClass"
+                        app:boxBackgroundColor="@color/colorBackground">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/travelClassEdit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:ellipsize="end"
+                            android:focusable="false"
+                            android:inputType="none"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:text="ECONOMY" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_search"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/button_searchFlight"
+                    app:backgroundTint="@color/contrast_blue" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutNoFlightAvailable"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/noFlightAvailable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="@string/textView_aucun_vol_disponible"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/noFlightDetail"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/noFlightAvailable"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="@string/noFlightsAvailable"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/noFlightsImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/noFlightDetail"
+                    android:layout_marginTop="10dp"
+                    android:contentDescription="@string/imageDescription_no_flights"
+                    android:gravity="center"
+                    android:src="@drawable/noflightsavalaible" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/loadingPanel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="?attr/actionBarSize"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutRecyclerViewVoyage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/global_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:nestedScrollingEnabled="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </RelativeLayout>
+
+
         </LinearLayout>
+    </ScrollView>
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/scroll_to_top_arrow"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignEnd="@+id/voyageTopLevel_ScrollView"
+        android:layout_alignBottom="@+id/voyageTopLevel_ScrollView"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="-85dp"
+        android:layout_marginBottom="18dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_arrow_upward_black_24dp"
+        app:civ_border_width="2dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="2dp"
-                android:layout_weight="8"
-                android:hint="@string/textView_nombre_voyageurs"
-                app:boxBackgroundColor="@color/colorBackground">
-
-                <AutoCompleteTextView
-                    android:id="@+id/passengers_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:focusable="false"
-                    android:inputType="none"
-                    android:text="1" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:layout_weight="5"
-                android:hint="@string/travelClass"
-                app:boxBackgroundColor="@color/colorBackground">
-
-                <AutoCompleteTextView
-                    android:id="@+id/travelClassEdit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:ellipsize="end"
-                    android:focusable="false"
-                    android:inputType="none"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:text="ECONOMY" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btn_search"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/button_searchFlight"
-            app:backgroundTint="@color/contrast_blue" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/layoutNoFlightAvailable"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/noFlightAvailable"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:text="@string/textView_aucun_vol_disponible"
-            android:textSize="26sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/noFlightDetail"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/noFlightAvailable"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:text="@string/noFlightsAvailable"
-            android:textSize="18sp" />
-
-        <ImageView
-            android:id="@+id/noFlightsImage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/noFlightDetail"
-            android:layout_marginTop="10dp"
-            android:contentDescription="@string/imageDescription_no_flights"
-            android:gravity="center"
-            android:src="@drawable/noflightsavalaible" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/loadingPanel"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        android:layout_marginBottom="?attr/actionBarSize"
-        android:gravity="center">
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/global_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="?attr/actionBarSize"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>

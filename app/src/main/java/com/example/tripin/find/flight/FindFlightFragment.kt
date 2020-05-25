@@ -1,11 +1,13 @@
 package com.example.tripin.find.flight
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
@@ -53,11 +55,15 @@ class FindFlightFragment : Fragment() {
     private var mBundleRecyclerViewState: Bundle? = null
     private var mListState: Parcelable? = null
 
+    private var animatedHide = false
+    private var animatedShow = false
+
     private var activityCreate = true
     private val amadeus: Amadeus = Amadeus
         .builder("TGvUHAv2qE6aoqa2Gg44ZZGpvDIEGwYs", "a16JGxtWdWBPtTGB")
         .build()
 
+    @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("SimpleDateFormat")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,11 +81,61 @@ class FindFlightFragment : Fragment() {
         val autoTextViewDepart = view.findViewById<AutoCompleteTextView>(R.id.autoTextViewDepart)
         val autoTextViewRetour = view.findViewById<AutoCompleteTextView>(R.id.autoTextViewRetour)
         val allertypeRadiogroup = view.findViewById<RadioGroup>(R.id.allerType_radiogroup)
-        val passengersNumberTextView = view.findViewById<AutoCompleteTextView>(R.id.passengers_number)
+        val passengersNumberTextView =
+            view.findViewById<AutoCompleteTextView>(R.id.passengers_number)
         val travelClassEdit = view.findViewById<AutoCompleteTextView>(R.id.travelClassEdit)
+        val scrollToTopArrow =
+            view.findViewById<de.hdodenhof.circleimageview.CircleImageView>(R.id.scroll_to_top_arrow)
+        val findTopLevelScrollView = view.findViewById<ScrollView>(R.id.findTopLevel_scrollView)
+        val findTopLevelLayout = view.findViewById<RelativeLayout>(R.id.findTopLevel_Layout)
         flightsRecyclerView.layoutManager = LinearLayoutManager(activity)
 
         val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
+        scrollToTopArrow.setOnClickListener { findTopLevelScrollView.smoothScrollTo(0, 0) }
+
+        // Positions for the arrow when is hidden and visible
+        val whenVisibleMargin = convertDpToPixel(15f, requireContext())
+        val whenHideMargin = convertDpToPixel(-85f, requireContext())
+
+        // Hide the arrow at the beginning when the screen starts
+        scrollToTopArrow.visibility = View.GONE
+
+        findTopLevelScrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
+            if (scrollY >= 600) {
+                if (!animatedShow) {
+                    scrollToTopArrow.visibility = View.VISIBLE
+                    val params = scrollToTopArrow.layoutParams as RelativeLayout.LayoutParams
+                    val animator =
+                        ValueAnimator.ofInt(params.rightMargin, whenVisibleMargin.toInt())
+                    animator.addUpdateListener { valueAnimator ->
+                        params.rightMargin = valueAnimator.animatedValue as Int
+                        scrollToTopArrow.requestLayout()
+                    }
+                    animator.duration = 300
+                    animator.start()
+                    animatedShow = true
+                    animatedHide = false
+                }
+            } else {
+                if (!animatedHide) {
+                    scrollToTopArrow.visibility = View.VISIBLE
+                    val params = scrollToTopArrow.layoutParams as RelativeLayout.LayoutParams
+                    val animator =
+                        ValueAnimator.ofInt(params.rightMargin, whenHideMargin.toInt())
+                    animator.addUpdateListener { valueAnimator ->
+                        params.rightMargin = valueAnimator.animatedValue as Int
+                        scrollToTopArrow.requestLayout()
+                    }
+                    animator.duration = 300
+                    animator.start()
+                    animatedHide = true
+                    animatedShow = false
+                }
+            }
+
+        }
+
 
         scope.launch {
             // Récupère la liste des aéroports dans le csv correspondant
@@ -138,7 +194,7 @@ class FindFlightFragment : Fragment() {
                 // Affiche le calendrier pour choisir la date d'aller
                 allerDate.setOnClickListener {
                     hideKeyboard()
-                    savedTopLevel_layout.requestFocus()
+                    findTopLevelLayout.requestFocus()
                     if (return_dateLayout.visibility == View.VISIBLE) { // Si c'est un voyage aller-retour
 
                         rangeDatePickerPrimeCalendar()
@@ -186,21 +242,21 @@ class FindFlightFragment : Fragment() {
                 // Affiche le calendrier pour choisir la date de retour
                 returnDate.setOnClickListener {
                     hideKeyboard()
-                    savedTopLevel_layout.requestFocus()
+                    findTopLevelLayout.requestFocus()
                     rangeDatePickerPrimeCalendar()
                 }
 
                 // Montre toute la liste déroulante à chaque fois
                 passengersNumberTextView.setOnClickListener {
                     hideKeyboard()
-                    savedTopLevel_layout.requestFocus()
+                    findTopLevelLayout.requestFocus()
                     passengersNumberTextView.showDropDown()
                 }
 
                 // Montre toute la liste déroulante à chaque fois
                 travelClassEdit.setOnClickListener {
                     hideKeyboard()
-                    savedTopLevel_layout.requestFocus()
+                    findTopLevelLayout.requestFocus()
                     travelClassEdit.showDropDown()
                 }
 
@@ -215,7 +271,7 @@ class FindFlightFragment : Fragment() {
                 // Bouton pour lancer la recherche
                 btnSearch.setOnClickListener {
                     hideKeyboard()
-                    savedTopLevel_layout.requestFocus()
+                    findTopLevelScrollView.requestFocus()
                     if (autoTextViewDepart.text.toString() == "" || autoTextViewRetour.text.toString() == "") { // Si les lieux ne sont pas bien spécifiés
                         Toast.makeText(
                             requireContext(),
@@ -277,6 +333,10 @@ class FindFlightFragment : Fragment() {
         return view
     }
 
+    private fun convertDpToPixel(dp: Float, context: Context): Float {
+        return dp * (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+    }
+
 
     override fun onResume() {
         super.onResume()
@@ -319,6 +379,7 @@ class FindFlightFragment : Fragment() {
             }
             withContext(Dispatchers.Main) {
                 loadingPanel.visibility = View.GONE // cache roue de chargement
+                layoutRecyclerViewFlights.visibility = View.VISIBLE
             }
         }
     }
@@ -340,8 +401,9 @@ class FindFlightFragment : Fragment() {
             if (travelClassEdit.text.toString() != "PREMIUM ECO") travelClassEdit.text.toString() else "PREMIUM_ECONOMY"
         val nbAdults = passengers_number.text.toString().toInt()
         flights_recyclerview.adapter = FlightsAdapter(mutableListOf())
-        layout_search.visibility = View.GONE // cache le formulaire
+      //  layout_search.visibility = View.GONE // cache le formulaire
         loadingPanel.visibility = View.VISIBLE // affiche la roue de chargement
+        layoutRecyclerViewFlights.visibility = View.GONE
         layoutNoFlightAvailable.visibility = View.GONE // cache l'image aucun vol dispo
         runBlocking {
             beginSearch(dateDepart, dateRetour, lieuDepart, lieuRetour, travelClass, nbAdults)
@@ -430,12 +492,14 @@ class FindFlightFragment : Fragment() {
                             val heureArrivalFormat =
                                 formatterHour.format(parser.parse(arrivalDate)!!)
 
-
-                            rows.map { itMap ->
-                                itMap.map {
-                                    if (it.value == itSegments.carrierCode) {
-                                        carrierName = itMap["name"].toString()
-                                        carrierCodeLogo = itMap["2char_code"].toString()
+                            run loop@ {
+                                rows.map { itMap ->
+                                    itMap.map {
+                                        if (it.value == itSegments.carrierCode) {
+                                            carrierName = itMap["name"].toString()
+                                            carrierCodeLogo = itMap["2char_code"].toString()
+                                            return@loop
+                                        }
                                     }
                                 }
                             }
@@ -489,6 +553,7 @@ class FindFlightFragment : Fragment() {
                 }
 
                 loadingPanel.visibility = View.GONE // cache roue de chargement
+                layoutRecyclerViewFlights.visibility = View.VISIBLE
             }
         }
 
