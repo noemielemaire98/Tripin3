@@ -10,7 +10,9 @@ import androidx.room.Room
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.CityDao
 import com.example.tripin.data.retrofit
+import com.example.tripin.data.retrofitHotel
 import com.example.tripin.find.activity.ActivitybyCity
+import com.example.tripin.find.hotel.HotelAPI
 import com.example.tripin.model.City
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import kotlinx.coroutines.runBlocking
@@ -66,6 +68,14 @@ class SplashActivity : AppCompatActivity() {
 
 //            writeToFile(list, this@SplashActivity)
         }
+
+        runBlocking {
+            val service2 = retrofitHotel().create(HotelAPI::class.java)
+            val result2 = service2.getLocation("fr_FR","paris","d82ce245cbmsh006f040e3753b19p1d57ddjsna1fe19bfba68")
+            Log.d("EPFF","$result2")
+        }
+
+
 
         Handler().postDelayed({
             val intent = Intent(this, MainActivity::class.java)

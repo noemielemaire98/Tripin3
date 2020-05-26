@@ -18,7 +18,6 @@ fun AppCompatActivity.dao() : ActivityDao {
 
 // retourne l'accès à l'API rest
 
-
 }
 
 fun AppCompatActivity.retrofit():Retrofit {
