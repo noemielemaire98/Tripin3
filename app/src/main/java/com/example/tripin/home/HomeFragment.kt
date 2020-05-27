@@ -14,6 +14,7 @@ import androidx.room.Room
 import com.example.tripin.R
 import com.example.tripin.data.*
 import com.example.tripin.find.activity.ActivityAdapterGlobal
+import com.example.tripin.find.activity.ActivityAdapterGlobalFormatted
 import com.example.tripin.find.activity.ActivitybyCity
 import com.example.tripin.model.Activity
 import kotlinx.coroutines.runBlocking
@@ -141,7 +142,7 @@ class HomeFragment : Fragment() {
                 }
                 val activities = activityDaoSearch?.getActivity()
                 recyclerview_home.adapter =
-                    ActivityAdapterGlobal(activities!!.toMutableList(), list_favoris)
+                    ActivityAdapterGlobalFormatted(activities!!.toMutableList(), list_favoris)
             } else {
                 noActivity_home.visibility = View.VISIBLE
                 Toast.makeText(requireContext(), "La ville que vous avez saisie n'est pas reconnue", Toast.LENGTH_SHORT).show()
