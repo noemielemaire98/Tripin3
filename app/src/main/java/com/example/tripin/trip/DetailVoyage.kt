@@ -42,6 +42,7 @@ class DetailVoyage : AppCompatActivity() {
             voyage_dateDepart_textview.text = "Du "+voyage?.date
             voyage_dateRetour_textview.text = "Au "+voyage?.dateRetour
             voyage_nb_voyageurs_textview.text = "Nombre de voyageur :" +voyage?.nb_voyageur
+
         }
     }
 

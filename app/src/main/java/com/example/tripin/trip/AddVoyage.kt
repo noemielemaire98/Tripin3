@@ -24,10 +24,7 @@ import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.CityDao
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.find.flight.IgnoreAccentsArrayAdapter
-import com.example.tripin.model.Activity
-import com.example.tripin.model.Flight
-import com.example.tripin.model.Hotel
-import com.example.tripin.model.Voyage
+import com.example.tripin.model.*
 import kotlinx.android.synthetic.main.activity_add_voyage.*
 import kotlinx.android.synthetic.main.activity_add_voyage.passengers_number
 import kotlinx.android.synthetic.main.activity_find_flight.*
@@ -44,6 +41,7 @@ class AddVoyage : AppCompatActivity() {
     var list_cities_name = arrayListOf<String>()
     var budget= "100"
     var image =""
+    val city :City? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -170,10 +168,18 @@ class AddVoyage : AppCompatActivity() {
                         .build()
 
                 voyageDao = database.getVoyageDao()
-                Log.d("aaa", addv_titre_editText.text.toString())
+                citydao = database.getCityDao()
+
+
+                Log.d("oct", addv_titre_editText.text.toString())
+                Log.d("oct", addv_titre_editText.text.toString())
+
+
                 runBlocking {
                     val voyages = voyageDao?.getVoyageByTitre(addv_titre_editText.text.toString())
+                    val city = citydao.getCity(addv_destination.text.toString())
 
+                    Log.d("oct", "city =$city")
 
                     if (addv_titre_editText.text.isEmpty() || addv_dateDepart.text.toString()
                             .isEmpty() || addv_dateRetour.text.toString()
@@ -193,7 +199,15 @@ class AddVoyage : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
 
-                    } else {
+                    } else if(city == null){
+                        addv_destination.hint =  addv_destination.text
+                        addv_destination.text = null
+                        Toast.makeText(
+                            this@AddVoyage,
+                            "Destination indiponible",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }else {
                         val titre = addv_titre_editText.text
                         val dateDepart = addv_dateDepart.text
                         val dateRetour = addv_dateRetour.text
