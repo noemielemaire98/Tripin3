@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AutoCompleteTextView
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.example.tripin.R
 import com.example.tripin.data.*
+import com.example.tripin.find.IgnoreAccentsArrayAdapter
 import com.example.tripin.find.activity.ActivityAdapterGlobal
 import com.example.tripin.find.activity.ActivityAdapterGlobalFormatted
 import com.example.tripin.find.activity.ActivitybyCity
@@ -42,6 +44,8 @@ class HomeFragment : Fragment() {
         recyclerview_home.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         var noActivity_home = root.findViewById(R.id.layoutNoActivities_frag_home) as RelativeLayout
+
+
 
         val databasesearch =
             Room.databaseBuilder(
@@ -76,7 +80,8 @@ class HomeFragment : Fragment() {
             list_favoris.clear()
             Log.d("KLM", "${city_pref?.destination}")
             city_query = city_pref?.destination ?: "Madrid"
-
+            val envie = city_pref?.envie ?: "Au soleil"
+            Log.d("tyui", "$envie")
         }
 
         // récupère la ville saisie

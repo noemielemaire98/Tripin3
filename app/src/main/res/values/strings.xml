@@ -55,6 +55,15 @@
         <item>9</item>
     </string-array>
 
+    <string-array name="catDestination">
+        <item>Exotique</item>
+        <item>Au soleil</item>
+        <item>Pour skier</item>
+        <item>A la montagne</item>
+        <item>En forêt</item>
+        <item>A la plage</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="connexion_facebook">Connectez-vous à facebook</string>
