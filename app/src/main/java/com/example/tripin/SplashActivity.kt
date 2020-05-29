@@ -47,7 +47,7 @@ class SplashActivity : AppCompatActivity() {
             //           val list: MutableList<City> = mutableListOf()
 
 
-
+            val destination : List<String> = listOf("Exotique", "Au soleil", "Pour skier", "Pour découvrir", "A la plage", "Pour visiter")
             var iataCode = ""
             result.map {
                 run loop@{
@@ -60,7 +60,27 @@ class SplashActivity : AppCompatActivity() {
                         }
                     }
                 }
-                val row = City(it.id, it.name, it.show_in_popular, iataCode, it.cover_image_url)
+                var dest = "Au soleil"
+                if(it.name == "Paris" || it.name == "Amsterdam" || it.name == "Rome" || it.name == "New York" || it.name == "Londres" || it.name == "Chicago" || it.name == "Denver" || it.name == "Seattle" || it.name == "Shanghai" || it.name == "Singapour" || it.name == "Bangkok" || it.name == "Washington DC"){
+                    dest = "Pour visiter"
+                }
+                if(it.name == "La Grand île - Hawaii" || it.name == "Honolulu" || it.name == "Oahu" || it.name == "Buenos Aires" || it.name == "Abu dhabi" || it.name == "Medina" || it.name == "Denver" || it.name == "Seattle" || it.name == "Chiang Mai"){
+                    dest = "Exotique"
+                }
+                if(it.name == "Marrakech" || it.name == "Lisbonne" || it.name == "Tampa Bay" || it.name == "Tusayan" || it.name == "Livingstone" || it.name == "Rio de Janeiro" || it.name == "Bilbao" || it.name == "Sydney" || it.name == "Las Vegas"){
+                    dest = "Au soleil"
+                }
+                if(it.name == "La Grand île - Hawaii" || it.name == "Honolulu" || it.name == "Oahu" || it.name == "San Francisco" || it.name == "Venise" || it.name == "Bordeaux" || it.name == "Denver" || it.name == "Lima" || it.name == "Cancun"){
+                    dest = "A la plage"
+                }
+                if(it.name == "Moscow" || it.name == "Saint-Pétersbourg" || it.name == "Göteborg" || it.name == "Malmö" || it.name == "Stockholm" || it.name == "Reykjavik" ){
+                    dest = "Pour skier"
+                }
+                if(it.name == "Tusayan" || it.name == "Sedona" || it.name == "Mantoue" || it.name == "Budapest" || it.name == "Istanbul" || it.name == "Cracovie" ){
+                    dest = "Pour découvrir"
+                }
+
+                val row = City(it.id, it.name, dest,it.show_in_popular, iataCode, it.cover_image_url)
 //                list.add(row)
                 Log.d("epf", "$row")
                 citydao?.addCity(row)

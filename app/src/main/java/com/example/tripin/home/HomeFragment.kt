@@ -19,6 +19,7 @@ import com.example.tripin.find.activity.ActivityAdapterGlobal
 import com.example.tripin.find.activity.ActivityAdapterGlobalFormatted
 import com.example.tripin.find.activity.ActivitybyCity
 import com.example.tripin.model.Activity
+import com.example.tripin.model.City
 import kotlinx.coroutines.runBlocking
 
 
@@ -31,6 +32,7 @@ class HomeFragment : Fragment() {
     val monnaie: String = "EUR"
     var city_query: String = "Madrid"
     private lateinit var citydao: CityDao
+    var list_destination : List<City> = emptyList()
     var list_favoris = arrayListOf<Boolean>()
 
     override fun onCreateView(
@@ -82,6 +84,7 @@ class HomeFragment : Fragment() {
             city_query = city_pref?.destination ?: "Madrid"
             val envie = city_pref?.envie ?: "Au soleil"
             Log.d("tyui", "$envie")
+            list_destination = citydao.getCityByDestination(envie)
         }
 
         // récupère la ville saisie
@@ -148,7 +151,67 @@ class HomeFragment : Fragment() {
                 val activities = activityDaoSearch?.getActivity()
                 recyclerview_home.adapter =
                     ActivityAdapterGlobalFormatted(activities!!.toMutableList(), list_favoris)
-            } else {
+            }
+            if(city == null && list_destination.isNotEmpty()){
+                for (x in list_destination.indices){
+                    var result = service.listActivitybyCity(list_destination[x].id, "relevance", "", lang, monnaie)
+
+//                if(btn_museum_activate.isActivated||btn_sport_activate.isActivated||btn_night_activate.isActivated||btn_food_activate.isActivated||btn_fun_activate.isActivated||btn_other_activate.isActivated){
+//                    var categories = liste_cat_active(btn_museum,btn_food,btn_night,btn_fun,btn_other,btn_sport)
+//                    result = service.listActivitybyCityandCategory(city.id,categories,lang, monnaie)
+//                }
+
+                    if (result.meta.count == 0L) {
+                        noActivity_home.visibility = View.VISIBLE
+                    } else {
+                        noActivity_home.visibility = View.GONE
+                    }
+
+                    val list_activities_bdd = activityDaoSaved?.getActivity()
+                    result.data.map {
+                        val titre = it.title
+                        var match_bdd = false
+                        // vérification pour le bouton favoris
+                        list_activities_bdd?.forEach {
+                            if (it.title == titre) {
+                                list_favoris.add(true)
+                                match_bdd = true
+                            }
+                        }
+                        if (match_bdd == false) {
+                            list_favoris.add(false)
+                        }
+
+
+                        var list_cat = it.categories.map {
+                            it.name
+                        }
+
+
+                        val activity = Activity(
+                            it.uuid,
+                            it.title,
+                            it.cover_image_url,
+                            it.retail_price.formatted_iso_value,
+                            it.operational_days,
+                            it.reviews_avg,
+                            list_cat,
+                            it.url,
+                            it.top_seller,
+                            it.must_see,
+                            it.description,
+                            it.about,
+                            it.latitude,
+                            it.longitude
+                        )
+                        activityDaoSearch?.addActivity(activity)
+                    }
+                }
+                val activities = activityDaoSearch?.getActivity()
+                recyclerview_home.adapter =
+                    ActivityAdapterGlobalFormatted(activities!!.toMutableList(), list_favoris)
+            }
+            else {
                 noActivity_home.visibility = View.VISIBLE
                 Toast.makeText(requireContext(), "La ville que vous avez saisie n'est pas reconnue", Toast.LENGTH_SHORT).show()
             }
