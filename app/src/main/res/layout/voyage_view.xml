@@ -1,63 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="8dp"
     android:layout_width="match_parent"
-    android:layout_height="240dp">
+    android:layout_height="230dp"
+    android:layout_margin="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <ImageView
-            android:layout_margin="8dp"
             android:id="@+id/voyage_imageview"
             android:layout_width="match_parent"
-            android:layout_height="100dp"/>
+            android:layout_height="100dp"
+            android:layout_margin="8dp"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="10dp"
-                android:textSize="20dp"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-                android:layout_gravity="center_vertical"
-                tools:text="Mon voyage"
-                android:id="@+id/voyage_title_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            <TextView
+                    android:id="@+id/voyage_title_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="10dp"
+                    android:textSize="20dp"
+                    tools:text="Mon voyage" />
+
+                <TextView
+                    android:id="@+id/voyage_destination_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textSize="20dp"
+                    android:layout_toEndOf= "@id/voyage_title_textview"
+                    tools:text="Destination" />
+
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
+
                 <TextView
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="10dp"
-                    tools:text="Date départ"
                     android:id="@+id/voyage_date_textview"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="10dp"
-                    tools:text="Date retour"
+                    tools:text="Date départ" />
+
+                <TextView
                     android:id="@+id/voyage_dateRetour_textview"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="10dp"
+                    tools:text="Date retour" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
             <TextView
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="10dp"
-                tools:text="Nombre de voyageur : "
-                android:id="@+id/voyage_nb_voyageur_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                        android:id="@+id/voyage_nb_voyageur_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="10dp"
+                        tools:text="Nombre de voyageur : " />
+
+
+                    <TextView
+                        android:id="@+id/voyage_budget_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:layout_marginTop="10dp"
+                        android:gravity="end"
+                        tools:text="Budget :" />
+
+
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

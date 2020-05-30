@@ -41,7 +41,7 @@ class AddVoyage : AppCompatActivity() {
     var list_cities_name = arrayListOf<String>()
     var budget= "100"
     var image =""
-    val city :City? = null
+    var city :City? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -172,12 +172,11 @@ class AddVoyage : AppCompatActivity() {
 
 
                 Log.d("oct", addv_titre_editText.text.toString())
-                Log.d("oct", addv_titre_editText.text.toString())
 
 
                 runBlocking {
                     val voyages = voyageDao?.getVoyageByTitre(addv_titre_editText.text.toString())
-                    val city = citydao.getCity(addv_destination.text.toString())
+                    city = citydao.getCity(addv_destination.text.toString())
 
                     Log.d("oct", "city =$city")
 

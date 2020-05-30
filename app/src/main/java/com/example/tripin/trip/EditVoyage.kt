@@ -19,10 +19,7 @@ import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.CityDao
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.find.flight.IgnoreAccentsArrayAdapter
-import com.example.tripin.model.Activity
-import com.example.tripin.model.Flight
-import com.example.tripin.model.Hotel
-import com.example.tripin.model.Voyage
+import com.example.tripin.model.*
 import com.example.tripin.trip.DetailVoyage
 import kotlinx.android.synthetic.main.activity_edit_voyage.*
 import kotlinx.coroutines.runBlocking
@@ -42,6 +39,8 @@ class EditVoyage() : AppCompatActivity() {
     var nbvoyageur: Int ?= 0
     var destination = ""
     var budget = ""
+    var city : City? = null
+
     private var voyageDao: VoyageDao? = null
     var cal: Calendar = Calendar.getInstance()
 
@@ -202,9 +201,18 @@ class EditVoyage() : AppCompatActivity() {
                         .build()
 
                 voyageDao = database.getVoyageDao()
-                Log.d("aaa", editv_titre_editText.text.toString())
+                Log.d("oct", editv_titre_editText.text.toString())
                 runBlocking {
+
                     val voyages = voyageDao?.getVoyageByTitre(editv_titre_editText.text.toString())
+                    if(editv_destination.text.isNotEmpty()){
+                        city = citydao.getCity(editv_destination.text.toString())
+                    }else{
+                        city = citydao.getCity(editv_destination.hint.toString())
+                    }
+
+
+                    Log.d("oct", "city =$city")
 
                     if (voyages != null) {
                         Toast.makeText(
@@ -213,7 +221,17 @@ class EditVoyage() : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
 
-                    } else {
+                    }else if(city == null){
+                        editv_destination.text = null
+                        Toast.makeText(
+                            this@EditVoyage,
+                            "Destination indiponible",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }else {
+
+
+                        Log.d("oct", "update")
 
                         if (editv_titre_editText.text.isNotEmpty()) {
                             titre = editv_titre_editText.text.toString()
@@ -262,12 +280,10 @@ class EditVoyage() : AppCompatActivity() {
                         runBlocking {
                             voyageDao.updateVoyage(nvvoyage)
                         }
+                        finish()
                     }
                 }
-                finish()
-//                val intent= Intent(it.context, DetailVoyage::class.java)
-//                intent.putExtra("id",id)
-//                it.context.startActivity(intent)
+
                     true
             }
             android.R.id.home -> {

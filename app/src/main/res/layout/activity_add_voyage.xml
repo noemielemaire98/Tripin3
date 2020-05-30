@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:text="Destination"
+                android:text="Destination :"
                 android:textSize="20dp" />
 
             <AutoCompleteTextView
@@ -174,7 +174,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="100 - 10000" />
+                android:hint="100 - 5000" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -184,7 +184,7 @@
                     android:id="@+id/addv_budget"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="10000"
+                    android:max="5000"
                     android:min="100"
                     android:progress="100" />
             </LinearLayout>

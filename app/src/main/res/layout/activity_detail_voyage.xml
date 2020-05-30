@@ -3,42 +3,48 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".trip.DetailVoyage">
-
-   <!-- <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:src="@drawable/addvoyage"
-        app:layout_constraintTop_toTopOf="parent" />-->
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/voyage_title_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="8dp"
         android:textSize="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
         tools:text="Mon voyage" />
 
+    <TextView
+        android:id="@+id/voyage_destination_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="8dp"
+
+        android:layout_marginTop="20dp"
+        android:textSize="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/voyage_title_textview"
+        tools:text="Destination" />
+
     <LinearLayout
         android:id="@+id/voyage_datett_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/voyage_title_textview"
+        app:layout_constraintTop_toBottomOf="@+id/voyage_destination_textview"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="8dp"
         tools:ignore="MissingConstraints">
 
         <TextView
             android:id="@+id/voyage_dateDepart_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="40dp"
             android:textSize="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
             tools:text="Date depart" />
@@ -47,9 +53,7 @@
             android:id="@+id/voyage_dateRetour_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="40dp"
             android:textSize="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
             tools:text="Date retour" />
@@ -61,10 +65,54 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:textSize="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/voyage_datett_textview"
-        tools:text="Date" />
+        tools:text="Voyageur" />
+
+    <TextView
+        android:id="@+id/voyage_budget_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="20dp"
+        android:textSize="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/voyage_nb_voyageurs_textview"
+        tools:text="Budget" />
+
+    <TextView
+        android:id="@+id/voyage_activite_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="20dp"
+        android:textSize="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/voyage_budget_textview"
+        tools:text="Nombre d'activités" />
+
+    <TextView
+        android:id="@+id/voyage_flight_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="20dp"
+        android:textSize="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/voyage_activite_textview"
+        tools:text="Nombre de vol" />
+
+    <TextView
+        android:id="@+id/voyage_hotel_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="20dp"
+        android:textSize="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/voyage_flight_textview"
+        tools:text="Nombre d'hotel" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

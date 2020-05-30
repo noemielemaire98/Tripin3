@@ -32,6 +32,8 @@ class VoyageAdapter(val voyages:List<Voyage>) : RecyclerView.Adapter<VoyageAdapt
         holder.voyageView.voyage_date_textview.text = "Du ${voyage.date}"
         holder.voyageView.voyage_dateRetour_textview.text = "Au ${voyage.dateRetour}"
         holder.voyageView.voyage_nb_voyageur_textview.text = "Nombre de voyageurs : ${voyage.nb_voyageur}"
+        holder.voyageView.voyage_budget_textview.text = "Budget : ${voyage.budget} €"
+        holder.voyageView.voyage_destination_textview.text = "${voyage.destination}"
 
         if (voyage.photo != null) {
             val url = voyage.photo
