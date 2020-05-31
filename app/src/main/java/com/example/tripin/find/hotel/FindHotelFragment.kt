@@ -1,7 +1,10 @@
 package com.example.tripin.find.hotel
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Activity.RESULT_CANCELED
 import android.content.Context
+import android.content.Intent
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
@@ -11,11 +14,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.core.provider.FontsContractCompat.FontRequestCallback.RESULT_OK
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.amadeus.Amadeus
-import com.amadeus.Params
 import com.aminography.primecalendar.civil.CivilCalendar
 import com.aminography.primedatepicker.picker.PrimeDatePicker
 import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
@@ -24,16 +27,15 @@ import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.CityDao
 import com.example.tripin.data.HotelDao
+import com.example.tripin.data.retrofitHotel
 import com.example.tripin.model.Hotel
-import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import io.apptik.widget.MultiSlider
 import kotlinx.android.synthetic.main.activity_find_hotel.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.android.synthetic.main.activity_gestion_rooms.*
 import kotlinx.coroutines.runBlocking
-import org.jetbrains.anko.support.v4.runOnUiThread
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * A simple [Fragment] subclass.
@@ -43,7 +45,7 @@ class FindHotelFragment : Fragment() {
     private var hotelDaoSearch: HotelDao? = null
     private var hotelDaoSaved: HotelDao? = null
     private var citydao: CityDao? = null
-    private lateinit var cityCode: String
+    private var cityCode: Int= 0
     val listCitiesFormatted = mutableListOf<List<String>>()
     val listEquipementFormatted = mutableListOf<List<String>>()
     private var cal: Calendar = Calendar.getInstance()
@@ -51,11 +53,16 @@ class FindHotelFragment : Fragment() {
     private lateinit var dateArrivee: String
     private lateinit var dateDepart: String
     var priceMinFixed: Int = 0
-    var priceMaxFixed: Int = 1000
+    var priceMaxFixed: Int = 5000
     var priceMinChosen: Int = priceMinFixed
     var priceMaxChosen: Int = priceMaxFixed
     var list_favoris  = arrayListOf<Boolean>()
     var list_cities_name = arrayListOf<String>()
+    private val service = retrofitHotel().create(HotelAPI::class.java)
+    private val hotelKey = "d82ce245cbmsh006f040e3753b19p1d57ddjsna1fe19bfba68"
+    private var sortBy : String = ""
+    var adultsList : ArrayList<String> ?= arrayListOf()
+
 
 
     override fun onCreateView(
@@ -78,6 +85,12 @@ class FindHotelFragment : Fragment() {
         val loadingPanel = view.findViewById<RelativeLayout>(R.id.loadingPanel)
         val decreaseButton = view.findViewById<ImageButton>(R.id.decrease_rooms)
         val increaseButton = view.findViewById<ImageButton>(R.id.increase_rooms)
+        val hotelsLayout = view.findViewById<RelativeLayout>(R.id.hotelsFind_layout)
+        val bt_best_seller = view.findViewById<Button>(R.id.best_seller)
+        val bt_highest_first = view.findViewById<Button>(R.id.highest_first)
+        val bt_lowest_first = view.findViewById<Button>(R.id.lowest_first)
+        val bt_price_sort = view.findViewById<Button>(R.id.price)
+        val bt_highest_price = view.findViewById<Button>(R.id.highest_price)
         //Initialisation Recyclerview
         recyclerViewHotels.layoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
@@ -102,12 +115,7 @@ class FindHotelFragment : Fragment() {
         citydao = databasesaved.getCityDao()
         hotelDaoSearch = databasesearch.getHotelDao()
 
-
-
-        //création d'un client Amadeus
-        val amadeus = Amadeus
-            .builder("TGvUHAv2qE6aoqa2Gg44ZZGpvDIEGwYs", "a16JGxtWdWBPtTGB")
-            .build()
+        adultsList?.clear()
 
         runBlocking {
             val list_cities_bdd = citydao?.getCity()
@@ -121,7 +129,7 @@ class FindHotelFragment : Fragment() {
         editText.setAdapter(adapter)
 
         //Gestion nombre de chambres
-        roomNumber.text = rooms_number.toString()
+        roomNumber.text = adultsList?.size.toString()
 
 
         // Gestion Date d'arrivée
@@ -130,6 +138,12 @@ class FindHotelFragment : Fragment() {
             rangeDatePickerPrimeCalendar()
 
         }
+        val listButtons = listOf<Button>(bt_best_seller,bt_highest_first,bt_lowest_first,bt_price_sort,bt_highest_price)
+        listener_bouton(bt_best_seller,listButtons,requireContext())
+        listener_bouton(bt_highest_first,listButtons,requireContext())
+        listener_bouton(bt_lowest_first,listButtons,requireContext())
+        listener_bouton(bt_price_sort,listButtons,requireContext())
+        listener_bouton(bt_highest_price,listButtons,requireContext())
 
 
         // Gestion Date de départ
@@ -138,27 +152,16 @@ class FindHotelFragment : Fragment() {
             rangeDatePickerPrimeCalendar()
         }
 
-        decreaseButton.setOnClickListener {
-            hideKeyboard()
-            if (rooms_number == 1) {
-            } else {
-                rooms_number = rooms_number.minus(1)
-            }
-
-            roomNumber.text = rooms_number.toString()
-        }
-
         increaseButton.setOnClickListener {
-            hideKeyboard()
-            if (rooms_number == 9) {
-            } else {
-                rooms_number = rooms_number.plus(1)
-            }
-            roomNumber.text = rooms_number.toString()
+            val intent= Intent(it.context, RoomsGestion::class.java)
+            startActivityForResult(intent, 1)
         }
 
-        //Gestion Gamme de Prix
-        priceRange.setMin(priceMinFixed, true, true)
+
+
+
+
+        priceRange.setMin(priceMinFixed, true, false)
         priceRange.setMax(priceMaxFixed, true, true)
         priceMin.text = priceMinFixed.toString()
         priceMax.text = priceMaxFixed.toString()
@@ -192,207 +195,120 @@ class FindHotelFragment : Fragment() {
             layoutNoHotelAvailable.visibility = View.GONE
             editText.clearFocus()
             loadingPanel.visibility = View.VISIBLE
+            hotelsLayout.visibility = View.GONE
 
-            //Récupération de la liste des cityCode
+
+            //Recuperation de la ville : RapidAPI
             runBlocking {
+                hotelDaoSearch?.deleteHotels()
                 val searchCity = editText.text.toString()
-                val list_cities_bdd = citydao?.getCity()
-                list_cities_bdd?.map {
-                    if (it.name == searchCity){
-                        cityCode = it.iataCode
+                var result = service.getLocation("fr_FR",searchCity.toLowerCase(),hotelKey)
+
+                result.suggestions.map {
+                    if (it.group == "CITY_GROUP"){
+                        cityCode = it.entities[0].destinationId.toInt()
                     }
                 }
             }
 
+
             runBlocking {
-
-                var equipementsCsv = resources.openRawResource(R.raw.equipements)
-                var listEquipements: List<Map<String, String>> =
-                    csvReader().readAllWithHeader(equipementsCsv)
-
-
-                listEquipements.map { itMap ->
-                    var amenity_code = itMap["amenity_code"].toString()
-                    var amenity_name = itMap["amenity_name"].toString()
-                    var listEquipement: List<String> =
-                        listOf(amenity_code, amenity_name)
-                    listEquipementFormatted.add(listEquipement)
-
-                }
-            }
-
             dateArrivee = arriveeDate.text.toString()
             dateDepart = departDate.text.toString()
 
             runBlocking {
-
-                Log.d("Hotel", "Début de la récupération des données")
                 hotelDaoSearch?.deleteHotels()
                 val hotels_saved_bdd = hotelDaoSaved?.getHotels()
                 list_favoris.clear()
-                rooms_number = room_number.text.toString().toInt()
-
-                //Récupération des données
-                GlobalScope.launch {
-                    Log.d("price",  priceMinChosen.toString() + "-" + priceMaxChosen.toString())
-                    val hotelOffersSearches =
-                        amadeus.shopping.hotelOffers[Params.with("cityCode", cityCode)
-                            .and("roomQuantity", rooms_number)
-                            .and("priceRange", priceMinChosen.toString() + "-" + priceMaxChosen.toString())
-                            .and("checkInDate", dateArrivee)
-                            .and("checkOutDate", dateDepart)
-                            .and("currency", "EUR")
-                            .and("lang", "FR")]
-
-                    Log.d("Hotel", "Récupération des données terminée")
 
 
-                    runOnUiThread {
-                        hotelOffersSearches.map { itHotelOffer ->
-                            Log.d("Hotel", itHotelOffer.toString())
-                            var idHotel = itHotelOffer.hotel.hotelId
+                sortBy =
+                    liste_cat_active(bt_best_seller, bt_highest_first, bt_lowest_first, bt_price_sort, bt_highest_price)
 
-                            var name = itHotelOffer.hotel.name
-
-                            var description: String
-                            if (itHotelOffer.hotel.description == null) {
-                                description = "Description non disponible"
-                            } else {
-                                description = itHotelOffer.hotel.description.text
-                            }
-
-                            var rate = itHotelOffer.hotel.rating
-
-                            var uri: String
-                            if (itHotelOffer.hotel.media == null) {
-                                uri = "0"
-                            } else {
-                                uri = itHotelOffer.hotel.media[0].uri
-                            }
+                while(adultsList?.size != 4){
+                    adultsList?.add("null")
+                }
 
 
-                            var adresse: MutableList<String> = mutableListOf()
-                            val geocoder = Geocoder(activity)
-                            val adresseList = geocoder.getFromLocation(
-                                itHotelOffer.hotel.latitude,
-                                itHotelOffer.hotel.longitude,
-                                1
-                            )
-                            adresseList.map {
-                                adresse.add(it.featureName)
-                                adresse.add(it.thoroughfare)
-                                adresse.add(it.postalCode)
-                                adresse.add(it.locality)
-                                adresse.add(it.countryName)
-                            }
+                Log.d("Hotel", "Début de la récupération des données")
 
+                var result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,15,
+                    adultsList!!.get(0).toInt(), adultsList!!.get(1).toInt(),null, null,
+                    sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR","d82ce245cbmsh006f040e3753b19p1d57ddjsna1fe19bfba68" )
+                Log.d("Hotel", "Récupération des données terminée")
 
-                            var telephone: String
-                            if (itHotelOffer.hotel.contact == null) {
-                                telephone = "Téléphone non disponible"
-                            } else {
-                                telephone = itHotelOffer.hotel.contact.phone
-                            }
+                Log.d("Hotel", result.toString())
+                result.data.body.searchResults.results.map{
 
+                    var idHotel = it.id.toString()
 
-                            var latitude = itHotelOffer.hotel.latitude
-                            var longitude = itHotelOffer.hotel.longitude
-
-
-                            var price: Double = -1.0
-                            itHotelOffer.offers.map {
-                                if (price < 0) {
-                                    price = it.price.total.toDouble()
-                                } else if (price < it.price.total.toDouble()) {
-                                } else if (price > it.price.total.toDouble()) {
-                                    price = it.price.total.toDouble()
-                                }
-                            }
-
-
-                            //TODO : régler problème des équipements
-                            var equipements = mutableListOf<String>()
-                            if (itHotelOffer.hotel.amenities.isNullOrEmpty()) {
-                            } else {
-                                itHotelOffer.hotel.amenities.forEach { itAmenity ->
-                                    val amenity = itAmenity
-                                    listEquipementFormatted.forEach {
-                                        if (amenity == it[0]) {
-                                            val nom = it[1]
-                                            var test = true
-                                            equipements.forEach {
-                                                if(it == amenity){
-                                                    test = false }
-                                            }
-                                            if(test){
-                                                equipements.add(it[1])
-                                            }
-                                        } else {
-                                        }
-                                    }
-                                }
-                            }
-
-
-                            var listOfferId: MutableList<String> = mutableListOf()
-                            itHotelOffer.offers.map {
-                                var offerId = it.id
-                                listOfferId.add(offerId)
-                            }
-
-
-                            var match_bdd = false
-                            var favori = false
-                            hotels_saved_bdd?.forEach {
-                                if (it.hotelId == idHotel) {
-                                    list_favoris.add(true)
-                                    match_bdd = true
-                                    favori = true
-                                }
-                            }
-                            if (match_bdd == false ){list_favoris.add(false)}
-
-                            //Création de l'hôtel
-                            val hotel = Hotel(
-                                0,
-                                idHotel,
-                                name,
-                                description,
-                                rate,
-                                uri,
-                                adresse,
-                                telephone,
-                                latitude,
-                                longitude,
-                                price,
-                                equipements,
-                                listOfferId,
-                                favori
-                            )
-
-
-
-
-                            runBlocking {
-                                hotelDaoSearch?.addHotel(hotel)
-                            }
-                        }
-
-                        var hotels_search_bdd: List<Hotel>? = null
-
-                        runBlocking {
-                            hotels_search_bdd = hotelDaoSearch?.getHotels()
-                        }
-
-                        if (!hotels_search_bdd.isNullOrEmpty()) {
-                            layoutNoHotelAvailable.visibility = View.GONE
-                            recyclerViewHotels.adapter =
-                                HotelsAdapter(hotels_search_bdd ?: emptyList(), list_favoris)
-                        } else {
-                            layoutNoHotelAvailable.visibility = View.VISIBLE
-                        }
-                        loadingPanel.visibility = View.GONE
+                    var adresse: MutableList<String> = mutableListOf()
+                    val geocoder = Geocoder(activity)
+                    val adresseList = geocoder.getFromLocation(
+                        it.coordinate.lat,
+                        it.coordinate.lon,
+                        1
+                    )
+                    adresseList.map {
+                        adresse.add(it.featureName)
+                        if(it.thoroughfare == null){
+                            adresse.add("null")
+                        }else{
+                        adresse.add(it.thoroughfare)}
+                        adresse.add(it.postalCode)
+                        adresse.add(it.locality)
+                        adresse.add(it.countryName)
                     }
+                    var match_bdd = false
+                    var favori = false
+                    hotels_saved_bdd?.forEach {
+                        if (it.hotelId == idHotel.toInt()) {
+                            list_favoris.add(true)
+                            match_bdd = true
+                            favori = true
+                        }
+                    }
+                    if (match_bdd == false ){list_favoris.add(false)}
+
+                    val hotel = Hotel(
+                        0,
+                        it.id.toInt(),
+                        it.name,
+                        null,
+                        it.starRating.toInt(),
+                        it.thumbnailURL,
+                        adresse,
+                        null,
+                        it.coordinate.lat,
+                        it.coordinate.lon,
+                        it.ratePlan.price.current,
+                        null
+
+                    )
+                    runBlocking {
+                        hotelDaoSearch?.addHotel(hotel)
+                        Log.d("Hotel", hotel.toString())
+                    }
+                }
+
+
+                var hotels_search_bdd: List<Hotel>? = null
+
+                runBlocking {
+                    hotels_search_bdd = hotelDaoSearch?.getHotels()
+                }
+
+                if (!hotels_search_bdd.isNullOrEmpty()) {
+                    layoutNoHotelAvailable.visibility = View.GONE
+                    hotelsLayout.visibility = View.VISIBLE
+                    recyclerViewHotels.adapter =
+                        HotelsAdapter(hotels_search_bdd ?: emptyList(), list_favoris, adultsList!!)
+                } else {
+                    layoutNoHotelAvailable.visibility = View.VISIBLE
+                }
+
+
+                loadingPanel.visibility = View.GONE
                 }
 
             }
@@ -432,12 +348,43 @@ class FindHotelFragment : Fragment() {
                     list_favoris.add(false)
                 }
                 hotels_recyclerview.adapter =
-                    HotelsAdapter(hotels ?: emptyList(), list_favoris)
+                    HotelsAdapter(hotels ?: emptyList(), list_favoris, adultsList!!)
             }
 
 
         }
 
+    }
+
+
+
+     @SuppressLint("RestrictedApi")
+     override fun  onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                var result = data?.getStringExtra("listAdults")
+                Log.d("TestLists", result)
+                initializeAdultsList(result)
+               if(adultsList!!.isEmpty()){
+                    view?.findViewById<TextView>(R.id.room_number)?.text = "0"
+                }else{
+                   view?.findViewById<TextView>(R.id.room_number)?.text = adultsList?.size.toString()
+                }
+                Log.d("TestLists", adultsList.toString())
+
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                Log.d("ERREUR", "erreur")
+            }
+        }
+    }
+
+    private fun initializeAdultsList(result : String?){
+        var substring = result?.substringBefore("]")
+        substring = substring?.substringAfter("[")
+        adultsList?.clear()
+        adultsList = substring?.split(", ") as ArrayList<String>
     }
 
 
@@ -451,6 +398,27 @@ class FindHotelFragment : Fragment() {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    private fun listener_bouton(bt : Button,listButtons : List<Button>, context: Context) : Button{
+        bt.setOnClickListener {
+
+            listButtons.forEach {
+                if (bt == it){
+                    bt.isActivated = true
+                    it.isActivated = true
+                    bt.backgroundTintList =
+                        context.resources!!.getColorStateList(R.color.butn_pressed)
+            }else{
+                    it.isActivated = false
+                    it.backgroundTintList =context.resources!!.getColorStateList(R.color.white)
+                }
+
+
+            }
+        }
+
+        return bt
+
+    }
 
     private fun rangeDatePickerPrimeCalendar() {
         val rangeDaysPickCallback = RangeDaysPickCallback { startDate, endDate ->
@@ -494,5 +462,31 @@ class FindHotelFragment : Fragment() {
             datePickerT.show(childFragmentManager, "PrimeDatePickerBottomSheet")
         }
     }
+
+
+
+        private fun liste_cat_active(bt_best_seller: Button, bt_highest_first: Button, bt_lowest_first: Button, bt_price_sort: Button, bt_highest_price : Button) : String {
+            var string = ""
+            if(bt_best_seller.isActivated){
+                string = "BEST_SELLER"
+
+            }
+            if(bt_highest_first.isActivated){
+                string = "STAR_RATING_HIGHEST_FIRST"
+            }
+            if(bt_lowest_first.isActivated){
+                string = "STAR_RATING_LOWEST_FIRST"
+
+            }
+            if(bt_price_sort.isActivated){
+                string = "PRICE"
+
+            }
+            if(bt_highest_price.isActivated){
+                string = "PRICE_HIGHEST_FIRST"
+            }
+
+            return string
+        }
 
 }

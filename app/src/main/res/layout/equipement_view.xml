@@ -2,31 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
  <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
      android:orientation="horizontal"
-        android:layout_marginTop="3dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
+        android:layout_marginTop="3dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
             android:textSize="16dp"
+            android:text="HEADER"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            android:id="@+id/equiment_textview"/>
+            android:textColor="@color/contrast_blue"
+            android:id="@+id/header_textview"/>
 
      <ImageView
          android:layout_width="25dp"
          android:layout_height="25dp"
          android:layout_gravity="center_vertical"
-         android:layout_marginRight="35dp"
+         android:layout_marginRight="30dp"
+         android:src="@drawable/wifi"
          android:id="@+id/equiment_imageview"/>
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="60dp"
+        android:text="LISTS"
+        android:id="@+id/list_equipements"/>
 
 </LinearLayout>
 

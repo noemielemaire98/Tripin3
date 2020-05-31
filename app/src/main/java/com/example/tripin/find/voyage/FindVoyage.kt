@@ -435,7 +435,7 @@ class FindVoyage : Fragment() {
                     }
                 }
                 withContext(Dispatchers.Main) {
-                    hotelsAdapter = HotelsAdapter(hotels, listFavorisHotels)
+                    hotelsAdapter = HotelsAdapter(hotels, listFavorisHotels, mutableListOf())
                     mergeAdapter.addAdapter(hotelsAdapter!!)
                 }
             }
@@ -492,6 +492,7 @@ class FindVoyage : Fragment() {
     }
 
     // Lancement de la recherche
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun beginSearchExported(dateRetour: String) {
         dateDepart = aller_date.text.toString()
 
@@ -805,7 +806,7 @@ class FindVoyage : Fragment() {
 
                         var matchBdd = false
                         bddHotels?.forEach {
-                            if (it.hotelId == idHotel) {
+                            if (it.hotelId == idHotel.toInt()) {
                                 listFavorisHotels.add(true)
                                 matchBdd = true
                                 favoris = true
@@ -817,7 +818,7 @@ class FindVoyage : Fragment() {
 
                         val hotel = Hotel(
                             0,
-                            idHotel,
+                            idHotel.toInt(),
                             name,
                             description,
                             rate,
@@ -826,10 +827,8 @@ class FindVoyage : Fragment() {
                             telephone,
                             latitude,
                             longitude,
-                            price,
-                            equipements,
-                            listOfferId,
-                            favoris
+                            price.toString(),
+                            equipements
                         )
                         runBlocking {
                             listHotels.add(hotel)
@@ -838,7 +837,7 @@ class FindVoyage : Fragment() {
                     }
 
                     if (!listHotels.isNullOrEmpty()) {
-                        hotelsAdapter = HotelsAdapter(listHotels, listFavorisHotels)
+                        hotelsAdapter = HotelsAdapter(listHotels, listFavorisHotels,mutableListOf())
                         try {
                             mergeAdapter.addAdapter(1, hotelsAdapter!!)
                         } catch (e: Exception) {

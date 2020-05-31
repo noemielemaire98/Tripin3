@@ -64,7 +64,7 @@ class SavedHotel : AppCompatActivity() {
             if(!hotels.isNullOrEmpty()){
                 layoutNoSavedHotel.visibility = View.GONE
                 hotels_saved_recyclerview.adapter =
-                    HotelsAdapter(hotels!!, list_favoris)
+                    HotelsAdapter(hotels!!, list_favoris,mutableListOf())
 
             }else{
                 layoutNoSavedHotel.visibility = View.VISIBLE
@@ -88,7 +88,7 @@ class SavedHotel : AppCompatActivity() {
 
             if(!hotels.isNullOrEmpty()){
             hotels_saved_recyclerview.adapter =
-                HotelsAdapter(hotels!!, list_favoris)
+                HotelsAdapter(hotels!!, list_favoris, mutableListOf())
                 layoutNoSavedHotel.visibility = View.GONE}
             else {
                 layoutRecyclerView_HotelsSaved.visibility = View.GONE
