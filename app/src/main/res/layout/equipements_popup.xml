@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,16 +15,16 @@
         android:layout_marginBottom="30dp">
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/equipement_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/equipement_view" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/equipement_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/equipement_view" />
 
         <Button
             android:id="@+id/bt_ok"
@@ -35,7 +35,7 @@
             android:layout_gravity="right"
             android:textColor="@color/colorAccent"
             android:layout_marginEnd="15dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="15dp"
             android:enabled="true"/>
     </LinearLayout>
 

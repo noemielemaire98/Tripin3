@@ -15,8 +15,8 @@ data class Rooms (
     var amenitiesRoom : List<String>,
     var priceNight : String,
     var price : String,
-    var promo : String,
+    var promo : String?,
     var checkIn: String,
     var checkOut : String,
-    var bookUrl : String?
+    var listOccupants: MutableList<String>?
 ) : Parcelable

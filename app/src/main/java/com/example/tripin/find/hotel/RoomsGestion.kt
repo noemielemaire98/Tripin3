@@ -5,8 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tripin.R
@@ -50,31 +52,40 @@ class RoomsGestion : AppCompatActivity() {
         add_room_button.setOnClickListener {
             hideKeyboard()
 
-            val nbadults = add_room_number_adults.text.toString()
-            adultsList?.add(nbadults)
-            Log.d("Rooms", adultsList.toString())
-            add_room_recyclerview.adapter = AddRoomAdapter(adultsList)
-            adultsNumber = 0
-            add_room_number_adults.text = adultsNumber.toString()
+            if(adultsList?.size == 3){
+                Toast.makeText(this,"Nombre de chambre maximal atteint", Toast.LENGTH_SHORT).show()
 
-
-            add_rooms_ok.setOnClickListener{
-                val intent = Intent(this, FindHotelFragment::class.java)
-
-                Log.d("TestLists","1")
-                intent.putExtra("listAdults", adultsList.toString())
-                Log.d("TestLists",adultsList.toString())
-                setResult(Activity.RESULT_OK, intent)
-                Log.d("TestLists","3")
-                this.finish()
-                Log.d("TestLists","4")
+            }else {
+                val nbadults = add_room_number_adults.text.toString()
+                adultsList?.add(nbadults)
+                add_room_recyclerview.adapter = AddRoomAdapter(adultsList)
 
             }
+            adultsNumber = 0
+            add_room_number_adults.text = adultsNumber.toString()
     }
 
+        add_rooms_ok.setOnClickListener{
+            val intent = Intent(this, FindHotelFragment::class.java)
+            intent.putExtra("listAdults", adultsList.toString())
+            setResult(Activity.RESULT_OK, intent)
+            this.finish()
+
+        }
 
 
 
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun Activity.hideKeyboard() {

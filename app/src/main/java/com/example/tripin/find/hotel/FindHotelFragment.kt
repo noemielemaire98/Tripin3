@@ -83,7 +83,6 @@ class FindHotelFragment : Fragment() {
         val priceMinFxd = view.findViewById<TextView>(R.id.min_fixed_textview)
         val priceMaxFxd = view.findViewById<TextView>(R.id.max_fixed_textview)
         val loadingPanel = view.findViewById<RelativeLayout>(R.id.loadingPanel)
-        val decreaseButton = view.findViewById<ImageButton>(R.id.decrease_rooms)
         val increaseButton = view.findViewById<ImageButton>(R.id.increase_rooms)
         val hotelsLayout = view.findViewById<RelativeLayout>(R.id.hotelsFind_layout)
         val bt_best_seller = view.findViewById<Button>(R.id.best_seller)
@@ -91,10 +90,13 @@ class FindHotelFragment : Fragment() {
         val bt_lowest_first = view.findViewById<Button>(R.id.lowest_first)
         val bt_price_sort = view.findViewById<Button>(R.id.price)
         val bt_highest_price = view.findViewById<Button>(R.id.highest_price)
+
+
         //Initialisation Recyclerview
         recyclerViewHotels.layoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        loadingPanel.visibility = View.GONE
+
+
 
         //Initialisation Database
         val databasesearch =
@@ -115,8 +117,16 @@ class FindHotelFragment : Fragment() {
         citydao = databasesaved.getCityDao()
         hotelDaoSearch = databasesearch.getHotelDao()
 
-        adultsList?.clear()
 
+        //Initialisation du nombre de filtres de recherche
+        val listButtons = listOf<Button>(bt_best_seller,bt_highest_first,bt_lowest_first,bt_price_sort,bt_highest_price)
+        listener_bouton(bt_best_seller,listButtons,requireContext())
+        listener_bouton(bt_highest_first,listButtons,requireContext())
+        listener_bouton(bt_lowest_first,listButtons,requireContext())
+        listener_bouton(bt_price_sort,listButtons,requireContext())
+        listener_bouton(bt_highest_price,listButtons,requireContext())
+
+        //Affichage des villes
         runBlocking {
             val list_cities_bdd = citydao?.getCity()
             list_cities_bdd?.map {
@@ -128,9 +138,13 @@ class FindHotelFragment : Fragment() {
         val adapter : ArrayAdapter<String> = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,list_cities_name)
         editText.setAdapter(adapter)
 
-        //Gestion nombre de chambres
+        //Gestion du nombre de chambres
+        adultsList?.clear()
         roomNumber.text = adultsList?.size.toString()
-
+        increaseButton.setOnClickListener {
+            val intent= Intent(it.context, RoomsGestion::class.java)
+            startActivityForResult(intent, 1)
+        }
 
         // Gestion Date d'arrivée
         arriveeDate.setOnClickListener {
@@ -138,13 +152,6 @@ class FindHotelFragment : Fragment() {
             rangeDatePickerPrimeCalendar()
 
         }
-        val listButtons = listOf<Button>(bt_best_seller,bt_highest_first,bt_lowest_first,bt_price_sort,bt_highest_price)
-        listener_bouton(bt_best_seller,listButtons,requireContext())
-        listener_bouton(bt_highest_first,listButtons,requireContext())
-        listener_bouton(bt_lowest_first,listButtons,requireContext())
-        listener_bouton(bt_price_sort,listButtons,requireContext())
-        listener_bouton(bt_highest_price,listButtons,requireContext())
-
 
         // Gestion Date de départ
         departDate.setOnClickListener {
@@ -152,15 +159,8 @@ class FindHotelFragment : Fragment() {
             rangeDatePickerPrimeCalendar()
         }
 
-        increaseButton.setOnClickListener {
-            val intent= Intent(it.context, RoomsGestion::class.java)
-            startActivityForResult(intent, 1)
-        }
 
-
-
-
-
+        // Gestion du prix
         priceRange.setMin(priceMinFixed, true, false)
         priceRange.setMax(priceMaxFixed, true, true)
         priceMin.text = priceMinFixed.toString()
@@ -189,17 +189,25 @@ class FindHotelFragment : Fragment() {
         })
 
 
+
+
         //Lancer la recherche
         bt_search.setOnClickListener {
-            hideKeyboard()
-            layoutNoHotelAvailable.visibility = View.GONE
-            editText.clearFocus()
             loadingPanel.visibility = View.VISIBLE
-            hotelsLayout.visibility = View.GONE
+            hideKeyboard()
+            editText.clearFocus()
 
+            //Récupération des dates
 
-            //Recuperation de la ville : RapidAPI
-            runBlocking {
+                dateArrivee = arriveeDate.text.toString()
+                dateDepart = departDate.text.toString()
+
+                //Récupération du filtre de recherche
+                sortBy =
+                    liste_cat_active(bt_best_seller, bt_highest_first, bt_lowest_first, bt_price_sort, bt_highest_price)
+
+            //Recuperation du code de la ville de l'API
+           runBlocking {
                 hotelDaoSearch?.deleteHotels()
                 val searchCity = editText.text.toString()
                 var result = service.getLocation("fr_FR",searchCity.toLowerCase(),hotelKey)
@@ -211,107 +219,123 @@ class FindHotelFragment : Fragment() {
                 }
             }
 
-
-            runBlocking {
-            dateArrivee = arriveeDate.text.toString()
-            dateDepart = departDate.text.toString()
-
+            //Lancement de la recherche
             runBlocking {
                 hotelDaoSearch?.deleteHotels()
                 val hotels_saved_bdd = hotelDaoSaved?.getHotels()
                 list_favoris.clear()
 
 
-                sortBy =
-                    liste_cat_active(bt_best_seller, bt_highest_first, bt_lowest_first, bt_price_sort, bt_highest_price)
-
-                while(adultsList?.size != 4){
-                    adultsList?.add("null")
+                Log.d("Hotel", "Début de la récupération des données")
+                var result: ModelRapid.Hotels? = null
+                when (adultsList?.size) {
+                    1 -> {
+                        result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
+                            adultsList!!.get(0).toInt(), null,null, null,
+                            sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR","d82ce245cbmsh006f040e3753b19p1d57ddjsna1fe19bfba68" )
+                    }
+                    2 -> {
+                        result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
+                            adultsList!!.get(0).toInt(),  adultsList!!.get(1).toInt(),null, null,
+                            sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR","d82ce245cbmsh006f040e3753b19p1d57ddjsna1fe19bfba68" )
+                    }
+                    3 -> {
+                        result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
+                            adultsList!!.get(0).toInt(),  adultsList!!.get(1).toInt(),adultsList!!.get(2).toInt(), null,
+                            sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR","d82ce245cbmsh006f040e3753b19p1d57ddjsna1fe19bfba68" )
+                    }
+                    4 -> {
+                        result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
+                            adultsList!!.get(0).toInt(), adultsList!!.get(1).toInt(),adultsList!!.get(2).toInt(), adultsList!!.get(3).toInt(),
+                            sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR","d82ce245cbmsh006f040e3753b19p1d57ddjsna1fe19bfba68" )
+                    }
+                    else -> {
+                        Toast.makeText(requireActivity().baseContext, "Veuillez ajouter des chambres", Toast.LENGTH_SHORT).show()
+                    }
                 }
 
-
-                Log.d("Hotel", "Début de la récupération des données")
-
-                var result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,15,
-                    adultsList!!.get(0).toInt(), adultsList!!.get(1).toInt(),null, null,
-                    sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR","d82ce245cbmsh006f040e3753b19p1d57ddjsna1fe19bfba68" )
                 Log.d("Hotel", "Récupération des données terminée")
 
-                Log.d("Hotel", result.toString())
-                result.data.body.searchResults.results.map{
 
-                    var idHotel = it.id.toString()
 
-                    var adresse: MutableList<String> = mutableListOf()
-                    val geocoder = Geocoder(activity)
-                    val adresseList = geocoder.getFromLocation(
-                        it.coordinate.lat,
-                        it.coordinate.lon,
-                        1
-                    )
-                    adresseList.map {
-                        adresse.add(it.featureName)
-                        if(it.thoroughfare == null){
-                            adresse.add("null")
-                        }else{
-                        adresse.add(it.thoroughfare)}
-                        adresse.add(it.postalCode)
-                        adresse.add(it.locality)
-                        adresse.add(it.countryName)
-                    }
-                    var match_bdd = false
-                    var favori = false
-                    hotels_saved_bdd?.forEach {
-                        if (it.hotelId == idHotel.toInt()) {
-                            list_favoris.add(true)
-                            match_bdd = true
-                            favori = true
+                if(result!=null) {
+                    result.data.body.searchResults.results.map {
+                        var idHotel = it.id.toString()
+                        var adresse: MutableList<String> = mutableListOf()
+                        val geocoder = Geocoder(activity)
+                        val adresseList = geocoder.getFromLocation(
+                            it.coordinate.lat,
+                            it.coordinate.lon,
+                            1
+                        )
+
+                        //Gestion de l'adresse
+                        adresseList.map {
+                            adresse.add(it.featureName)
+                            if (it.thoroughfare == null) {
+                                adresse.add("null")
+                            } else {
+                                adresse.add(it.thoroughfare)
+                            }
+                            adresse.add(it.postalCode)
+                            adresse.add(it.locality)
+                            adresse.add(it.countryName)
                         }
-                    }
-                    if (match_bdd == false ){list_favoris.add(false)}
 
-                    val hotel = Hotel(
-                        0,
-                        it.id.toInt(),
-                        it.name,
-                        null,
-                        it.starRating.toInt(),
-                        it.thumbnailURL,
-                        adresse,
-                        null,
-                        it.coordinate.lat,
-                        it.coordinate.lon,
-                        it.ratePlan.price.current,
-                        null
 
-                    )
-                    runBlocking {
-                        hotelDaoSearch?.addHotel(hotel)
-                        Log.d("Hotel", hotel.toString())
+                        //Récupération des hôtels favoris
+                        var match_bdd = false
+                        var favori = false
+                        hotels_saved_bdd?.forEach {
+                            if (it.hotelId == idHotel.toInt()) {
+                                list_favoris.add(true)
+                                match_bdd = true
+                                favori = true
+                            }
+                        }
+                        if (!match_bdd) {
+                            list_favoris.add(false)
+                        }
+
+
+                        val hotel = Hotel(
+                            0,
+                            it.id.toInt(),
+                            it.name,
+                            null,
+                            it.starRating.toInt(), // TODO : PB with long ? NewYork
+                            it.thumbnailURL, //TODO : pk null
+                            adresse,
+                            null,
+                            it.coordinate.lat,
+                            it.coordinate.lon,
+                            it.ratePlan.price.current,
+                            null
+
+                        )
+
+                            hotelDaoSearch?.addHotel(hotel)
+                            Log.d("Hotel", hotel.toString())
+
                     }
                 }
-
-
-                var hotels_search_bdd: List<Hotel>? = null
-
-                runBlocking {
-                    hotels_search_bdd = hotelDaoSearch?.getHotels()
                 }
 
+           runBlocking {  var hotels_search_bdd: List<Hotel>? = null
+
+                hotels_search_bdd = hotelDaoSearch?.getHotels()
                 if (!hotels_search_bdd.isNullOrEmpty()) {
-                    layoutNoHotelAvailable.visibility = View.GONE
+                    loadingPanel.visibility = View.GONE
                     hotelsLayout.visibility = View.VISIBLE
                     recyclerViewHotels.adapter =
                         HotelsAdapter(hotels_search_bdd ?: emptyList(), list_favoris, adultsList!!)
                 } else {
                     layoutNoHotelAvailable.visibility = View.VISIBLE
-                }
+                }}
 
 
-                loadingPanel.visibility = View.GONE
-                }
 
-            }
+
         }
 
         return view
@@ -371,8 +395,6 @@ class FindHotelFragment : Fragment() {
                 }else{
                    view?.findViewById<TextView>(R.id.room_number)?.text = adultsList?.size.toString()
                 }
-                Log.d("TestLists", adultsList.toString())
-
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 Log.d("ERREUR", "erreur")
@@ -384,7 +406,10 @@ class FindHotelFragment : Fragment() {
         var substring = result?.substringBefore("]")
         substring = substring?.substringAfter("[")
         adultsList?.clear()
-        adultsList = substring?.split(", ") as ArrayList<String>
+        if(substring?.length == 1){
+            adultsList?.add(substring)
+        }else{
+        adultsList = substring?.split(", ") as ArrayList<String>}
     }
 
 

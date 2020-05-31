@@ -44,10 +44,76 @@
                         android:id="@+id/detail_room_nom_textview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="40dp"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
-                        android:text="Nom de l'hôtel"
+                        android:text="Nom de la chambre"
                         android:textSize="25dp" />
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="20dp"
+                        android:visibility="gone"
+                        android:id="@+id/promo_layout">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp"
+                            android:text="Promotion"
+                            android:textColor="@color/contrast_blue"
+                            android:textSize="16dp"
+                            android:layout_marginBottom="5dp" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp"
+                            android:id="@+id/promo_room" />
+
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_marginBottom="25dp"
+                        android:layout_marginTop="25dp"
+                        android:layout_height="0.1dp"
+                        android:background="@android:color/darker_gray"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="20dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp"
+                            android:text="Détails"
+                            android:textColor="@color/contrast_blue"
+                            android:textSize="16dp"
+                            android:layout_marginBottom="5dp" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp"
+                            android:id="@+id/details_occupancy_room" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_marginBottom="25dp"
+                        android:layout_marginTop="25dp"
+                        android:layout_height="0.1dp"
+                        android:background="@android:color/darker_gray"/>
+
 
                     <LinearLayout
                     android:layout_width="match_parent"
@@ -55,20 +121,33 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="10dp"
                     android:orientation="vertical">
 
 
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Description"
+                            android:textColor="@color/contrast_blue"
+                            android:textSize="16dp"
+                            android:layout_marginBottom="5dp" />
                     <TextView
                         android:id="@+id/detail_room_description_textview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
                         android:ellipsize="end"
                         android:justificationMode="inter_word"
                         android:text="Description" />
 
                 </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_marginBottom="25dp"
+                        android:layout_marginTop="25dp"
+                        android:layout_height="0.1dp"
+                        android:background="@android:color/darker_gray"/>
 
 
                     <androidx.cardview.widget.CardView

@@ -58,9 +58,10 @@ class DetailsHotel : AppCompatActivity() {
     var image = ""
     private val service = retrofitHotel().create(HotelAPI::class.java)
     private val hotelKey = "d82ce245cbmsh006f040e3753b19p1d57ddjsna1fe19bfba68"
-private var listEquipements : MutableList<Equipement> = mutableListOf()
+    private var listEquipements : MutableList<Equipement> = mutableListOf()
     private var listProche : String = ""
-private var listRooms : MutableList<Rooms> = mutableListOf()
+    private var listRooms : MutableList<Rooms> = mutableListOf()
+    private var listAdults : MutableList<String> = mutableListOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,9 +76,12 @@ private var listRooms : MutableList<Rooms> = mutableListOf()
 
         hotel = intent.getParcelableExtra("hotel")
         favoris = intent.getBooleanExtra("favoris", false)
-        var listAdults = intent.getStringExtra("listAdults")
-
+        var Adults = intent.getStringExtra("listAdults")
+        if(Adults!="[]"){
+            initializeAdultsList(Adults)
+        }
         listEquipements.clear()
+
 
         val databasesaved =
             Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
@@ -109,7 +113,6 @@ Log.d("Test", result.toString())
 
             result.data.body.overview.overviewSections.forEach {
                 if (it.type == "HOTEL_FEATURE"){
-                    Log.d("HotelF", "true"+it.content.toString())
                     var description = it.content.toString().substringAfter("[")
                     description = description.substringBefore("]")
                     content_hotel_textview.text = "${description}."
@@ -121,7 +124,8 @@ Log.d("Test", result.toString())
                     }
                 }
             }
-proche_hotel_textview.text = listProche
+
+            proche_hotel_textview.text = listProche
 
 
 
@@ -152,6 +156,7 @@ proche_hotel_textview.text = listProche
                 it.images.forEach {
                     imageIndiceRoom.add(it.caption)
                     imagesRoom.add(it.fullSizeURL)
+                    Log.d("IMAGES", "erreur ? : ${imagesRoom.add(it.fullSizeURL)} ")
                 }
 
                 var descriptionRoom = it.additionalInfo.description
@@ -159,7 +164,7 @@ proche_hotel_textview.text = listProche
                 amenitiesRoom = it.additionalInfo.details.amenities as MutableList<String>
                 var priceNight  = it.ratePlans[0].price.nightlyPriceBreakdown.additionalColumns[0].value
                 var price = it.ratePlans[0].price.current
-                var promo  = it.ratePlans[0].welcomeRewards.info
+                var promo : String? = it.ratePlans[0].welcomeRewards.info
 
                 val room = Rooms(
                     hotel!!.hotelId,
@@ -174,7 +179,8 @@ proche_hotel_textview.text = listProche
                     promo,
                     "2020-08-01",
                     "2020-08-03",
-                    null)
+                    listAdults
+                    )
 
                 listRooms.add(room)
 
@@ -198,6 +204,16 @@ proche_hotel_textview.text = listProche
             button_description.visibility  = View.GONE
         }
 
+
+        button_proche.setOnClickListener {
+            AlertDialog.Builder(this).apply {
+                setTitle("Lire plus")
+                setMessage("${listProche}")
+                setPositiveButton(android.R.string.ok) { _, _ ->
+                }
+                show()
+            }
+        }
 
         button_description.setOnClickListener {
             val createdialog = androidx.appcompat.app.AlertDialog.Builder(this)
@@ -298,17 +314,6 @@ proche_hotel_textview.text = listProche
             }
         }
 
-
-
-        button_description.setOnClickListener {
-            AlertDialog.Builder(this).apply {
-                setTitle("Lire plus")
-                setMessage("${hotel?.hotelDescription}")
-                setPositiveButton(android.R.string.ok) { _, _ ->
-                }
-                show()
-            }
-        }
 
 
         //Ajout voyage
@@ -532,6 +537,17 @@ proche_hotel_textview.text = listProche
         datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
 
 
+    }
+
+    private fun initializeAdultsList(result : String?){
+        var substring = result?.substringBefore("]")
+        substring = substring?.substringAfter("[")
+        listAdults?.clear()
+        if(substring?.length == 1){
+            listAdults.add(substring)
+        }else {
+            listAdults = substring?.split(", ") as ArrayList<String>
+        }
     }
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {

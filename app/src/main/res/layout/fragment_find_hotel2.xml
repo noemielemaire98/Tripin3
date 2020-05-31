@@ -338,7 +338,7 @@ tools:context=".find.hotel.FindHotelFragment">
             android:layout_width="match_parent"
             android:layout_height="377dp"
             android:gravity="center"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ProgressBar
                 android:layout_width="wrap_content"
@@ -349,7 +349,8 @@ tools:context=".find.hotel.FindHotelFragment">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/hotelsFind_layout">
+            android:id="@+id/hotelsFind_layout"
+            android:visibility="gone">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/hotels_recyclerview"

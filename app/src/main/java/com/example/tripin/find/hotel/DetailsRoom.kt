@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
@@ -21,6 +22,7 @@ import java.util.concurrent.TimeUnit
 class DetailsRoom : AppCompatActivity() {
 
     private lateinit var room: Rooms
+    private var url : String? = ""
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +47,15 @@ class DetailsRoom : AppCompatActivity() {
         detail_room_description_textview.text = description
 
 
+        if(room.promo!= null){
+            promo_layout.visibility = View.VISIBLE
+            promo_room.text = room.promo
+        }
+
+        details_occupancy_room.text = room.occupancyRoom
+
+
+
         price_room.text ="Total : ${room.price}"
 
         val checkIn =  SimpleDateFormat("yyyy-MM-dd").parse(room.checkIn)
@@ -54,23 +65,45 @@ class DetailsRoom : AppCompatActivity() {
         price_night.text = "${room.priceNight} pour ${nbNuits} nuit(s)"
 
 
-        val url =  "https://fr.hotels.com/dl/hotel/details.html?hotelId=${room.idHotel}&q-check-in=${room.checkIn}&q-check-out=${room.checkOut}&q-rooms=1&q-room-0-adults=1&q-room-0-children=0"
-
-        booking_button.setOnClickListener {
-            val uri: Uri = Uri.parse(url)
-            val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
-            if (intent.resolveActivity(packageManager) != null) {
-                startActivity(intent)
+        when (room.listOccupants?.size) {
+            1 -> {
+                    url ="https://fr.hotels.com/dl/hotel/details.html?hotelId=${room.idHotel}&q-check-in=${room.checkIn}&q-check-out=${room.checkOut}&q-rooms=1&q-room-0-adults=${room.listOccupants?.get(0)}&q-room-0-children=0"
             }
-
+            2 ->{
+                url ="https://fr.hotels.com/dl/hotel/details.html?hotelId=${room.idHotel}&q-check-in=${room.checkIn}&q-check-out=${room.checkOut}&q-rooms=2&q-room-0-adults=${room.listOccupants?.get(0)}&q-room-0-children=0&q-room-1-adults=${room.listOccupants?.get(1)}&q-room-1-children=0"
+        }
+            3 -> {
+                url ="https://fr.hotels.com/dl/hotel/details.html?hotelId=${room.idHotel}&q-check-in=${room.checkIn}&q-check-out=${room.checkOut}&q-rooms=3&q-room-0-adults=${room.listOccupants?.get(0)}&q-room-0-children=0&q-room-1-adults=${room.listOccupants?.get(1)}&q-room-1-children=0&q-room-2-adults=${room.listOccupants?.get(1)}&q-room-2-children=0"
+            }
+            4 -> {
+                url ="https://fr.hotels.com/dl/hotel/details.html?hotelId=${room.idHotel}&q-check-in=${room.checkIn}&q-check-out=${room.checkOut}&q-rooms=4&q-room-0-adults=${room.listOccupants?.get(0)}&q-room-0-children=0&q-room-1-adults=${room.listOccupants?.get(1)}&q-room-1-children=0&q-room-2-adults=${room.listOccupants?.get(1)}&q-room-2-children=0&q-room-3-adults=${room.listOccupants?.get(3)}&q-room-3-children=0"
+            }
+            else -> {
+                Toast.makeText(this, "Pas d'occupant", Toast.LENGTH_SHORT).show()
+            }
         }
 
 
 
-        Log.d("URL", url)
+
+
+        booking_button.setOnClickListener {
+          if(url!=""){
+              val uri: Uri = Uri.parse(url)
+              val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
+              if (intent.resolveActivity(packageManager) != null) {
+                  startActivity(intent)
+              }
+        } else{
+              Toast.makeText(this, "Pas d'occupant", Toast.LENGTH_SHORT).show()
+          }
+
+        }
+
+
     }
 
-
+    //TODO : description moche
     private fun descriptionFixed(description : String) : String
     {
 
