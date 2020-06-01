@@ -32,7 +32,6 @@ class OffersAdapter (val offers : List<Rooms>): RecyclerView.Adapter<OffersAdapt
 
     override fun onBindViewHolder(holder: OfferViewHolder, position: Int) {
         val offer = offers?.get(position)
-        Log.d("offerAdapter", offer.toString())
         holder.offerView.price_room_recyclerview.text = "${offer?.price}"
         holder.offerView.name_room_recyclerview.text = offer.nameRoom
 

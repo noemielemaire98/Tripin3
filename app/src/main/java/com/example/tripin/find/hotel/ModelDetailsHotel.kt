@@ -216,8 +216,8 @@ object ModelDetailsHotel {
 
     data class Image (
         val caption: String,
-        val thumbnailURL: String,
-        val fullSizeURL: String
+        val thumbnailUrl: String,
+        val fullSizeUrl: String
     )
 
 

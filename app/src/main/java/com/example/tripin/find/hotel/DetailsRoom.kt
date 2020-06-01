@@ -1,7 +1,6 @@
 package com.example.tripin.find.hotel
 
 import android.content.Intent
-import android.graphics.Paint
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +10,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.example.tripin.R
 import com.example.tripin.model.Rooms
@@ -35,12 +35,11 @@ class DetailsRoom : AppCompatActivity() {
 
         room = intent.getParcelableExtra("room")
 
-        Log.d("ROOM", room.imagesRoom.toString())
 
-       /* Glide.with(this)
-            .load(room.imagesRoom[0])
+       Glide.with(this)
+            .load(room.imagesRoom)
             .centerCrop()
-            .into(detail_hotel_imageview)*/
+            .into(detail_hotel_imageview)
 
         var description = descriptionFixed(room.descriptionRoom)
         detail_room_nom_textview.text = room.nameRoom

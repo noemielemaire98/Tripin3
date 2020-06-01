@@ -8,8 +8,7 @@ import kotlinx.android.parcel.Parcelize
 data class Rooms (
     var idHotel : Int,
     var nameRoom : String,
-    var imageIndiceRoom : List<String>,
-    var imagesRoom : List<String>,
+    var imagesRoom : String,
     var descriptionRoom : String,
     var occupancyRoom : String,
     var amenitiesRoom : List<String>,

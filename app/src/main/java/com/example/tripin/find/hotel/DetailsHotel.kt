@@ -20,6 +20,7 @@ import com.amadeus.shopping.HotelOffersByHotel
 import com.aminography.primecalendar.civil.CivilCalendar
 import com.aminography.primedatepicker.picker.PrimeDatePicker
 import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
+import com.bumptech.glide.Glide
 import com.example.tripin.R
 import com.example.tripin.data.*
 import com.example.tripin.model.*
@@ -57,7 +58,7 @@ class DetailsHotel : AppCompatActivity() {
     private var budget = ""
     var image = ""
     private val service = retrofitHotel().create(HotelAPI::class.java)
-    private val hotelKey = "d82ce245cbmsh006f040e3753b19p1d57ddjsna1fe19bfba68"
+    private val hotelKey = "e510fb173emsh2748fdaccbfd76dp19ee52jsnc2bda03d8b6d"
     private var listEquipements : MutableList<Equipement> = mutableListOf()
     private var listProche : String = ""
     private var listRooms : MutableList<Rooms> = mutableListOf()
@@ -130,6 +131,7 @@ Log.d("Test", result.toString())
 
 
             result.data.body.amenities.forEach {
+
                 var headingTop = it.heading
                 it.listItems.forEach {
                     var  heading = it.heading
@@ -143,22 +145,11 @@ Log.d("Test", result.toString())
                 }
 
             }
-
-            var imageIndiceRoom : MutableList<String> = mutableListOf()
-            var imagesRoom : MutableList<String> = mutableListOf()
             var amenitiesRoom : MutableList<String> = mutableListOf()
-
-
-            Log.d("Rooms", result.data.body.toString())
             if( result.data.body.roomsAndRates!=null){
             result.data.body.roomsAndRates.rooms?.forEach {
                 var nameRoom = it.name
-                it.images.forEach {
-                    imageIndiceRoom.add(it.caption)
-                    imagesRoom.add(it.fullSizeURL)
-                    Log.d("IMAGES", "erreur ? : ${imagesRoom.add(it.fullSizeURL)} ")
-                }
-
+                var image = it.images[0]?.fullSizeUrl
                 var descriptionRoom = it.additionalInfo.description
                 var occupancyRoom = "${it.maxOccupancy.messageTotal} ${it.maxOccupancy.messageChildren}"
                 amenitiesRoom = it.additionalInfo.details.amenities as MutableList<String>
@@ -169,8 +160,7 @@ Log.d("Test", result.toString())
                 val room = Rooms(
                     hotel!!.hotelId,
                     nameRoom,
-                    imageIndiceRoom,
-                    imagesRoom,
+                    image,
                     descriptionRoom,
                     occupancyRoom,
                     amenitiesRoom,
@@ -237,26 +227,15 @@ Log.d("Test", result.toString())
 
         offers_recyclerview.adapter = OffersAdapter(listRooms)
 
-
-
-        //URL  https://fr.hotels.com/dl/hotel/details.html?hotelId=425916832&q-check-in=2020-02-08&q-check-out=2020-02-11&q-rooms=2&q-room-0-adults=3&q-room-0-children=0&q-room-1-adults=2&q-room-1-children=2
-
-
-
-
-        //TODO Recuperer les images
-
-
-        // Log.d("image uri", hotel?.image_url)
-        //          if ((hotel?.image_url==null) || (hotel?.image_url== " http://uat.multimediarepository.testing.amadeus.com/cmr/retrieve/hotel/EB874AAD4E0C410EB6D3C6841C85522B")){
+     if (hotel?.image_url==null){
         detail_hotel_imageview.setImageResource(R.drawable.hotel)
 
-        /*        }else{
+            }else{
             Glide.with(this@DetailsHotel)
                 .load(hotel?.image_url)
                 .centerCrop()
-                .into(detail_hotel_imageview)}*/
-        detail_hotel_imageview.setImageResource(R.drawable.hotel)
+                .into(detail_hotel_imageview)}
+
 
 
 

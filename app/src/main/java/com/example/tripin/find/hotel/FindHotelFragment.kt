@@ -59,7 +59,7 @@ class FindHotelFragment : Fragment() {
     var list_favoris  = arrayListOf<Boolean>()
     var list_cities_name = arrayListOf<String>()
     private val service = retrofitHotel().create(HotelAPI::class.java)
-    private val hotelKey = "d82ce245cbmsh006f040e3753b19p1d57ddjsna1fe19bfba68"
+    private val hotelKey = "e510fb173emsh2748fdaccbfd76dp19ee52jsnc2bda03d8b6d"
     private var sortBy : String = ""
     var adultsList : ArrayList<String> ?= arrayListOf()
 
@@ -232,22 +232,22 @@ class FindHotelFragment : Fragment() {
                     1 -> {
                         result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
                             adultsList!!.get(0).toInt(), null,null, null,
-                            sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR","d82ce245cbmsh006f040e3753b19p1d57ddjsna1fe19bfba68" )
+                            sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR",hotelKey )
                     }
                     2 -> {
                         result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
                             adultsList!!.get(0).toInt(),  adultsList!!.get(1).toInt(),null, null,
-                            sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR","d82ce245cbmsh006f040e3753b19p1d57ddjsna1fe19bfba68" )
+                            sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR",hotelKey )
                     }
                     3 -> {
                         result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
                             adultsList!!.get(0).toInt(),  adultsList!!.get(1).toInt(),adultsList!!.get(2).toInt(), null,
-                            sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR","d82ce245cbmsh006f040e3753b19p1d57ddjsna1fe19bfba68" )
+                            sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR",hotelKey )
                     }
                     4 -> {
                         result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
                             adultsList!!.get(0).toInt(), adultsList!!.get(1).toInt(),adultsList!!.get(2).toInt(), adultsList!!.get(3).toInt(),
-                            sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR","d82ce245cbmsh006f040e3753b19p1d57ddjsna1fe19bfba68" )
+                            sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR",hotelKey)
                     }
                     else -> {
                         Toast.makeText(requireActivity().baseContext, "Veuillez ajouter des chambres", Toast.LENGTH_SHORT).show()
@@ -259,6 +259,8 @@ class FindHotelFragment : Fragment() {
 
 
                 if(result!=null) {
+                    Log.d("IMAGESPB", "tout : ${result}")
+
                     result.data.body.searchResults.results.map {
                         var idHotel = it.id.toString()
                         var adresse: MutableList<String> = mutableListOf()
@@ -268,6 +270,8 @@ class FindHotelFragment : Fragment() {
                             it.coordinate.lon,
                             1
                         )
+                        Log.d("IMAGES", "test : ${it}")
+
 
                         //Gestion de l'adresse
                         adresseList.map {
@@ -304,7 +308,7 @@ class FindHotelFragment : Fragment() {
                             it.name,
                             null,
                             it.starRating.toInt(), // TODO : PB with long ? NewYork
-                            it.thumbnailURL, //TODO : pk null
+                            it.thumbnailUrl,
                             adresse,
                             null,
                             it.coordinate.lat,

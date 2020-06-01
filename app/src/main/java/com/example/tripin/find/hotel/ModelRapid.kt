@@ -211,7 +211,7 @@ object ModelRapid {
     data class Result (
         val id: Long, //TODO : hotelID
         val name: String, //TODO : hotelName
-        val thumbnailURL: String, //TODO : image_url
+        val thumbnailUrl: String, //TODO : image_url
         val starRating: Long, //TODO : rate
         //val urls: Badging,
         val address: Address, //TODO : adresse
