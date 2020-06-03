@@ -6,10 +6,11 @@ import retrofit2.http.Query
 
 interface HotelAPI {
 
-    @GET ("location/search")
+    @GET("locations/search")
     suspend fun getLocation (
+        @Query("locale") lang : String,
         @Query("query") city : String,
-        @Header("x-rapidapi-host") host : String,
         @Header("x-rapidapi-key") key : String
-    ):ModelRapid.Rapid
+    ):ModelRapid.Traffic
+
 }

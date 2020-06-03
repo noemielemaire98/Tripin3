@@ -23,6 +23,7 @@ interface CityDao {
     @Query("select * from allCities where name = :name")
     suspend fun getCity(name: String) : City
 
-
+    @Query("select * from allCities where category = :category")
+    suspend fun getCityByDestination(category: String) : List<City>
 
 }
