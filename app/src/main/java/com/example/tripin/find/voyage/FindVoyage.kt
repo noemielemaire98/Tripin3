@@ -1,14 +1,15 @@
 package com.example.tripin.find.voyage
 
 import android.animation.ValueAnimator
-import android.app.Activity as AppActivity
+import android.app.AlertDialog
 import android.content.Context
+import android.location.Address
 import android.location.Geocoder
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.Parcelable
 import android.util.DisplayMetrics
-import androidx.fragment.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.MergeAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -35,18 +37,22 @@ import com.example.tripin.find.activity.ActivitybyCity
 import com.example.tripin.find.flight.FlightsAdapter
 import com.example.tripin.find.flight.IgnoreAccentsArrayAdapter
 import com.example.tripin.find.hotel.HotelsAdapter
-import com.example.tripin.model.Flight
 import com.example.tripin.model.Activity
+import com.example.tripin.model.Flight
 import com.example.tripin.model.Hotel
+import com.example.tripin.model.Voyage
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import com.xw.repo.BubbleSeekBar
+import kotlinx.android.synthetic.main.createvoyage_popup.view.*
 import kotlinx.android.synthetic.main.fragment_find_voyage.*
 import kotlinx.android.synthetic.main.fragment_find_voyage.view.*
 import kotlinx.coroutines.*
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToInt
+import android.app.Activity as AppActivity
 
 /**
  * A simple [Fragment] subclass.
@@ -62,17 +68,21 @@ class FindVoyage : Fragment() {
 
     private var listFavoris = arrayListOf<Boolean>()
     private var listFavorisHotels = arrayListOf<Boolean>()
-    private val listHotels: MutableList<Hotel> = mutableListOf()
+    private var listHotels: MutableList<Hotel>? = mutableListOf()
     private val listEquipementFormatted = mutableListOf<List<String>>()
     private var flightsList: MutableList<MutableList<Flight>> = mutableListOf()
+    private var flightsListSimple: MutableList<Flight>? = mutableListOf()
     private var activitiesList: List<Activity>? = emptyList()
 
+    private var voyageDaoSavedSave: VoyageDao? = null
+    private var listVoyagesBdd: MutableList<Voyage>? = null
     private var flightDao: FlightDao? = null
-    private var citydao: CityDao? = null
+    private var cityDao: CityDao? = null
     private var activityDaoSaved: ActivityDao? = null
     private var activityDaoSearch: ActivityDao? = null
     private var hotelDaoSearch: HotelDao? = null
     private var hotelDaoSaved: HotelDao? = null
+    private var voyageDaoSaved: VoyageDao? = null
 
     private lateinit var globalRecyclerView: RecyclerView
     private var flightsAdapter: FlightsAdapter? = null
@@ -86,6 +96,16 @@ class FindVoyage : Fragment() {
     private var activityCreate = true
     private val lang: String = "fr-FR"
     private val monnaie: String = "EUR"
+    private var cityId = ""
+    private var categories = ""
+    private var query = ""
+    private var priceRange = "0,100"
+    private var priceMaxactivites = "100"
+    private var priceMaxhotels = "200"
+    private var image = ""
+    private var destination = ""
+    private var budget = ""
+    private var voyageFavoris = false
 
     private var animatedHide = false
     private var animatedShow = false
@@ -118,40 +138,94 @@ class FindVoyage : Fragment() {
         val allertypeRadiogroup = view.findViewById<RadioGroup>(R.id.allerType_radiogroup)
         val passengersNumberTextView =
             view.findViewById<AutoCompleteTextView>(R.id.passengers_number)
+        val activitiesNumberTextView =
+            view.findViewById<AutoCompleteTextView>(R.id.activities_number)
+        val hotelsNumberTextView = view.findViewById<AutoCompleteTextView>(R.id.hotels_number)
         val scrollToTopArrow =
             view.findViewById<de.hdodenhof.circleimageview.CircleImageView>(R.id.scroll_to_top_arrow)
         val voyageTopLevelScrollView = view.findViewById<ScrollView>(R.id.voyageTopLevel_ScrollView)
         val voyageTopLevelLayout = view.findViewById<RelativeLayout>(R.id.voyageTopLevel_Layout)
         val travelClassEdit = view.findViewById<AutoCompleteTextView>(R.id.travelClassEdit)
+        val btnMuseum = view.findViewById<Button>(R.id.cat_museum)
+        val btnSport = view.findViewById<Button>(R.id.cat_sport)
+        val btnFood = view.findViewById<Button>(R.id.cat_food)
+        val btnFun = view.findViewById<Button>(R.id.cat_fun)
+        val btnNight = view.findViewById<Button>(R.id.cat_night)
+        val btnOther = view.findViewById<Button>(R.id.cat_other)
+        val btPrice = view.findViewById<ImageButton>(R.id.bt_price_filter)
+        val fabAddVoyage = view.findViewById<ImageView>(R.id.fab_addVoyage)
+        val fabFavVoyage = view.findViewById<ImageView>(R.id.fab_favVoyage)
 
 
         // Initialise la BDD
         val databaseVoyage =
-            Room.databaseBuilder(requireContext(), AppDatabase::class.java, "voyageDatabase")
+            Room.databaseBuilder(requireContext(), AppDatabase::class.java, "voyageSearchDatabase")
                 .build()
         val databaseSaved =
             Room.databaseBuilder(requireContext(), AppDatabase::class.java, "savedDatabase")
                 .build()
 
+        val databaseSavedVoyage =
+            Room.databaseBuilder(requireContext(), AppDatabase::class.java, "savedVoyageDatabase")
+                .build()
+
+        voyageDaoSavedSave = databaseSavedVoyage.getVoyageDao()
+
+
+
         flightDao = databaseVoyage.getFlightDao()
-        citydao = databaseSaved.getCityDao()
+        cityDao = databaseSaved.getCityDao()
         activityDaoSearch = databaseVoyage.getActivityDao()
         activityDaoSaved = databaseSaved.getActivityDao()
         hotelDaoSearch = databaseVoyage.getHotelDao()
         hotelDaoSaved = databaseSaved.getHotelDao()
+        voyageDaoSaved = databaseSaved.getVoyageDao()
 
         val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
+        // listener sur les boutons activités = change de couleur
+        listenerBouton(btnMuseum, requireContext())
+        listenerBouton(btnSport, requireContext())
+        listenerBouton(btnFun, requireContext())
+        listenerBouton(btnNight, requireContext())
+        listenerBouton(btnFood, requireContext())
+        listenerBouton(btnOther, requireContext())
+
+        // listener sur le prix
+        btPrice.setOnClickListener {
+
+            val dialog = AlertDialog.Builder(activity)
+            val dialogView = layoutInflater.inflate(
+                R.layout.layout_dialog_price_voyage,
+                view.findViewById(android.R.id.content)
+            )
+
+            val seekbarActivites = dialogView.findViewById<BubbleSeekBar>(R.id.seekbarActivités)
+            val seekbarHotels = dialogView.findViewById<BubbleSeekBar>(R.id.seekbarHotels)
+            seekbarActivites.setProgress(priceMaxactivites.toFloat())
+            seekbarHotels.setProgress(priceMaxhotels.toFloat())
+            dialog.setView(dialogView)
+            dialog.setCancelable(false)
+            dialog.setPositiveButton(android.R.string.ok) { _, _ ->
+                priceRange = "0,${seekbarActivites.progress}"
+                priceMaxactivites = seekbarActivites.progress.toString()
+                priceMaxhotels = seekbarHotels.progress.toString()
+            }
+            dialog.show()
+        }
+
+        scrollToTopArrow.setOnClickListener { voyageTopLevelScrollView.smoothScrollTo(0, 0) }
+
+        // Hide the arrow at the beginning when the screen starts
+        scrollToTopArrow.visibility = View.GONE
+
         scope.launch {
 
-            scrollToTopArrow.setOnClickListener { voyageTopLevelScrollView.smoothScrollTo(0, 0) }
+            listVoyagesBdd = voyageDaoSavedSave?.getVoyage()?.toMutableList()
 
             // Positions for the arrow when is hidden and visible
             val whenVisibleMargin = convertDpToPixel(15f, requireContext())
             val whenHideMargin = convertDpToPixel(-85f, requireContext())
-
-            // Hide the arrow at the beginning when the screen starts
-            scrollToTopArrow.visibility = View.GONE
 
             voyageTopLevelScrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
                 if (scrollY >= 600) {
@@ -188,7 +262,7 @@ class FindVoyage : Fragment() {
 
             }
 
-            val listCities = citydao?.getCity()
+            val listCities = cityDao?.getCity()
 
             val listAirportsFormatted = mutableListOf<String>()
 
@@ -235,6 +309,8 @@ class FindVoyage : Fragment() {
                 autoTextViewRetour.setAdapter(adapterLieuArrival)
                 passengersNumberTextView.setAdapter(adapterPassengers)
                 travelClassEdit.setAdapter(adapterTravelClass)
+                activitiesNumberTextView.setAdapter(adapterPassengers)
+                hotelsNumberTextView.setAdapter(adapterPassengers)
 
                 // Affiche le calendrier pour choisir la date d'aller
                 allerDate.setOnClickListener {
@@ -305,6 +381,16 @@ class FindVoyage : Fragment() {
                     travelClassEdit.showDropDown()
                 }
 
+                activitiesNumberTextView.setOnClickListener {
+                    hideKeyboard()
+                    voyageTopLevelLayout.requestFocus()
+                }
+
+                hotelsNumberTextView.setOnClickListener {
+                    hideKeyboard()
+                    voyageTopLevelLayout.requestFocus()
+                }
+
                 hideInput.setOnClickListener {
                     if (layout_search.visibility == View.VISIBLE) {
                         layout_search.visibility = View.GONE
@@ -316,7 +402,7 @@ class FindVoyage : Fragment() {
                 // Bouton pour lancer la recherche
                 btnSearch.setOnClickListener {
                     hideKeyboard()
-                    voyageTopLevel_ScrollView.requestFocus()
+                    voyageTopLevelLayout.requestFocus()
 
                     if (autoTextViewDepart.text.toString() == "" || autoTextViewRetour.text.toString() == "") { // Si les lieux ne sont pas bien spécifiés
                         Toast.makeText(
@@ -372,12 +458,404 @@ class FindVoyage : Fragment() {
                         return_dateLayout.visibility = View.VISIBLE
                     }
                 }
+
+                //AU CLIC SUR LE BOUTON AJOUT A UN VOYAGE
+                fabAddVoyage.setOnClickListener {
+                    val listCheckeditems = ArrayList<Boolean>()
+                    val listVoyage: ArrayList<String> = arrayListOf()
+                    runBlocking {
+                        val voyage = voyageDaoSaved?.getVoyage()
+                        flightsListSimple = flightDao?.getFlights()?.toMutableList()
+                        activitiesList = activityDaoSearch?.getActivity()
+                        listHotels = hotelDaoSearch?.getHotels()?.toMutableList()
+                        voyage?.map {
+
+                            listVoyage.add(it.titre)
+                            var equalsNumber = 0
+                            it.list_flights?.map {
+                                flightsListSimple?.map { itF ->
+                                    if (it.uuid == itF.uuid && it.lieuDepart == itF.lieuDepart) {
+                                        equalsNumber += 1
+                                    }
+                                }
+                            }
+
+                            it.list_hotels?.map {
+                                listHotels?.map { itH ->
+                                    if (it.hotelId == itH.hotelId) {
+                                        equalsNumber += 1
+                                    }
+                                }
+                            }
+                            it.list_activity?.map {
+                                activitiesList?.map { itA ->
+                                    if (it.title == itA.title) {
+                                        equalsNumber += 1
+                                    }
+                                }
+                            }
+                            val sizeTotal =
+                                flightsListSimple?.size!! + listHotels?.size!! + activitiesList?.size!!
+
+                            if (sizeTotal == equalsNumber) {
+                                listCheckeditems.add(true)
+                            } else {
+                                listCheckeditems.add(false)
+                            }
+                        }
+                    }
+                    val plusdialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    plusdialog.setTitle("Dossier de voyage")
+                    val listChoix = arrayListOf<String>()
+
+                    if (listVoyage.isNullOrEmpty()) {
+                        plusdialog.setMessage("Vous n'avez constitué aucun dossier de voyage, cliquez sur créer")
+                    } else {
+                        hasVoyage(
+                            listVoyage,
+                            listCheckeditems,
+                            plusdialog,
+                            listChoix,
+                            flightsListSimple!!,
+                            activitiesList!!.toMutableList(),
+                            listHotels!!
+                        )
+                    }
+
+                    plusdialog.setPositiveButton(android.R.string.ok) { _, _ ->
+                        plusdialog.show().dismiss()
+                    }
+
+
+                    plusdialog.setNeutralButton("Créer") { _, _ ->
+
+
+                        val createDialog = AlertDialog.Builder(context)
+
+                        val viewPop = LayoutInflater.from(context).inflate(
+                            R.layout.createvoyage_popup_findvoyage,
+                            view.findViewById(android.R.id.content),
+                            false
+                        )
+
+                        val okButton = viewPop.findViewById<Button>(R.id.bt_ok)
+                        val returnButton = viewPop.findViewById<Button>(R.id.bt_retour)
+                        val editTitre = viewPop.findViewById<EditText>(R.id.et_titre)
+                        createDialog.setView(viewPop)
+                        createDialog.setTitle("Créer")
+                        val alert = createDialog.show()
+
+                        okButton.setOnClickListener {
+                            var exist = false
+                            listVoyage.map { itL ->
+                                if (editTitre.text.toString() == itL) {
+                                    exist = true
+                                }
+                            }
+                            when {
+                                exist -> {
+                                    Toast.makeText(
+                                        context,
+                                        "Ce nom de voyage existe déjà, veuillez en chosir un autre",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    editTitre.setText("")
+                                }
+                                editTitre.text.isNotEmpty() -> {
+
+                                    var date = ""
+                                    val poto =
+                                        (flightsListSimple?.get(0)?.prixTotal!! / flightsListSimple?.get(
+                                            0
+                                        )?.prixParPassager!!).roundToInt()
+                                    run loop@{
+                                        flightsListSimple?.map {
+                                            if (it.retour == 1) {
+                                                date = it.dateDepart
+                                                return@loop
+                                            } else {
+                                                date = ""
+                                            }
+                                        }
+                                    }
+                                    val voyage = Voyage(
+                                        0,
+                                        viewPop.et_titre.text.toString(),
+                                        flightsListSimple?.get(0)?.dateDepart,
+                                        date,
+                                        image,
+                                        poto,
+                                        emptyList(),
+                                        emptyList(),
+                                        emptyList(),
+                                        destination,
+                                        budget
+                                    )
+                                    runBlocking {
+                                        voyageDaoSaved?.addVoyage(voyage)
+                                    }
+                                    listVoyage.add(editTitre.text.toString())
+                                    plusdialog.show().dismiss()
+                                    fabAddVoyage.performClick()
+                                    alert.dismiss()
+                                }
+                                else -> {
+                                    Toast.makeText(
+                                        context,
+                                        "Veuillez saisir tous les champs",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        }
+                        returnButton.setOnClickListener {
+                            alert.dismiss()
+                            plusdialog.show().dismiss()
+                            fabAddVoyage.performClick()
+                        }
+                    }
+                    plusdialog.show()
+                }
+
+
+                val listVoyageSaved: ArrayList<String> = arrayListOf()
+
+                flightsListSimple = flightDao?.getFlights()?.toMutableList()
+                activitiesList = activityDaoSearch?.getActivity()
+                listHotels = hotelDaoSearch?.getHotels()?.toMutableList()
+                listVoyagesBdd?.map {
+
+                    listVoyageSaved.add(it.titre)
+                    var equalsNumber = 0
+                    it.list_flights?.map {
+                        flightsListSimple?.map { itF ->
+                            if (it.uuid == itF.uuid && it.lieuDepart == itF.lieuDepart) {
+                                equalsNumber += 1
+                            }
+                        }
+                    }
+
+                    it.list_hotels?.map {
+                        listHotels?.map { itH ->
+                            if (it.hotelId == itH.hotelId) {
+                                equalsNumber += 1
+                            }
+                        }
+                    }
+                    it.list_activity?.map {
+                        activitiesList?.map { itA ->
+                            if (it.title == itA.title) {
+                                equalsNumber += 1
+                            }
+                        }
+                    }
+                    val sizeTotal =
+                        flightsListSimple?.size!! + listHotels?.size!! + activitiesList?.size!!
+
+                    voyageFavoris = if (sizeTotal == equalsNumber) {
+                        fab_favVoyage.setImageResource(R.drawable.ic_favorite_black_24dp)
+                        true
+                    } else {
+                        fab_favVoyage.setImageResource(R.drawable.ic_favorite_border_black_24dp)
+                        false
+                    }
+                }
+
+                fabFavVoyage.setOnClickListener {
+
+                    if (!voyageFavoris) {
+
+                        val createDialog = AlertDialog.Builder(context)
+
+                        val viewPop = LayoutInflater.from(context).inflate(
+                            R.layout.createvoyage_popup_findvoyage,
+                            view.findViewById(android.R.id.content),
+                            false
+                        )
+
+                        val okButton = viewPop.findViewById<Button>(R.id.bt_ok)
+                        val returnButton = viewPop.findViewById<Button>(R.id.bt_retour)
+                        val editTitre = viewPop.findViewById<EditText>(R.id.et_titre)
+                        createDialog.setView(viewPop)
+                        createDialog.setTitle("Créer")
+                        val alert = createDialog.show()
+
+                        okButton.setOnClickListener {
+                            var exist = false
+                            listVoyageSaved.map { itL ->
+                                if (editTitre.text.toString() == itL) {
+                                    exist = true
+                                }
+                            }
+                            when {
+                                exist -> {
+                                    Toast.makeText(
+                                        context,
+                                        "Ce nom de voyage existe déjà, veuillez en chosir un autre",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    editTitre.setText("")
+                                }
+                                editTitre.text.isNotEmpty() -> {
+                                    var date = ""
+                                    val poto =
+                                        (flightsListSimple?.get(0)?.prixTotal!! / flightsListSimple?.get(
+                                            0
+                                        )?.prixParPassager!!).roundToInt()
+                                    run loop@{
+                                        flightsListSimple?.map {
+                                            if (it.retour == 1) {
+                                                date = it.dateDepart
+                                                return@loop
+                                            } else {
+                                                date = ""
+                                            }
+                                        }
+                                    }
+
+                                    val voyage = Voyage(
+                                        0,
+                                        viewPop.et_titre.text.toString(),
+                                        flightsListSimple?.get(0)?.dateDepart,
+                                        date,
+                                        image,
+                                        poto,
+                                        activitiesList,
+                                        flightsListSimple,
+                                        listHotels,
+                                        destination,
+                                        budget
+                                    )
+
+                                    runBlocking {
+                                        voyageDaoSavedSave?.addVoyage(voyage)
+                                    }
+
+                                    voyageFavoris = true
+                                    fab_favVoyage.setImageResource(R.drawable.ic_favorite_black_24dp)
+                                    Toast.makeText(
+                                        context,
+                                        "Le voyage a bien été ajouté aux favoris",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    listVoyageSaved.add(editTitre.text.toString())
+                                    alert.dismiss()
+                                }
+                                else -> {
+                                    Toast.makeText(
+                                        context,
+                                        "Veuillez saisir tous les champs",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        }
+                        returnButton.setOnClickListener {
+                            alert.dismiss()
+                        }
+
+
+                    } else if (voyageFavoris) {
+
+                        runBlocking {
+                            voyageDaoSavedSave?.deleteFindVoyage("viewPop.et_titre.text.toString()")
+                        }
+
+
+                        voyageFavoris = false
+
+                        fab_favVoyage.setImageResource(R.drawable.ic_favorite_border_black_24dp)
+                        Toast.makeText(
+                            context,
+                            "Le voyage a bien été supprimé des favoris",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    runBlocking {
+                        listVoyagesBdd = voyageDaoSavedSave?.getVoyage()?.toMutableList()
+                    }
+
+                    Log.d("totototo", "onCreateView: $listVoyagesBdd")
+                }
+
             }
 
         }
 
         return view
     }
+
+    private fun hasVoyage(
+        list_voyage: ArrayList<String>,
+        list_checkedItems: ArrayList<Boolean>,
+        plusdialog: androidx.appcompat.app.AlertDialog.Builder,
+        list_choix: ArrayList<String>,
+        flights: MutableList<Flight>,
+        activities: MutableList<Activity>,
+        hotels: MutableList<Hotel>
+    ) {
+        plusdialog.setMultiChoiceItems(
+            list_voyage.toTypedArray(),
+            list_checkedItems.toBooleanArray()
+        ) { _, which: Int, isChecked ->
+            // Update the current focused item's checked status
+            list_checkedItems[which] = isChecked
+            if (isChecked) {
+                list_choix.add(list_voyage[which])
+                runBlocking {
+                    val voyage = voyageDaoSaved?.getVoyageByTitre(list_voyage[which])
+
+
+                    val ancienneListFlights = voyage!!.list_flights?.toMutableList()
+                    val ancienneListActivites = voyage.list_activity?.toMutableList()
+                    val ancienneListHotels = voyage.list_hotels?.toMutableList()
+                    ancienneListFlights?.addAll(flights)
+                    ancienneListActivites?.addAll(activities)
+                    ancienneListHotels?.addAll(hotels)
+                    val nouvelleListeFlights = ancienneListFlights?.toList()
+                    val nouvelleListeActivites = ancienneListActivites?.toList()
+                    val nouvelleListeHotels = ancienneListHotels?.toList()
+                    voyage.list_flights = nouvelleListeFlights
+                    voyage.list_activity = nouvelleListeActivites
+                    voyage.list_hotels = nouvelleListeHotels
+
+
+
+                    voyageDaoSaved?.updateVoyage(voyage)
+                }
+                Toast.makeText(
+                    requireContext(),
+                    "Le voyage a bien été ajouté à ${list_voyage[which]}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                list_choix.remove(list_voyage[which])
+                runBlocking {
+                    val voyage = voyageDaoSaved?.getVoyageByTitre(list_voyage[which])
+                    val ancienneListFlights = voyage!!.list_flights?.toMutableList()
+                    val ancienneListActivites = voyage.list_activity?.toMutableList()
+                    val ancienneListHotels = voyage.list_hotels?.toMutableList()
+                    ancienneListFlights?.removeAll(flights)
+                    ancienneListActivites?.removeAll(activities)
+                    ancienneListHotels?.removeAll(hotels)
+                    val nouvelleListeFlights = ancienneListFlights?.toList()
+                    val nouvelleListeActivites = ancienneListActivites?.toList()
+                    val nouvelleListeHotels = ancienneListHotels?.toList()
+                    voyage.list_flights = nouvelleListeFlights
+                    voyage.list_activity = nouvelleListeActivites
+                    voyage.list_hotels = nouvelleListeHotels
+                    voyageDaoSaved?.updateVoyage(voyage)
+                }
+                Toast.makeText(
+                    requireContext(),
+                    "Le voyage a bien été supprimé de ${list_voyage[which]}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
 
     private fun convertDpToPixel(dp: Float, context: Context): Float {
         return dp * (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
@@ -414,7 +892,7 @@ class FindVoyage : Fragment() {
                     }
                 }
                 withContext(Dispatchers.Main) {
-                    flightsAdapter = FlightsAdapter(flightsList)
+                    flightsAdapter = FlightsAdapter(flightsList, requireView())
                     mergeAdapter.addAdapter(flightsAdapter!!)
                 }
             }
@@ -470,6 +948,7 @@ class FindVoyage : Fragment() {
                 withContext(Dispatchers.Main) {
                     loadingPanel.visibility = View.GONE // cache roue de chargement
                     layoutRecyclerViewVoyage.visibility = View.VISIBLE
+                    cardViewVoyage.visibility = View.VISIBLE
                     globalRecyclerView.adapter = mergeAdapter
 
                     if (mBundleRecyclerViewState != null) {
@@ -494,13 +973,16 @@ class FindVoyage : Fragment() {
     // Lancement de la recherche
     private fun beginSearchExported(dateRetour: String) {
         dateDepart = aller_date.text.toString()
+        val nbActivities = activities_number.text.toString()
+        val nbHotels = hotels_number.text.toString().toInt()
 
         mergeAdapter = MergeAdapter()
         travelClass =
             if (travelClassEdit.text.toString() != "PREMIUM ECO") travelClassEdit.text.toString() else "PREMIUM_ECONOMY"
         val nbAdults = passengers_number.text.toString().toInt()
-        layout_search.visibility = View.GONE // cache le formulaire
+        //     layout_search.visibility = View.GONE // cache le formulaire
         layoutRecyclerViewVoyage.visibility = View.GONE
+        cardViewVoyage.visibility = View.GONE
         loadingPanel.visibility = View.VISIBLE // affiche la roue de chargement
         layoutNoFlightAvailable.visibility = View.GONE // cache l'image aucun vol dispo
 
@@ -518,10 +1000,10 @@ class FindVoyage : Fragment() {
                 travelClass,
                 nbAdults
             )
-            searchActivities(lieuRetourName)
-            //           Handler().postDelayed({
-            searchHotels(lieuRetourIata)
-            //           }, 100)
+            searchActivities(lieuRetourName, nbActivities, dateDepart, dateRetour, priceRange)
+            Handler().postDelayed({
+                searchHotels(lieuRetourIata, nbHotels, dateDepart, dateRetour, "0", priceMaxhotels)
+            }, 100)
         }
         activityCreate = false
         globalRecyclerView.adapter = mergeAdapter
@@ -531,6 +1013,7 @@ class FindVoyage : Fragment() {
         if (flightsDone && hotelsDone && activitiesDone) {
             view.loadingPanel.visibility = View.GONE // cache roue de chargement
             layoutRecyclerViewVoyage.visibility = View.VISIBLE
+            cardViewVoyage.visibility = View.VISIBLE
             if (flightsList.isNullOrEmpty() && listHotels.isNullOrEmpty() && activitiesList.isNullOrEmpty()) {
                 view.layoutNoFlightAvailable.visibility = View.VISIBLE
             }
@@ -548,6 +1031,7 @@ class FindVoyage : Fragment() {
         nbAdults: Int
     ) {
         flightsList.clear()
+        flightsListSimple?.clear()
         val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
         flightDao?.deleteFlights()
 
@@ -626,7 +1110,7 @@ class FindVoyage : Fragment() {
                                 formatterHour.format(parser.parse(arrivalDate)!!)
 
 
-                            run loop@ {
+                            run loop@{
                                 rows.map { itMap ->
                                     itMap.map {
                                         if (it.value == itSegments.carrierCode) {
@@ -663,6 +1147,7 @@ class FindVoyage : Fragment() {
                             )
                             uuidSomme += uuid // Somme des uuid d'un même itinéraire
                             listFlightAdd.add(flight)
+                            flightsListSimple?.add(flight)
 
                             id += 1
                         }
@@ -679,7 +1164,7 @@ class FindVoyage : Fragment() {
                 // Si au moins un vol de trouvé
                 if (!flightsList.isNullOrEmpty()) {
                     layoutNoFlightAvailable.visibility = View.GONE
-                    flightsAdapter = FlightsAdapter(flightsList)
+                    flightsAdapter = FlightsAdapter(flightsList, requireView())
                     mergeAdapter.addAdapter(0, flightsAdapter!!)
                 }
                 flightsDone = true
@@ -689,7 +1174,14 @@ class FindVoyage : Fragment() {
 
     }
 
-    private fun searchHotels(searchCity: String) {
+    private fun searchHotels(
+        searchCity: String,
+        nbHot: Int,
+        dateDepart: String,
+        dateArrivee: String,
+        priceMinChosen: String,
+        priceMaxChosen: String
+    ) {
 
         runBlocking {
 
@@ -710,24 +1202,49 @@ class FindVoyage : Fragment() {
 
         runBlocking {
 
-            listHotels.clear()
+            listHotels?.clear()
             listFavorisHotels.clear()
             hotelDaoSearch?.deleteHotels()
             val bddHotels = hotelDaoSaved?.getHotels()
 
             GlobalScope.launch {
-                var hotelOffersSearches: Array<HotelOffer> = emptyArray()
-                try {
-                    hotelOffersSearches = amadeus.shopping.hotelOffers[Params
-                        .with("cityCode", searchCity)]
+                val hotelOffersSearches: Array<HotelOffer>
+                //     if (dateArrivee != "") {
+                hotelOffersSearches = try {
+                    amadeus.shopping.hotelOffers[Params
+                        .with("cityCode", searchCity)
+                        .and("priceRange", "$priceMinChosen-$priceMaxChosen")
+                        .and("checkInDate", dateDepart)
+                        .and("checkOutDate", dateArrivee)
+                        .and("currency", "EUR")
+                        .and("lang", "FR")]
 
                 } catch (e: Exception) {
                     Log.d("Error", e.toString())
+                    emptyArray()
                 }
+//                } else {
+//                    try {
+//                        hotelOffersSearches = amadeus.shopping.hotelOffers[Params
+//                            .with("cityCode", searchCity)
+//                            .and("priceRange", "$priceMinChosen-$priceMaxChosen")
+//                            .and("checkInDate", dateDepart)
+//                            .and("currency", "EUR")
+//                            .and("lang", "FR")]
+//
+//                    } catch (e: Exception) {
+//                        Log.d("Error", e.toString())
+//                        return@launch
+//                    }
+//                }
                 val hotelNb: MutableList<HotelOffer>? = mutableListOf()
 
                 try {
-                    hotelNb?.add(hotelOffersSearches[0])
+                    val nbH =
+                        if (nbHot > hotelOffersSearches.size) hotelOffersSearches.size else nbHot
+                    for (h in 1..nbH) {
+                        hotelNb?.add(hotelOffersSearches[h - 1])
+                    }
                 } catch (e: Exception) {
                     Log.d("ErrorFilter", e.toString())
                 }
@@ -755,18 +1272,28 @@ class FindVoyage : Fragment() {
 
                         val adresse: MutableList<String> = mutableListOf()
                         val geocoder = Geocoder(activity)
-                        val adresseList = geocoder.getFromLocation(
-                            itHotelOffer.hotel.latitude,
-                            itHotelOffer.hotel.longitude,
-                            1
-                        )
-                        adresseList.map {
-                            adresse.add(it.featureName)
-                            adresse.add(it.thoroughfare)
-                            adresse.add(it.postalCode)
-                            adresse.add(it.locality)
-                            adresse.add(it.countryName)
+                        try {
+                            val adresseList: MutableList<Address> = geocoder.getFromLocation(
+                                itHotelOffer.hotel.latitude,
+                                itHotelOffer.hotel.longitude,
+                                1
+                            )
+                            adresseList.map {
+                                adresse.add(it.featureName)
+                                adresse.add(it.thoroughfare)
+                                adresse.add(it.postalCode)
+                                adresse.add(it.locality)
+                                adresse.add(it.countryName)
+                            }
+                        } catch (e: Exception) {
+                            Log.d("ErrorGeoCoder", e.toString())
+                            adresse.add("featureName")
+                            adresse.add("thoroughfare")
+                            adresse.add("postalCode")
+                            adresse.add("locality")
+                            adresse.add("countryName")
                         }
+
 
                         val telephone: String = if (itHotelOffer.hotel.contact == null) {
                             "Téléphone non disponible"
@@ -832,13 +1359,13 @@ class FindVoyage : Fragment() {
                             favoris
                         )
                         runBlocking {
-                            listHotels.add(hotel)
+                            listHotels?.add(hotel)
                             hotelDaoSearch?.addHotel(hotel)
                         }
                     }
 
                     if (!listHotels.isNullOrEmpty()) {
-                        hotelsAdapter = HotelsAdapter(listHotels, listFavorisHotels)
+                        hotelsAdapter = HotelsAdapter(listHotels!!, listFavorisHotels)
                         try {
                             mergeAdapter.addAdapter(1, hotelsAdapter!!)
                         } catch (e: Exception) {
@@ -854,21 +1381,61 @@ class FindVoyage : Fragment() {
     }
 
 
-    private fun searchActivities(searchCity: String) {
+    private fun searchActivities(
+        searchCity: String,
+        nbAct: String,
+        aller_date: String,
+        retour_date: String,
+        priceRange: String
+    ) {
         // supression des anciens éléments (list_fav + list_activité
         runBlocking {
             activityDaoSearch?.deleteActivity()
             listFavoris.clear()
             activitiesList = emptyList()
+            cityId = ""
+            query = ""
+        }
+
+        val retourDateChanged: String
+        if (retour_date == "") {
+            val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val c = Calendar.getInstance()
+            c.time = df.parse(aller_date)!!
+            c.add(Calendar.DATE, 30)
+            retourDateChanged = df.format(c.time)
+        } else {
+            retourDateChanged = retour_date
         }
 
         val service = retrofit().create(ActivitybyCity::class.java)
         runBlocking {
-            val city = citydao?.getCity(searchCity)
+            // Récupère les données des items du layout
+            val city = cityDao?.getCity(searchCity)
+            if (city != null) {
+                cityId = city.id.toString()
+            } else {
+                query = searchCity
+            }
 
+            categories =
+                listeCatActive(cat_museum, cat_food, cat_night, cat_fun, cat_other, cat_sport)
 
-            val result =
-                service.listActivitybyCityVoyage(city!!.id, "relevance", "", 2, lang, monnaie)
+            //lancement de la requête api
+            val result = service.listAct(
+                query,
+                "AUTO",
+                "AUTO",
+                "relevance-city",
+                cityId,
+                priceRange,
+                categories,
+                nbAct,
+                aller_date,
+                retourDateChanged,
+                lang,
+                monnaie
+            )
 
 
             val listActivitiesBdd = activityDaoSaved?.getActivity()
@@ -912,7 +1479,8 @@ class FindVoyage : Fragment() {
             activitiesList = activityDaoSearch?.getActivity()
 
             if (!activitiesList.isNullOrEmpty()) {
-                activityAdapter = ActivityAdapterGlobal(activitiesList!!.toMutableList(), listFavoris)
+                activityAdapter =
+                    ActivityAdapterGlobal(activitiesList!!.toMutableList(), listFavoris)
                 mergeAdapter.addAdapter(activityAdapter!!)
             }
 
@@ -994,6 +1562,86 @@ class FindVoyage : Fragment() {
         val inputMethodManager =
             getSystemService(AppActivity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun listenerBouton(bt: Button, context: Context): Button {
+        bt.setOnClickListener {
+            if (bt.isActivated) {
+                bt.isActivated = false
+                bt.backgroundTintList =
+                    context.resources!!.getColorStateList(R.color.white)
+            } else {
+                bt.isActivated = true
+                bt.backgroundTintList =
+                    context.resources!!.getColorStateList(R.color.butn_pressed)
+            }
+        }
+
+        return bt
+
+    }
+
+    private fun listeCatActive(
+        bt_musee: Button,
+        bt_food: Button,
+        bt_night: Button,
+        bt_fun: Button,
+        bt_other: Button,
+        bt_sport: Button
+    ): String {
+        var string = ""
+        var premierItem = true
+
+        if (bt_musee.isActivated) {
+            if (premierItem) {
+                string += "arts-culture"
+                premierItem = false
+            } else {
+                string += ",arts-culture"
+            }
+        }
+        if (bt_food.isActivated) {
+            if (premierItem) {
+                string += "food-wine"
+                premierItem = false
+            } else {
+                string += ",food_wine"
+            }
+        }
+        if (bt_night.isActivated) {
+            if (premierItem) {
+                string += "nightlife"
+                premierItem = false
+            } else {
+                string += ",nightlife"
+            }
+        }
+        if (bt_fun.isActivated) {
+            if (premierItem) {
+                string += "entertainment"
+                premierItem = false
+            } else {
+                string += ",entertainement"
+            }
+        }
+        if (bt_other.isActivated) {
+            if (premierItem) {
+                string += "sightseeing"
+                premierItem = true
+            } else {
+                string += ",sightseeing"
+            }
+        }
+        if (bt_sport.isActivated) {
+            string += if (premierItem) {
+                //string += "adventure2Csports"
+                "sports"
+            } else {
+                ",adventure,sports"
+            }
+        }
+
+        return string
     }
 }
 

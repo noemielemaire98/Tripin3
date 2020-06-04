@@ -28,6 +28,7 @@ import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
 import com.aminography.primedatepicker.picker.callback.SingleDayPickCallback
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
+import com.example.tripin.data.CityDao
 import com.example.tripin.data.FlightDao
 import com.example.tripin.model.Flight
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
@@ -50,6 +51,7 @@ class FindFlightFragment : Fragment() {
     private lateinit var lieuRetour: String
     private lateinit var travelClass: String
     private var flightDao: FlightDao? = null
+    private var cityDao: CityDao? = null
     private lateinit var flightsRecyclerView: RecyclerView
 
     private var mBundleRecyclerViewState: Bundle? = null
@@ -136,21 +138,41 @@ class FindFlightFragment : Fragment() {
 
         }
 
+        val databaseSaved =
+            Room.databaseBuilder(requireContext(), AppDatabase::class.java, "savedDatabase")
+                .build()
+
+        cityDao = databaseSaved.getCityDao()
+
 
         scope.launch {
             // Récupère la liste des aéroports dans le csv correspondant
-            val airportCsv = resources.openRawResource(R.raw.iata_airport_list)
-            val listAirports: List<Map<String, String>> =
-                csvReader().readAllWithHeader(airportCsv)
+//            val airportCsv = resources.openRawResource(R.raw.iata_airport_list)
+//            val listAirports: List<Map<String, String>> =
+//                csvReader().readAllWithHeader(airportCsv)
+//
+//            val listAirportsFormatted = mutableListOf<String>()
+//
+//            // Affiche uniquement les infos utiles des aéroports dans une liste
+//            listAirports.map { itMap ->
+//                listAirportsFormatted.add(
+//                    itMap["city_name"].toString()
+//                        .toUpperCase(Locale.ROOT) + " " + itMap["por_name"].toString()
+//                        .toUpperCase(Locale.ROOT) + " (" + itMap["por_code"].toString()
+//                        .toUpperCase(
+//                            Locale.ROOT
+//                        ) + ")"
+//                )
+//            }
+
+            val listCities = cityDao?.getCity()
 
             val listAirportsFormatted = mutableListOf<String>()
 
-            // Affiche uniquement les infos utiles des aéroports dans une liste
-            listAirports.map { itMap ->
+            // Affiche uniquement les infos utiles des villes dans une liste
+            listCities?.map { itMap ->
                 listAirportsFormatted.add(
-                    itMap["city_name"].toString()
-                        .toUpperCase(Locale.ROOT) + " " + itMap["por_name"].toString()
-                        .toUpperCase(Locale.ROOT) + " (" + itMap["por_code"].toString()
+                    itMap.name.toString() + " (" + itMap.iataCode
                         .toUpperCase(
                             Locale.ROOT
                         ) + ")"
@@ -271,7 +293,7 @@ class FindFlightFragment : Fragment() {
                 // Bouton pour lancer la recherche
                 btnSearch.setOnClickListener {
                     hideKeyboard()
-                    findTopLevelScrollView.requestFocus()
+                    findTopLevelLayout.requestFocus()
                     if (autoTextViewDepart.text.toString() == "" || autoTextViewRetour.text.toString() == "") { // Si les lieux ne sont pas bien spécifiés
                         Toast.makeText(
                             requireContext(),
@@ -366,7 +388,7 @@ class FindFlightFragment : Fragment() {
                     }
                 }
                 withContext(Dispatchers.Main) {
-                    flightsRecyclerView.adapter = FlightsAdapter(flightsList)
+                    flightsRecyclerView.adapter = FlightsAdapter(flightsList, requireView())
                     if (mBundleRecyclerViewState != null) {
                         mListState = mBundleRecyclerViewState!!.getParcelable("keyR")
                         flightsRecyclerView.layoutManager?.onRestoreInstanceState(mListState)
@@ -400,7 +422,7 @@ class FindFlightFragment : Fragment() {
         travelClass =
             if (travelClassEdit.text.toString() != "PREMIUM ECO") travelClassEdit.text.toString() else "PREMIUM_ECONOMY"
         val nbAdults = passengers_number.text.toString().toInt()
-        flights_recyclerview.adapter = FlightsAdapter(mutableListOf())
+        flights_recyclerview.adapter = FlightsAdapter(mutableListOf(), requireView())
       //  layout_search.visibility = View.GONE // cache le formulaire
         loadingPanel.visibility = View.VISIBLE // affiche la roue de chargement
         layoutRecyclerViewFlights.visibility = View.GONE
@@ -547,7 +569,7 @@ class FindFlightFragment : Fragment() {
                 // Si au moins un vol de trouvé
                 if (!flightsList.isNullOrEmpty()) {
                     layoutNoFlightAvailable.visibility = View.GONE
-                    flightsRecyclerView.adapter = FlightsAdapter(flightsList)
+                    flightsRecyclerView.adapter = FlightsAdapter(flightsList, requireView())
                 } else if (!activityCreate) {
                     layoutNoFlightAvailable.visibility = View.VISIBLE
                 }

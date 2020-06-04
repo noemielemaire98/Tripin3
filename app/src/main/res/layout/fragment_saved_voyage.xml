@@ -1,15 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_savedVoyage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".saved.SavedVoyage">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="FAVORIS VOYAGE"
-        android:gravity="center"
-        android:textSize="30dp"/>
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <AutoCompleteTextView
+            android:id="@+id/search_voyageSave"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/cutom_search"
+            android:completionThreshold="1"
+            android:drawableStart="@drawable/ic_search"
+            android:elevation="1dp"
+            android:focusable="true"
+            android:layout_marginBottom="10dp"
+            android:hint="Cherchez un voyage"
+            android:imeOptions="actionSearch"
+            android:inputType="textAutoComplete" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/voyageSave_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="?attr/actionBarSize"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:listitem="@layout/voyage_view"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+    </LinearLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

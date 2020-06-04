@@ -90,7 +90,7 @@ class SavedFlightFragment : Fragment() {
 
                 }
                 savedFlights_recyclerview.adapter =
-                    FlightsAdapter(flightsList)
+                    FlightsAdapter(flightsList, requireView())
 
             } else {
                 layoutNoSavedFlight.visibility = View.VISIBLE

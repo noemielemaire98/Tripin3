@@ -1,4 +1,4 @@
-package com.example.tripin.trip
+package com.example.tripin.saved
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -14,15 +14,17 @@ import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.find.voyage.FindVoyage
 import com.example.tripin.model.Voyage
+import com.example.tripin.trip.*
 import kotlinx.android.synthetic.main.activity_detail_voyage2.*
 import kotlinx.coroutines.*
 
-class DetailVoyage2 : AppCompatActivity() {
+class DetailVoyageSave : AppCompatActivity() {
 
     var voyage: Voyage?=null
     private var id : Int=0
     private var voyageDao : VoyageDao? = null
     private var bundle = Bundle()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,14 +33,16 @@ class DetailVoyage2 : AppCompatActivity() {
         id = intent.getIntExtra("id",0)
 
         val database =
-            Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
+            Room.databaseBuilder(this, AppDatabase::class.java, "savedVoyageDatabase")
                 .build()
 
         voyageDao = database.getVoyageDao()
         runBlocking {
             voyage = voyageDao!!.getVoyage(id)
         }
+
         bundle.putSerializable("voyage", voyage)
+
         setupViewPager(viewpager_detail_voyage)
         viewpager_detail_voyage.offscreenPageLimit = 3
         tablayout_detail_voyage.setupWithViewPager(viewpager_detail_voyage)

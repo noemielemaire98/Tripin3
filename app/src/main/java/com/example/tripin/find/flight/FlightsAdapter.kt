@@ -25,8 +25,7 @@ import com.example.tripin.data.FlightDao
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Flight
 import com.example.tripin.model.Voyage
-import com.example.tripin.saved.SavedFlight
-import kotlinx.android.synthetic.main.activity_saved_flight.*
+import kotlinx.android.synthetic.main.activity_saved_flight.view.*
 import kotlinx.android.synthetic.main.createvoyage_popup.view.*
 import kotlinx.android.synthetic.main.flights_view.view.*
 import kotlinx.coroutines.runBlocking
@@ -38,7 +37,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 
-class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) :
+class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>, private val viewFragment : View) :
     RecyclerView.Adapter<FlightsAdapter.FlightsViewHolder>() {
 
     private var voyageDaoSaved: VoyageDao? = null
@@ -123,7 +122,7 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
                             ims?.close()
                         }
 
-                    } else if (flights[pot].retour == 1 && flights[pot - 1].dureeVol != flights[pot].dureeVol) {
+                    } else if (flights[pot].retour == 1 && flights[pot - 1].retour == 0) {
 
                         returnTravel = pot
 
@@ -156,7 +155,7 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
                         }
 
                     }
-                    if (flights[pot].retour == 0 && (pot == flights.size - 1 || flights[pot + 1].dureeVol != flights[pot].dureeVol)) {
+                    if (flights[pot].retour == 0 && (pot == flights.size - 1 || flights[pot + 1].retour == 1)) {
                         view.heureArrivee_aller.text =
                             itFlight.heureArrivee
                         view.lieuArrivee_aller.text = "${itFlight.lieuArrivee}, "
@@ -302,14 +301,22 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
                         }
                     }
 
-                    if (context.javaClass == SavedFlight::class.java) {
+                    val fragmentFavorisViewPager = try {
+                        // https://stackoverflow.com/a/54829516/13289762
+                        (context as MainActivity).supportFragmentManager.fragments[0].childFragmentManager.fragments[0]?.childFragmentManager?.fragments
+                            ?.get(1)?.javaClass?.simpleName
+                    } catch (ex: Exception) {
+                        ""
+                    }
+
+                    if (fragmentFavorisViewPager == "SavedFlightFragment") {
                         flightsList.remove(flights)
 
                         notifyItemRemoved(position)
                         notifyItemRangeChanged(position, itemCount)
 
                         if (flightsList.isNullOrEmpty()) {
-                            (context as SavedFlight).layoutNoSavedFlight.visibility = View.VISIBLE
+                            viewFragment.layoutNoSavedFlight.visibility = View.VISIBLE
                         }
                     }
 
@@ -336,7 +343,7 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
                     val voyage = voyageDaoSaved?.getVoyage()
                     voyage?.map {
                         var dejaAjoute = false
-                        listVoyage.add(it.titre!!)
+                        listVoyage.add(it.titre)
                         it.list_flights?.map { itF ->
                             if (itF.uuid == flights[0].uuid) {
                                 dejaAjoute = true
@@ -393,7 +400,7 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
                         if (exist) {
                             Toast.makeText(
                                 context,
-                                "Ce nom de voyage existe déjà, veuillez en chosir un autre",
+                                "Ce nom de voyage existe déjà, veuillez en choisir un autre",
                                 Toast.LENGTH_SHORT
                             ).show()
                             editTitre.setText("")
@@ -463,7 +470,7 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
                 }
                 Toast.makeText(
                     context,
-                    "Le vol à bien été ajouté à ${list_voyage[which]}",
+                    "Le vol a bien été ajouté à ${list_voyage[which]}",
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
@@ -478,7 +485,7 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>) 
                 }
                 Toast.makeText(
                     context,
-                    "Le vol à bien été supprimé de ${list_voyage[which]}",
+                    "Le vol a bien été supprimé de ${list_voyage[which]}",
                     Toast.LENGTH_SHORT
                 ).show()
             }

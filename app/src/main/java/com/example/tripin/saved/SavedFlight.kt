@@ -81,7 +81,7 @@ class SavedFlight : AppCompatActivity() {
 
                 }
                 savedFlights_recyclerview.adapter =
-                    FlightsAdapter(flightsList)
+                    FlightsAdapter(flightsList, findViewById(android.R.id.content))
 
             } else {
                 layoutNoSavedFlight.visibility = View.VISIBLE

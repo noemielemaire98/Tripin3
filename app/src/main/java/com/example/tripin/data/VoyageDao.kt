@@ -29,7 +29,8 @@ interface VoyageDao {
     @Query("update myVoyages set list_activity= :list where titre = :dossier_voyage")
     suspend fun updateVoyageActivities(list: List<Activity>?,dossier_voyage: String)
 
-
+    @Query("delete from myVoyages where titre = :titre")
+    suspend fun deleteFindVoyage(titre: String)
 
 
 

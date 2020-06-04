@@ -15,6 +15,7 @@ import com.example.tripin.MainActivity
 import com.example.tripin.R
 import com.example.tripin.find.flight.FlightsAdapterTrip
 import com.example.tripin.model.Flight
+import com.example.tripin.model.Voyage
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -30,7 +31,8 @@ class FlightTripFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        val voyage = (activity as? DetailVoyage2)!!.voyage
+        val voyage = arguments?.getSerializable("voyage") as Voyage
+
 
         val view = inflater.inflate(R.layout.activity_saved_flight, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.savedFlights_recyclerview)

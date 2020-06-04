@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tripin.MainActivity
 import com.example.tripin.R
 import com.example.tripin.find.activity.ActivityAdapterTrip
+import com.example.tripin.model.Voyage
 import kotlinx.coroutines.runBlocking
 
 
@@ -25,7 +26,8 @@ class ActivityTripFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val voyage = (activity as? DetailVoyage2)!!.voyage
+        val voyage = arguments?.getSerializable("voyage") as Voyage
+
 
         val view = inflater.inflate(R.layout.activity_saved_activites, container, false)
         val rv = view.findViewById<RecyclerView>(R.id.activitiessaved_recyclerview)

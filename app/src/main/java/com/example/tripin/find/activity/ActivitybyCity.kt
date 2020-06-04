@@ -34,7 +34,7 @@ interface ActivitybyCity {
         @Path("city_id") city_id: Int,
         @Query("sort_by") sort_by: String,
         @Query("vertical_in") vertical_in: String,
-        @Query("limit") limit: Int,
+        @Query("limit") limit: String,
         @Header("accept-language") lang: String,
         @Header("x-musement-currency") monnaie: String
     ): ModelMusement.Welcome
