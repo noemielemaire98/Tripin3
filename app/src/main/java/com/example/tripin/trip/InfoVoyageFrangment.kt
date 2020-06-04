@@ -2,10 +2,13 @@ package com.example.tripin.trip
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Button
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.room.Room
@@ -24,6 +27,7 @@ class InfoVoyageFrangment : Fragment() {
     private lateinit var viewpager: ViewPager
     private lateinit var tabLayout: TabLayout
 
+    @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,12 +53,11 @@ class InfoVoyageFrangment : Fragment() {
         destination.text = "Destination : ${voyage?.destination}"
         dateDepart.text = "Du " + voyage?.date
         dateRetour.text = "Au " + voyage?.dateRetour
-        nbVoyageur.text = "Nombre de voyageur :" + voyage?.nb_voyageur
-        budget.text = "Budget = ${voyage?.budget} €"
+        nbVoyageur.text = "Nombre de voyageur : ${voyage?.nb_voyageur}"
+        budget.text = "Budget : ${voyage?.budget} €"
         nbActivité.text ="Nombre d'activités : ${voyage?.list_activity?.size}"
         nbVol.text ="Nombre de vol : ${voyage?.list_flights?.size}"
         nbHotel.text ="Nombre d'hotel : ${voyage?.list_hotels?.size}"
-
 
         return view
     }

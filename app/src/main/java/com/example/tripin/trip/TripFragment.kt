@@ -7,10 +7,7 @@ import android.os.Parcelable
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,13 +15,11 @@ import androidx.room.Room
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
-import com.example.tripin.model.Activity
-import com.example.tripin.model.Flight
-import com.example.tripin.model.Hotel
 import com.example.tripin.model.Voyage
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_trip.*
 import kotlinx.coroutines.runBlocking
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.util.*
 
 class TripFragment : Fragment() {
 
@@ -33,6 +28,7 @@ class TripFragment : Fragment() {
     private var mListState: Parcelable? = null
     var list_voyage_title = arrayListOf<String>()
     var voyages = arrayListOf<Voyage>()
+
 
     private var destination = ""
     private var budget = ""
@@ -51,8 +47,10 @@ class TripFragment : Fragment() {
 
         val bt_search = root.findViewById<Button>(R.id.bt_recherche)
         val searchText = root.findViewById<AutoCompleteTextView>(R.id.search_voyage)
-
         val fab: FloatingActionButton = root.findViewById(R.id.fab_add)
+//        val searchText2 = root.findViewById<SearchView>(R.id.searchtext)
+
+
 
         fab.setOnClickListener {
             val intent = Intent(this.context, AddVoyage::class.java)
@@ -70,9 +68,10 @@ class TripFragment : Fragment() {
         voyageDao = database.getVoyageDao()
         //voyage_recyclerview.adapter = VoyageAdapter(Voyage.all)
 
+        var list_voyage : List<Voyage> ?
 
         runBlocking {
-            val list_voyage = voyageDao?.getVoyage()
+            list_voyage = voyageDao?.getVoyage()
             list_voyage?.map {
                 list_voyage_title.add(it.titre)
 //                list_voyage_title.add(it.destination)
@@ -80,6 +79,25 @@ class TripFragment : Fragment() {
             }
         }
 
+
+
+//         resultat.addAll(list)
+//
+//                   resultat.a
+//
+//        searchview.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                return true
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                if (newText!!.isNotEmpty()){
+//                    val search = newText.toLowerCase(Locale.getDefault() )
+//                }
+//                return true
+//            }
+//
+//        })
 
         Log.d("epf", "$list_voyage_title")
         val adapter: ArrayAdapter<String> =
@@ -89,6 +107,7 @@ class TripFragment : Fragment() {
 
         searchText.setAdapter(adapter)
 
+
         bt_search.setOnClickListener {
             voyages.clear()
             hideKeyboard()
@@ -97,7 +116,6 @@ class TripFragment : Fragment() {
                     val voyage = voyageDao?.getVoyageByTitre(search_voyage.text.toString())
                     if (voyage != null) {
                         voyages.add(voyage)
-                        Log.d("epf", voyages.toString())
                         voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
                         voyage_recyclerview.layoutManager =
                             LinearLayoutManager(requireContext())
@@ -109,12 +127,28 @@ class TripFragment : Fragment() {
                         ).show()
                     }
                 }
-            }else{
+            }else if(search_voyage.text.isEmpty()){
+                runBlocking {
+                    val voyages = voyageDao!!.getVoyage()
+                    voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
+                }
+
             }
             search_voyage.text = null
 
         }
 
+//        searchText2.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                return false
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                adapter.filter.filter(newText)
+//                return false
+//            }
+//
+//        })
         return root
     }
 
@@ -129,29 +163,21 @@ class TripFragment : Fragment() {
 //            val list_hotels = listOf<Hotel>()
 //            val voyage =Voyage(0,"titre","debut","fin",R.drawable.destination1,0,list_activities, list_flights, list_hotels, destination, budget)
         }
-        runBlocking {
-            val voyage = voyageDao?.getVoyageByTitre(search_voyage.text.toString())
-            if (voyage != null) {
-                voyages.add(voyage)
-                Log.d("epf", voyages.toString())
-                voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
-                voyage_recyclerview.layoutManager =
-                    LinearLayoutManager(requireContext())
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    "Voyage introuvable",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
+//        runBlocking {
+//            val voyage = voyageDao?.getVoyageByTitre(search_voyage.text.toString())
+//            if (voyage != null) {
+//                voyages.add(voyage)
+//                voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
+//                voyage_recyclerview.layoutManager =
+//                    LinearLayoutManager(requireContext())
+//            }
+//        }
 
     }
 
 
     override fun onPause() {
         super.onPause()
-
         mBundleRecyclerViewState = Bundle()
 
         mListState = voyage_recyclerview.layoutManager?.onSaveInstanceState()
@@ -169,6 +195,18 @@ class TripFragment : Fragment() {
             getSystemService(android.app.Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
+
+
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        setHasOptionsMenu(true)
+//        super.onCreate(savedInstanceState)
+//    }
+//
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater){
+//        inflater.inflate(R.menu.menu_tripfragment, menu)
+//        super.onCreateOptionsMenu(menu, inflater)
+////        menuInflater.inflate(R.menu.menu_tripfragment, menu)
+//    }
 
 
 }
