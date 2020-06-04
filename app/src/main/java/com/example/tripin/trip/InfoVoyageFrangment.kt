@@ -36,7 +36,7 @@ class InfoVoyageFrangment : Fragment() {
     ): View? {
 
         val voyage = (activity as? DetailVoyage2)!!.voyage
-        val view = inflater.inflate(R.layout.activity_detail_voyage, container, false)
+        val view = inflater.inflate(R.layout.activity_infovoyage , container, false)
         val title = view.findViewById<TextView>(R.id.voyage_title_textview)
         val destination = view.findViewById<TextView>(R.id.voyage_destination_textview)
         val dateDepart = view.findViewById<TextView>(R.id.voyage_dateDepart_textview)
@@ -46,18 +46,28 @@ class InfoVoyageFrangment : Fragment() {
         val nbActivité = view.findViewById<TextView>(R.id.voyage_activite_textview)
         val nbVol = view.findViewById<TextView>(R.id.voyage_flight_textview)
         val nbHotel = view.findViewById<TextView>(R.id.voyage_hotel_textview)
+        val date = view.findViewById<TextView>(R.id.voyage_date_textview)
 
 
-        Log.d("zzzz" , "id =$voyage")
-        title.text = "Titre : ${voyage?.titre}"
-        destination.text = "Destination : ${voyage?.destination}"
-        dateDepart.text = "Du " + voyage?.date
-        dateRetour.text = "Au " + voyage?.dateRetour
-        nbVoyageur.text = "Nombre de voyageur : ${voyage?.nb_voyageur}"
-        budget.text = "Budget : ${voyage?.budget} €"
-        nbActivité.text ="Nombre d'activités : ${voyage?.list_activity?.size}"
-        nbVol.text ="Nombre de vol : ${voyage?.list_flights?.size}"
-        nbHotel.text ="Nombre d'hotel : ${voyage?.list_hotels?.size}"
+        title.text = "${voyage?.titre}"
+        destination.text = "${voyage?.destination}"
+        date.text = "Du ${voyage?.date} au ${voyage?.dateRetour}"
+        nbVoyageur.text = "${voyage?.nb_voyageur}"
+        budget.text = "${voyage?.budget} €"
+        nbActivité.text ="${voyage?.list_activity?.size}"
+        nbVol.text ="${voyage?.list_flights?.size}"
+        nbHotel.text ="${voyage?.list_hotels?.size}"
+
+//        Log.d("zzzz" , "id =$voyage")
+//        title.text = "Titre : ${voyage?.titre}"
+//        destination.text = "Destination : ${voyage?.destination}"
+//        dateDepart.text = "Du ${voyage?.date}"
+//        dateRetour.text = "Au ${voyage?.dateRetour}"
+//        nbVoyageur.text = "Nombre de voyageur : ${voyage?.nb_voyageur}"
+//        budget.text = "Budget : ${voyage?.budget} €"
+//        nbActivité.text ="Nombre d'activités : ${voyage?.list_activity?.size}"
+//        nbVol.text ="Nombre de vol : ${voyage?.list_flights?.size}"
+//        nbHotel.text ="Nombre d'hotel : ${voyage?.list_hotels?.size}"
 
         return view
     }

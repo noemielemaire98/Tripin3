@@ -108,7 +108,7 @@ class DetailVoyage2 : AppCompatActivity() {
 
         scope.launch {
             val adapter = FindTabAdapterTrip(supportFragmentManager)
-            adapter.addFragment(InfoVoyageFrangment(), "Recap")
+            adapter.addFragment(InfoVoyageFrangment(), "Aperçu")
 //            adapter.addFragment(FindVoyage(), "Aperçu")
             adapter.addFragment(FlightTripFragment(), "Vol")
             adapter.addFragment(HotelTripFragment(), "Hotel")
