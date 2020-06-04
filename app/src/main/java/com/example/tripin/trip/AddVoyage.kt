@@ -3,6 +3,8 @@ package com.example.tripin.trip
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.fragment.app.Fragment
 import androidx.room.Room
@@ -18,6 +21,7 @@ import com.aminography.primecalendar.civil.CivilCalendar
 import com.aminography.primedatepicker.picker.PrimeDatePicker
 import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
 import com.aminography.primedatepicker.picker.callback.SingleDayPickCallback
+import com.example.tripin.MainActivity
 import com.example.tripin.R
 import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
@@ -25,6 +29,7 @@ import com.example.tripin.data.CityDao
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.find.flight.IgnoreAccentsArrayAdapter
 import com.example.tripin.model.*
+import com.xw.repo.BubbleSeekBar
 import kotlinx.android.synthetic.main.activity_add_voyage.*
 import kotlinx.android.synthetic.main.activity_add_voyage.passengers_number
 import kotlinx.android.synthetic.main.activity_find_flight.*
@@ -43,6 +48,10 @@ class AddVoyage : AppCompatActivity() {
     var image =""
     var city :City? = null
 
+    private lateinit var context: Context
+
+
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_voyage)
@@ -91,6 +100,8 @@ class AddVoyage : AppCompatActivity() {
 
         var seekbar =  findViewById<SeekBar>(R.id.addv_budget)
 
+
+
         seekbar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekbarView: SeekBar, progress: Int, fromUser: Boolean) {
                 budget = seekbarView.progress.toString()
@@ -98,13 +109,14 @@ class AddVoyage : AppCompatActivity() {
             }
 
             override fun onStartTrackingTouch(seekbarView: SeekBar) {
-                // Write code to perform some action when touch is started.
+                 //Write code to perform some action when touch is started.
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 // Write code to perform some action when touch is stopped.
             }
         })
+
 
     }
 
@@ -246,6 +258,9 @@ class AddVoyage : AppCompatActivity() {
                         runBlocking {
                             voyageDao.addVoyage(voyage)// Reference aux co-routines Kotlin
                         }
+
+//
+
                         finish()
                     }
                 }
