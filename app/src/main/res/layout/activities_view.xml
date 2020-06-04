@@ -86,24 +86,6 @@
                 tools:text="Titre"
                 android:textStyle="bold"/>
 
-            <TextView
-                android:id="@+id/activity_price_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="15dp"
-                android:textSize="15dp"
-                tools:text="Prix : " />
-
-           <!-- <TextView
-                android:id="@+id/activity_days_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="15dp"
-                android:textSize="12dp"
-                tools:text="Dispo : " />-->
-
            <androidx.recyclerview.widget.RecyclerView
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
@@ -111,6 +93,17 @@
                android:layout_marginTop="10dp"
                android:layout_marginStart="8dp"
                android:id="@+id/rv_categorie"/>
+
+            <TextView
+                android:id="@+id/activity_price_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="30dp"
+                android:textSize="15dp"
+                android:layout_gravity="end"
+                tools:text="A partir de  " />
 
             </LinearLayout>
 

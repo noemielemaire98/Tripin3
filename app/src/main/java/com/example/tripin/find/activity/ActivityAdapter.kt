@@ -1,5 +1,6 @@
 package com.example.tripin.find.activity
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -52,6 +53,7 @@ class ActivityAdapter(val list_activity: List<Activity>, val attribut_favoris : 
 
 
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ActivityViewHolder, position: Int) {
 
 
@@ -63,8 +65,7 @@ class ActivityAdapter(val list_activity: List<Activity>, val attribut_favoris : 
             .centerCrop()
             .into(holder.activtyView.activity_imageview)
 
-        holder.activtyView.activity_price_textview.text = "Prix : ${activity.formatted_iso_value}"
-        //holder.activtyView.activity_days_textview.text = "Dispo : ${activity.operational_days}"
+        holder.activtyView.activity_price_textview.text = "A partir de ${activity.formatted_iso_value}"
 
         if(attribut_favoris[position] == true){
             holder.activtyView.fab_favActivity.setImageResource(R.drawable.ic_favorite_black_24dp)

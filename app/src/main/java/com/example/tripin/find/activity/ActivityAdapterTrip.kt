@@ -3,6 +3,7 @@ package com.example.tripin.find.activity
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +47,7 @@ class ActivityAdapterTrip(val list_activity: MutableList<Activity>, val attribut
 
         context = parent.context
 
+
         return ActivityViewHolder(
             view
         )
@@ -74,6 +76,7 @@ class ActivityAdapterTrip(val list_activity: MutableList<Activity>, val attribut
         }
 
         holder.activtyView.bt_delete.setOnClickListener {
+
             list_activity.removeAt(position)
             voyage.list_activity = list_activity.toList()
             runBlocking {
@@ -82,7 +85,9 @@ class ActivityAdapterTrip(val list_activity: MutableList<Activity>, val attribut
             notifyItemRemoved(position)
             notifyItemRangeChanged(position,list_activity.size)
             val marker = listMarker[position]
+            listMarker.removeAt(position)
             marker.remove()
+
 
             if(list_activity.isEmpty()){
                layout_noactivities.visibility = View.VISIBLE

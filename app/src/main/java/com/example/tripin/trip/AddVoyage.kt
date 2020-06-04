@@ -202,7 +202,12 @@ class AddVoyage : AppCompatActivity() {
                         val budget = budget
 
                         val citie = citydao.getCity(destination.toString())
-                        image = citie.cover_image_url.toString()
+                        if(citie != null) {
+                            image = citie.cover_image_url.toString()
+                        }else {
+                            image = ""
+                        }
+
 
 
                         val list_activities = listOf<Activity>()
