@@ -20,11 +20,15 @@
             android:layout_marginTop="-20dp"
             android:src="@drawable/addvoyage"></ImageView>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="Titre"
+            android:text="Titre :"
             android:textSize="20dp" />
 
         <EditText
@@ -35,6 +39,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginBottom="20dp"
             android:inputType="text" />
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
