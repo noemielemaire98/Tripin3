@@ -28,6 +28,8 @@ class VoyageAdapter(val voyages:List<Voyage>) : RecyclerView.Adapter<VoyageAdapt
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: VoyageViewHolder, position: Int) {
         val voyage = voyages[position]
+
+
         holder.voyageView.voyage_title_textview.text = voyage.titre
         holder.voyageView.voyage_date_textview.text = "Du ${voyage.date}"
         holder.voyageView.voyage_dateRetour_textview.text = "Au ${voyage.dateRetour}"
@@ -35,7 +37,7 @@ class VoyageAdapter(val voyages:List<Voyage>) : RecyclerView.Adapter<VoyageAdapt
         holder.voyageView.voyage_budget_textview.text = "Budget : ${voyage.budget} €"
         holder.voyageView.voyage_destination_textview.text = "${voyage.destination}"
 
-        if (voyage.photo != null) {
+        if (voyage.photo != "") {
             val url = voyage.photo
             Glide.with(holder.voyageView)
                 .load(url)
@@ -43,12 +45,14 @@ class VoyageAdapter(val voyages:List<Voyage>) : RecyclerView.Adapter<VoyageAdapt
                 .into(holder.voyageView.voyage_imageview)
         }else {
             holder.voyageView.voyage_imageview.setImageResource(R.drawable.destination1)
-        }  
+        }
+
 
         holder.voyageView.setOnClickListener {
             val intent= Intent(it.context, DetailVoyage2::class.java)
             intent.putExtra("id",voyage.id)
             it.context.startActivity(intent)
+
         }
     }
 

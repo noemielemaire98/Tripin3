@@ -5,7 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentManager
 import androidx.room.Room
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
@@ -13,7 +17,15 @@ import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.find.voyage.FindVoyage
+import com.example.tripin.model.Activity
 import com.example.tripin.model.Voyage
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_detail_voyage2.*
 import kotlinx.coroutines.*
 
@@ -22,10 +34,16 @@ class DetailVoyage2 : AppCompatActivity() {
     var voyage: Voyage?=null
     private var id : Int=0
     private var voyageDao : VoyageDao? = null
+    lateinit var map: GoogleMap
+    lateinit var mapFragment: SupportMapFragment
+    var listMarker2 = arrayListOf<Marker>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_voyage2)
+        voyage_map_layout.visibility = View.GONE
+        mapFragment = supportFragmentManager.findFragmentById(R.id.map_voyage) as SupportMapFragment
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         id = intent.getIntExtra("id",0)
 
@@ -40,16 +58,34 @@ class DetailVoyage2 : AppCompatActivity() {
         setupViewPager(viewpager_detail_voyage)
         viewpager_detail_voyage.offscreenPageLimit = 3
         tablayout_detail_voyage.setupWithViewPager(viewpager_detail_voyage)
-        val url = voyage?.photo
-        Glide.with(this@DetailVoyage2)
-            .load(url)
-            .centerCrop()
-            .into(imageView)
-
-        if(viewpager_detail_voyage.currentItem != 0 ){
+        if(voyage?.photo != ""){
+            Glide.with(this@DetailVoyage2)
+                .load(voyage?.photo)
+                .centerCrop()
+                .into(imageView)
+        }else{
             imageView.setImageResource(R.drawable.destination1)
         }
 
+
+        tablayout_detail_voyage.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                if ((tab!!.position == 0 || tab!!.position == 1 || tab!!.position == 2)||(tab!!.position == 3 && voyage!!.list_activity.isNullOrEmpty())){
+                    voyage_map_layout.visibility = View.GONE
+                    imageView.visibility = View.VISIBLE
+                }else {
+                    voyage_map_layout.visibility = View.VISIBLE
+                    imageView.visibility = View.GONE
+                    setUpMapActivities(voyage!!.list_activity!!.toMutableList())
+                }
+
+            }
+
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -58,7 +94,6 @@ class DetailVoyage2 : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) : Boolean=
-
         when (item.itemId) {
             R.id.ic_menu_delete_voyage -> {
                 AlertDialog.Builder(this).apply {
@@ -107,15 +142,33 @@ class DetailVoyage2 : AppCompatActivity() {
         val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
         scope.launch {
-            val adapter = FindTabAdapterTrip(supportFragmentManager)
+            val adapter = FindTabAdapterTrip(supportFragmentManager,voyage_map_layout,imageView)
             adapter.addFragment(InfoVoyageFrangment(), "Aperçu")
-//            adapter.addFragment(FindVoyage(), "Aperçu")
             adapter.addFragment(FlightTripFragment(), "Vol")
             adapter.addFragment(HotelTripFragment(), "Hotel")
             adapter.addFragment(ActivityTripFragment(), "Activites")
             withContext(Dispatchers.Main) {
                 viewPager.adapter = adapter
             }
+        }
+
+    }
+
+    private fun setUpMapActivities(activityList : MutableList<Activity>){
+
+        mapFragment.getMapAsync {
+            map = it
+            activityList.map {
+                val marker : Marker = map.addMarker(
+                    MarkerOptions()
+                        .position(LatLng(it.latitude, it.longitude))
+                        .title(it.title))
+                listMarker2.add(marker)
+            }
+            if(!activityList.isEmpty()){
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(activityList[0].latitude,activityList[0].longitude), 10f))
+            }
+
         }
 
     }
