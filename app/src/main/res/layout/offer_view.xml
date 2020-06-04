@@ -2,10 +2,12 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="5dp"
+    app:cardCornerRadius="1dp"
+    app:cardElevation="0.5dp"
 android:layout_marginLeft="20dp"
     android:layout_marginTop="1dp"
     android:layout_marginRight="20dp"
+    android:layout_marginBottom="1dp"
     android:layout_height="50dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,11 +23,14 @@ android:layout_marginLeft="20dp"
             android:layout_height="wrap_content"
             android:text="name"
             android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="@color/contrast_blue"
             app:layout_constraintTop_toTopOf="@id/constraint_layout"
             app:layout_constraintBottom_toBottomOf="@id/constraint_layout"
             app:layout_constraintLeft_toLeftOf="@id/constraint_layout"
-            android:textSize="16dp" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/price_room_recyclerview"

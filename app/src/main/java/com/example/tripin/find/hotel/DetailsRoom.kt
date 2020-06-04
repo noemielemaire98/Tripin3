@@ -1,5 +1,6 @@
 package com.example.tripin.find.hotel
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -24,6 +25,7 @@ class DetailsRoom : AppCompatActivity() {
     private lateinit var room: Rooms
     private var url : String? = ""
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,14 +57,16 @@ class DetailsRoom : AppCompatActivity() {
 
 
 
-        price_room.text ="Total : ${room.price}"
+        price_room.text ="${room.price}"
 
         val checkIn =  SimpleDateFormat("yyyy-MM-dd").parse(room.checkIn)
         val checkOut =  SimpleDateFormat("yyyy-MM-dd").parse(room.checkOut)
         val diff: Long = checkOut.time - checkIn.time
         val nbNuits = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
-        price_night.text = "${room.priceNight} pour ${nbNuits} nuit(s)"
+        price_night.text = "${room.priceNight}"
 
+        date_room_details.text = "${room.checkIn} au ${room.checkOut}"
+        nb_night_details.text = "$nbNuits nuit(s)"
 
         when (room.listOccupants?.size) {
             1 -> {
