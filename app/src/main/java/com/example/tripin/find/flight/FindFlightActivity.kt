@@ -79,7 +79,7 @@ class FindFlightActivity : AppCompatActivity() {
             override val selectionBarBackgroundColor: Int
                 get() = super.getColor(R.color.contrast_blue)
 
-            override val calendarViewPickedDayCircleColor: Int
+            val calendarViewPickedDayCircleColor: Int
                 get() = super.getColor(R.color.contrast_blue)
         }
 
@@ -297,7 +297,7 @@ class FindFlightActivity : AppCompatActivity() {
                         flightsList.add(testlist)
                     }
                 }
-                flightsRecyclerView.adapter = FlightsAdapter(flightsList)
+                flightsRecyclerView.adapter = FlightsAdapter(flightsList, findViewById(android.R.id.content))
             } else if (!activityCreate) { // S'il n'y a pas de vols et qu'une recherche a été effectuée, affiche l'image aucun vol dispo
                 layoutNoFlightAvailable.visibility = View.VISIBLE
             }
@@ -312,7 +312,7 @@ class FindFlightActivity : AppCompatActivity() {
         travelClass =
             if (travelClassEdit.text.toString() != "PREMIUM ECO") travelClassEdit.text.toString() else "PREMIUM_ECONOMY"
         val nbAdults = passengers_number.text.toString().toInt()
-        flights_recyclerview.adapter = FlightsAdapter(mutableListOf())
+        flights_recyclerview.adapter = FlightsAdapter(mutableListOf(), findViewById(android.R.id.content))
         layout_search.visibility = View.GONE // cache le formulaire
         loadingPanel.visibility = View.VISIBLE // affiche la roue de chargement
         layoutNoFlightAvailable.visibility = View.GONE // cache l'image aucun vol dispo
@@ -457,7 +457,7 @@ class FindFlightActivity : AppCompatActivity() {
                 // Si au moins un vol de trouvé
                 if (!flightsList.isNullOrEmpty()) {
                     layoutNoFlightAvailable.visibility = View.GONE
-                    flightsRecyclerView.adapter = FlightsAdapter(flightsList)
+                    flightsRecyclerView.adapter = FlightsAdapter(flightsList, findViewById(android.R.id.content))
                 } else if (!activityCreate) {
                     layoutNoFlightAvailable.visibility = View.VISIBLE
                 }

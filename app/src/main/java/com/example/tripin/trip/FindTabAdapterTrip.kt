@@ -3,19 +3,22 @@ package com.example.tripin.trip
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
 
-class FindTabAdapterTrip (fm : FragmentManager, val map_layout : LinearLayout, val imageView : ImageView): FragmentPagerAdapter(fm) {
+class FindTabAdapterTrip (fm : FragmentManager, val map_layout : LinearLayout, val imageView : ImageView, data: Bundle): FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
 
     val fragment_list = arrayListOf<Fragment>()
     val fragment_title = arrayListOf<String>()
+    private val fragmentBundle: Bundle = data
 
     override fun getItem(position: Int): Fragment {
-       return fragment_list[position]
+        fragment_list[position].arguments = fragmentBundle
+        return fragment_list[position]
     }
 
     override fun getPageTitle(position: Int): CharSequence? {

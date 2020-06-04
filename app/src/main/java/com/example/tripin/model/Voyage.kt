@@ -3,6 +3,7 @@ package com.example.tripin.model
 import android.text.Editable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity(tableName = "myvoyages")
 data class Voyage(
@@ -18,7 +19,7 @@ data class Voyage(
     val destination : String?,
     val budget : String?
 
-) {
+) : Serializable {
 
 
 //    companion object { /*  all: même chose que :ListClient<>*/

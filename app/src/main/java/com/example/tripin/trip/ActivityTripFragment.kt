@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.example.tripin.model.Voyage
 import kotlinx.coroutines.runBlocking
 
 
@@ -43,6 +44,8 @@ class ActivityTripFragment : Fragment() {
 
         val voyage = (activity as? DetailVoyage2)!!.voyage
         var listMarker2 = (activity as? DetailVoyage2)!!.listMarker2
+        val voyage = arguments?.getSerializable("voyage") as Voyage
+
 
         val view = inflater.inflate(R.layout.activity_tripdetails_activites, container, false)
         val rv = view.findViewById<RecyclerView>(R.id.activitiessaved_recyclerview)
