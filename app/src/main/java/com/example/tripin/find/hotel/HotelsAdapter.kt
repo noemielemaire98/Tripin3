@@ -4,12 +4,14 @@ package com.example.tripin.find.hotel
 import  android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import com.bumptech.glide.Glide
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.HotelDao
@@ -17,7 +19,7 @@ import com.example.tripin.model.Hotel
 import kotlinx.android.synthetic.main.hotel_view.view.*
 import kotlinx.coroutines.runBlocking
 
-class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>): RecyclerView.Adapter<HotelsAdapter.HotelViewHolder>(){
+class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>, val listAdults : MutableList<String>): RecyclerView.Adapter<HotelsAdapter.HotelViewHolder>(){
 
     class HotelViewHolder(val hotelView : View):RecyclerView.ViewHolder(hotelView)
 
@@ -76,18 +78,20 @@ class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>
         }
 
 
-        holder.hotelView.hotel_prix_textview.text = "A partir de : ${hotel.prix} €"
+        holder.hotelView.hotel_prix_textview.text = "A partir de : ${hotel.prix}"
 
 
         //Récupération de l'image
         // TODO : Vérifier si les images "test" se mettent à jour
-            holder.hotelView.hotels_imageview.setImageResource(R.drawable.hotel)
 
-       // }else{
-       // Glide.with(holder.hotelView)
-        //   .load(hotel.image_url)
-         //  .centerCrop()
-         //   .into(holder.hotelView.hotels_imageview)}
+        if(hotel.image_url==null) {
+            holder.hotelView.hotels_imageview.setImageResource(R.drawable.hotel)
+        }
+        else{
+        Glide.with(holder.hotelView)
+          .load(hotel.image_url)
+           .centerCrop()
+           .into(holder.hotelView.hotels_imageview)}
 
 
         if (favoris[position] == true){
@@ -101,6 +105,7 @@ class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>
             val intent= Intent(it.context, DetailsHotel::class.java)
             intent.putExtra("hotel", hotel)
             intent.putExtra("favoris", favoris[position])
+            intent.putExtra("listAdults", listAdults.toString())
             it.context.startActivity(intent)
         }
 
@@ -116,7 +121,6 @@ class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>
 
             }else {
                 holder.hotelView.fab_favActivity.setImageResource(R.drawable.ic_favorite_black_24dp)
-                hotel.favoris= true
                 runBlocking {
                     hotelDaoSaved?.addHotel(hotel)
                 }

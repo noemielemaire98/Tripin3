@@ -6,6 +6,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,7 @@ import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Activity
 import com.example.tripin.model.Voyage
+import com.google.android.gms.maps.model.Marker
 import kotlinx.android.synthetic.main.activities_view.view.*
 import kotlinx.android.synthetic.main.activities_view.view.activity_imageview
 import kotlinx.android.synthetic.main.activities_view.view.activity_price_textview
@@ -26,7 +28,7 @@ import kotlinx.android.synthetic.main.activities_view.view.layout_activity_rate
 import kotlinx.android.synthetic.main.activitiestrip_view.view.*
 import kotlinx.coroutines.runBlocking
 
-class ActivityAdapterTrip(val list_activity: MutableList<Activity>, val attribut_favoris : ArrayList<Boolean>,var voyage: Voyage) : RecyclerView.Adapter<ActivityAdapterTrip.ActivityViewHolder>() {
+class ActivityAdapterTrip(val list_activity: MutableList<Activity>, val attribut_favoris : ArrayList<Boolean>,var voyage: Voyage,val listMarker : ArrayList<Marker>, val layout_noactivities : RelativeLayout) : RecyclerView.Adapter<ActivityAdapterTrip.ActivityViewHolder>() {
 
     class ActivityViewHolder(val activtyView : View) : RecyclerView.ViewHolder(activtyView)
 
@@ -55,7 +57,7 @@ class ActivityAdapterTrip(val list_activity: MutableList<Activity>, val attribut
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ActivityViewHolder, position: Int) {
-        val recyclerView = holder.activtyView.findViewById<RecyclerView>(R.id.activitiessaved_recyclerview)
+
         val activity =list_activity[position]
         holder.activtyView.activity_title_textview.text = activity.title
         val url = activity.cover_image_url
@@ -79,6 +81,12 @@ class ActivityAdapterTrip(val list_activity: MutableList<Activity>, val attribut
             }
             notifyItemRemoved(position)
             notifyItemRangeChanged(position,list_activity.size)
+            val marker = listMarker[position]
+            marker.remove()
+
+            if(list_activity.isEmpty()){
+               layout_noactivities.visibility = View.VISIBLE
+            }
         }
 
         holder.activtyView.setOnClickListener {

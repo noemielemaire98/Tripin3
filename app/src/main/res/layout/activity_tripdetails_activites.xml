@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".saved.SavedActivites"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:id="@+id/layout_nosavedActivities"
+        android:visibility="visible">
+
+    <TextView
+    android:id="@+id/noSavedActivityAvailable"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:layout_marginTop="10dp"
+    android:gravity="center"
+    android:text="Aucune activité en favoris"
+    android:textSize="26sp"
+    android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/noSavedActivityDetail"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/noSavedActivityAvailable"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:text="@string/noSavedFlights"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/noActivityImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/noSavedActivityDetail"
+        android:layout_marginTop="30dp"
+        android:contentDescription="@string/imageDescription_no_favoriteFlight"
+        android:gravity="center"
+        android:src="@drawable/nosavedflights" />
+
+    </RelativeLayout>
+
+    <fragment
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_marginBottom="5dp"
+        android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/activitiessaved_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/activities_view" />
+
+</LinearLayout>
