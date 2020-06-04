@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.amadeus.Amadeus
 import com.amadeus.Params
@@ -19,14 +20,10 @@ import com.amadeus.shopping.HotelOffersByHotel
 import com.aminography.primecalendar.civil.CivilCalendar
 import com.aminography.primedatepicker.picker.PrimeDatePicker
 import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
+import com.bumptech.glide.Glide
 import com.example.tripin.R
-import com.example.tripin.data.AppDatabase
-import com.example.tripin.data.HotelDao
-import com.example.tripin.data.OfferDao
-import com.example.tripin.data.VoyageDao
-import com.example.tripin.model.Hotel
-import com.example.tripin.model.Offer
-import com.example.tripin.model.Voyage
+import com.example.tripin.data.*
+import com.example.tripin.model.*
 import kotlinx.android.synthetic.main.activity_details_hotel.*
 import kotlinx.coroutines.runBlocking
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -60,6 +57,12 @@ class DetailsHotel : AppCompatActivity() {
     private var destination = ""
     private var budget = ""
     var image = ""
+    private val service = retrofitHotel().create(HotelAPI::class.java)
+    private val hotelKey = "e510fb173emsh2748fdaccbfd76dp19ee52jsnc2bda03d8b6d"
+    private var listEquipements : MutableList<Equipement> = mutableListOf()
+    private var listProche : String = ""
+    private var listRooms : MutableList<Rooms> = mutableListOf()
+    private var listAdults : MutableList<String> = mutableListOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,84 +73,21 @@ class DetailsHotel : AppCompatActivity() {
         equipement_recyclerview.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         offers_recyclerview.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         hotel = intent.getParcelableExtra("hotel")
         favoris = intent.getBooleanExtra("favoris", false)
-
-        val databaseoffers =
-            Room.databaseBuilder(this, AppDatabase::class.java, "searchDatabase")
-                .build()
-        offerDao = databaseoffers.getOfferDao()
+        var Adults = intent.getStringExtra("listAdults")
+        if(Adults!="[]"){
+            initializeAdultsList(Adults)
+        }
+        listEquipements.clear()
 
 
         val databasesaved =
             Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
                 .build()
         hotelDaoSaved = databasesaved.getHotelDao()
-
-
-        val amadeus = Amadeus
-            .builder("TGvUHAv2qE6aoqa2Gg44ZZGpvDIEGwYs", "a16JGxtWdWBPtTGB")
-            .build()
-
-
-
-
-        GlobalScope.launch {
-            offerDao!!.deleteOffers()
-
-            val hotelId = hotel!!.hotelId
-            var offer: String? = null
-
-            Log.d("resultOffer", hotel!!.listIdOffer.toString())
-            val resultOffers = amadeus.shopping.hotelOffersByHotel[Params.with("hotelId", hotelId)]
-
-
-
-
-
-
-            runOnUiThread(java.lang.Runnable {
-                resultOffers.offers.map {
-
-                    Log.d("price", it.price.total)
-                    var type: String
-                    if (it.type == null) {
-                        type = ""
-                    } else {
-                        type = it.type
-                    }
-                    val offer = Offer(
-                        it.id,
-                        type,
-                        it.room.typeEstimated.beds,
-                        it.room.typeEstimated.bedType,
-                        it.room.description.text,
-                        it.price.total.toDouble()
-                    )
-
-                    runBlocking {
-                        if (offer.bed_Type == null || offer.nb_bed == null) {
-                        } else {
-                            offerDao!!.addOffers(offer)
-                        }
-                    }
-                }
-                var offers_bdd: List<Offer> = emptyList()
-                runBlocking {
-                    offers_bdd = offerDao!!.getOffers()
-
-                }
-                offers_recyclerview.adapter = OffersAdapter(offers_bdd)
-
-
-            })
-
-
-        }
-
-
 
         runBlocking {
             hotels_saved_bdd = hotelDaoSaved!!.getHotels()
@@ -168,16 +108,136 @@ class DetailsHotel : AppCompatActivity() {
         }
 
 
-        // Log.d("image uri", hotel?.image_url)
-        //          if ((hotel?.image_url==null) || (hotel?.image_url== " http://uat.multimediarepository.testing.amadeus.com/cmr/retrieve/hotel/EB874AAD4E0C410EB6D3C6841C85522B")){
+        runBlocking {
+            val result = service.getHotelDetail(hotel!!.hotelId.toInt(),"2020-08-01","2020-08-03","fr_FR","EUR", hotelKey)
+Log.d("Test", result.toString())
+
+            result.data.body.overview.overviewSections.forEach {
+                if (it.type == "HOTEL_FEATURE"){
+                    var description = it.content.toString().substringAfter("[")
+                    description = description.substringBefore("]")
+                    content_hotel_textview.text = "${description}."
+                }
+                else if (it.type == "LOCATION_SECTION"){
+                   val proche = it.content
+                    it.content.forEach{
+                        listProche += "${it} \n"
+                    }
+                }
+            }
+
+            proche_hotel_textview.text = listProche
+
+
+
+            result.data.body.amenities.forEach {
+
+                var headingTop = it.heading
+                it.listItems.forEach {
+                    var  heading = it.heading
+                    var listItems = it.listItems
+
+                    val equipement = Equipement (
+                        heading,
+                        listItems
+                    )
+                    listEquipements.add(equipement)
+                }
+
+            }
+            var amenitiesRoom : MutableList<String> = mutableListOf()
+            if( result.data.body.roomsAndRates!=null){
+            result.data.body.roomsAndRates.rooms?.forEach {
+                var nameRoom = it.name
+                var image = it.images[0]?.fullSizeUrl
+                var descriptionRoom = it.additionalInfo.description
+                var occupancyRoom = "${it.maxOccupancy.messageTotal} ${it.maxOccupancy.messageChildren}"
+                amenitiesRoom = it.additionalInfo.details.amenities as MutableList<String>
+                var priceNight  = it.ratePlans[0].price.nightlyPriceBreakdown.additionalColumns[0].value
+                var price = it.ratePlans[0].price.current
+                var promo : String? = it.ratePlans[0].welcomeRewards.info
+
+                val room = Rooms(
+                    hotel!!.hotelId,
+                    nameRoom,
+                    image,
+                    descriptionRoom,
+                    occupancyRoom,
+                    amenitiesRoom,
+                    priceNight,
+                    price,
+                    promo,
+                    "2020-08-01",
+                    "2020-08-03",
+                    listAdults
+                    )
+
+                listRooms.add(room)
+
+
+
+            }}
+
+            Log.d("Equipements", listEquipements.toString())
+
+        }
+
+
+        if(listEquipements.size > 2){
+            val newList = mutableListOf<Equipement>(listEquipements[0],listEquipements[1])
+            equipement_recyclerview.adapter =
+                EquipementAdapter(newList, this@DetailsHotel)
+                button_description.visibility  = View.VISIBLE
+        }else{
+            equipement_recyclerview.adapter =
+                EquipementAdapter(listEquipements, this@DetailsHotel)
+            button_description.visibility  = View.GONE
+        }
+
+
+        button_proche.setOnClickListener {
+            AlertDialog.Builder(this).apply {
+                setTitle("Lire plus")
+                setMessage("${listProche}")
+                setPositiveButton(android.R.string.ok) { _, _ ->
+                }
+                show()
+            }
+        }
+
+        button_description.setOnClickListener {
+            val createdialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            val view = layoutInflater.inflate(R.layout.equipements_popup, null)
+            val recyclerview = view.findViewById<RecyclerView>(R.id.equipement_recyclerview)
+            val okbutton = view.findViewById<Button>(R.id.bt_ok)
+            createdialog.setView(view)
+            createdialog.setTitle("Voir plus")
+            recyclerview.layoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            recyclerview.adapter =
+                EquipementAdapter(listEquipements,this)
+            val alert = createdialog.create()
+            alert.show()
+            okbutton.setOnClickListener {
+                alert.dismiss()
+            }
+
+        }
+
+
+        offers_recyclerview.adapter = OffersAdapter(listRooms)
+
+     if (hotel?.image_url==null){
         detail_hotel_imageview.setImageResource(R.drawable.hotel)
 
-        /*        }else{
+            }else{
             Glide.with(this@DetailsHotel)
                 .load(hotel?.image_url)
                 .centerCrop()
-                .into(detail_hotel_imageview)}*/
-        detail_hotel_imageview.setImageResource(R.drawable.hotel)
+                .into(detail_hotel_imageview)}
+
+
+
 
         when (hotel?.rate) {
             1 -> one_star_layout.visibility = View.VISIBLE
@@ -192,19 +252,14 @@ class DetailsHotel : AppCompatActivity() {
 
         var nom = "${hotel?.hotelName}".toLowerCase()
         detail_hotel_nom_textview.text = formatString(nom)
-        detail_hotel_description_textview.text = hotel?.hotelDescription
         detail_hotel_adresse_texview.setTypeface(null, Typeface.ITALIC)
-        detail_hotel_telephone_texview.setTypeface(null, Typeface.ITALIC)
         detail_hotel_adresse_texview.text =
             "${hotel?.adresse?.get(0)} ${hotel?.adresse?.get(1)}, ${hotel?.adresse?.get(2)}, ${hotel?.adresse?.get(
                 3
             )}, ${hotel?.adresse?.get(4)}"
-        detail_hotel_telephone_texview.text = "Téléphone : ${hotel?.telephone}"
-        equipement_recyclerview.adapter =
-            EquipementAdapter(
-                hotel?.equipements,
-                this@DetailsHotel
-            )
+
+
+
 
 
 
@@ -238,17 +293,6 @@ class DetailsHotel : AppCompatActivity() {
             }
         }
 
-
-
-        button_description.setOnClickListener {
-            AlertDialog.Builder(this).apply {
-                setTitle("Lire plus")
-                setMessage("${hotel?.hotelDescription}")
-                setPositiveButton(android.R.string.ok) { _, _ ->
-                }
-                show()
-            }
-        }
 
 
         //Ajout voyage
@@ -472,6 +516,17 @@ class DetailsHotel : AppCompatActivity() {
         datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
 
 
+    }
+
+    private fun initializeAdultsList(result : String?){
+        var substring = result?.substringBefore("]")
+        substring = substring?.substringAfter("[")
+        listAdults?.clear()
+        if(substring?.length == 1){
+            listAdults.add(substring)
+        }else {
+            listAdults = substring?.split(", ") as ArrayList<String>
+        }
     }
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {

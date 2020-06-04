@@ -14,7 +14,7 @@ import kotlinx.android.parcel.Parcelize
 @Entity (tableName = "allhotels")
 data class Hotel(
     @PrimaryKey(autoGenerate = true) val id: Int,
-    val hotelId: String,
+    val hotelId: Int,
     val hotelName: String,
     val hotelDescription: String?,
     val rate: Int?,
@@ -23,22 +23,20 @@ data class Hotel(
     @TypeConverters(Converters:: class)
     val adresse: MutableList<String>,
 
-    val telephone: String,
+    val telephone: String?, //null
     val latitude: Double,
     val longitude: Double,
-    val prix: Double,
+    val prix: String,
 
     @TypeConverters(Converters:: class)
-    val equipements: MutableList<String>,
+    val equipements: MutableList<String>? //null : details
 
-    @TypeConverters (Converters :: class)
-    val listIdOffer : MutableList<String>,
-
-    var favoris: Boolean) : Parcelable {
+) : Parcelable {
     companion object {
         val all = (1..20).map {
             Hotel(
-                it, "Id$it",
+                it,
+                it,
                 "Name$it",
                 "Description$it",
                 it,
@@ -47,10 +45,9 @@ data class Hotel(
                 "telephone$it",
                 0.1,
                 0.1,
-                0.1,
-                mutableListOf("A", "B", "C"),
-                mutableListOf("A", "B", "C"),
-                false
+                "0.1",
+                mutableListOf("A", "B", "C")
+
             )
         }.toMutableList()
     }

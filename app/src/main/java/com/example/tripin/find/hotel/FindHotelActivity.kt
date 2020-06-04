@@ -8,8 +8,6 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.AutoCompleteTextView
-import android.widget.ListAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +21,6 @@ import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.HotelDao
 import com.example.tripin.model.Hotel
-import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import io.apptik.widget.MultiSlider
 import io.apptik.widget.MultiSlider.SimpleChangeListener
@@ -33,13 +30,8 @@ import kotlinx.android.synthetic.main.activity_find_hotel.loadingPanel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 // TODO : Récupérer les dates
 
@@ -222,7 +214,7 @@ class FindHotelActivity : AppCompatActivity() {
 
                 runBlocking {
 
-                    Log.d("Hotel", "Début de la récupération des données")
+                   /* Log.d("Hotel", "Début de la récupération des données")
                     hotelDaoSearch?.deleteHotels()
                     val hotels_saved_bdd = hotelDaoSaved?.getHotels()
                     rooms_number = room_number.text.toString().toInt()
@@ -367,7 +359,7 @@ class FindHotelActivity : AppCompatActivity() {
 
                             loadingPanel.visibility = View.GONE
                         })
-                    }
+                    }*/
                 }
 
             }

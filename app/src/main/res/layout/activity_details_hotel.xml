@@ -7,6 +7,7 @@
     tools:context=".find.hotel.DetailsHotel">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="?attr/actionBarSize"
@@ -16,7 +17,8 @@
             android:id="@+id/detail_hotel_imageview"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/hotel" />
 
 
         <ScrollView
@@ -28,17 +30,21 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
+
+
                     <TextView
                         android:id="@+id/detail_hotel_nom_textview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="40dp"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
+                        android:text="Nom de l'hôtel"
                         android:textSize="25dp" />
 
 
@@ -88,7 +94,6 @@
                         </LinearLayout>
 
                     </RelativeLayout>
-
 
                     <RelativeLayout
                         android:id="@+id/three_star_layout"
@@ -220,18 +225,38 @@
 
                     </RelativeLayout>
 
-
-                    <LinearLayout
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="Description"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="20dp"
+                        android:textSize="16dp"
+                        android:textColor="@color/contrast_blue"/>
+
+                    <TextView
+                        android:id="@+id/content_hotel_textview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="vertical">
+                        android:justificationMode="inter_word"
+                        android:text="test"/>
 
 
-                        <TextView
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_marginBottom="25dp"
+                        android:layout_marginTop="25dp"
+                        android:layout_height="0.1dp"
+                        android:background="@android:color/darker_gray"/>
+
+
+
+
+
+                   <!--     <TextView
                             android:id="@+id/detail_hotel_description_textview"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -240,7 +265,28 @@
                             android:justificationMode="inter_word"
                             android:maxLines="5"
                             android:text="Description"
-                            android:textSize="16dp" />
+                            android:textSize="16dp" /> -->
+
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:orientation="vertical">
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/equipement_recyclerview"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:listitem="@layout/equipement_view" />
 
                         <Button
                             android:id="@+id/button_description"
@@ -248,40 +294,36 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
+                            android:visibility="gone"
                             android:gravity="center"
                             android:text="..."
                             app:backgroundTint="@color/contrast_blue" />
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_marginBottom="25dp"
+                        android:layout_marginTop="25dp"
+                        android:layout_height="0.1dp"
+                        android:background="@android:color/darker_gray"/>
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginBottom="30dp">
-
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/equipement_recyclerview"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="10dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:listitem="@layout/equipement_view" />
-
-                    </RelativeLayout>
-
+                        android:text="Carte"
+                        android:layout_marginLeft="20dp"
+                        android:textSize="16dp"
+                        android:textColor="@color/contrast_blue"/>
 
                     <fragment
                         android:id="@+id/map"
                         android:name="com.google.android.gms.maps.SupportMapFragment"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
-                        android:layout_margin="10dp"
-                        android:layout_marginBottom="30dp" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp" />
+
+
 
 
                     <TextView
@@ -290,53 +332,75 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
-                        android:text="Adresse"
-                        android:textSize="16dp" />
+                        android:text="Adresse"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_marginBottom="25dp"
+                        android:layout_marginTop="25dp"
+                        android:layout_height="0.1dp"
+                        android:background="@android:color/darker_gray"/>
 
                     <TextView
-                        android:id="@+id/detail_hotel_telephone_texview"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:gravity="right"
-                        android:text="téléphone"
-                        android:textSize="16dp" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:textSize="16dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColor="@color/contrast_blue"
+                        android:text="Proche de ..." />
+
+                    <TextView
+                        android:id="@+id/proche_hotel_textview"
+                        android:layout_width="match_parent"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:ellipsize="end"
+                        android:maxLines="5"
+                        android:layout_height="wrap_content" />
+
+                    <Button
+                        android:id="@+id/button_proche"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:gravity="center"
+                        android:text="..."
+                        app:backgroundTint="@color/contrast_blue" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_marginBottom="25dp"
+                        android:layout_marginTop="25dp"
+                        android:layout_height="0.1dp"
+                        android:background="@android:color/darker_gray"/>
+
 
 
                 </LinearLayout>
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="40dp"
-                    android:text="Chambres disponibles : "
-                    android:textSize="18dp"/>
-
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
 
-                    <GridLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:nestedScrollingEnabled="true"
-                        android:orientation="horizontal"
-                        android:scrollbars="horizontal">
 
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/offers_recyclerview"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="2dp"
                             android:layout_marginTop="2dp"
                             android:layout_marginEnd="2dp"
+                            android:paddingBottom="2dp"
                             android:layout_marginRight="2dp"
                             android:layout_marginBottom="?attr/actionBarSize"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -345,10 +409,8 @@
                             app:layout_constraintTop_toTopOf="parent"
                             tools:listitem="@layout/offer_view" />
 
-                    </GridLayout>
 
                 </LinearLayout>
-
 
             </LinearLayout>
 
@@ -388,16 +450,7 @@
         app:layout_anchorGravity="bottom|end" />
 
 
-    <Button
-        android:id="@+id/booking_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/rounded_button"
-        android:text="Réserver"
-        android:textAllCaps="false"
-        android:textColor="@color/white" />
+
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -109,16 +109,10 @@ tools:context=".find.hotel.FindHotelFragment">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="55dp"
+                android:layout_marginLeft="10dp"
                 android:gravity="center_vertical">
 
-                <ImageButton
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/minus_button"
-                    android:tint="@color/colorAccent"
-                    android:backgroundTint="@color/white"
-                    android:id="@+id/decrease_rooms" />
+
 
                 <TextView
                     android:id="@+id/room_number"
@@ -126,7 +120,7 @@ tools:context=".find.hotel.FindHotelFragment">
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="100dp"
                     android:textSize="18dp"
                     android:textStyle="bold" />
 
@@ -224,8 +218,67 @@ tools:context=".find.hotel.FindHotelFragment">
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/best_seller"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="Coups de coeur"
+                    android:textAllCaps="false"
+                    android:backgroundTint="@color/white"
+                    />
+
+                <Button
+                    android:id="@+id/highest_first"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="Les mieux notés"
+                    android:backgroundTint="@color/white"
+                    android:textAllCaps="false"/>
+
+                <Button
+                    android:id="@+id/lowest_first"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="Les moins bien notés"
+                    android:textAllCaps="false"
+                    android:backgroundTint="@color/white"
+                    android:backgroundTintMode="src_in"/>
+
+                <Button
+                    android:id="@+id/price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="Prix croissants"
+                    android:textAllCaps="false"
+                    android:backgroundTint="@color/white"/>
+
+                <Button
+                    android:id="@+id/highest_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="Prix décroissants"
+                    android:textAllCaps="false"
+                    android:backgroundTint="@color/white"/>
 
 
+            </LinearLayout>
+
+        </HorizontalScrollView>
 
 
 
@@ -283,8 +336,9 @@ tools:context=".find.hotel.FindHotelFragment">
         <RelativeLayout
             android:id="@+id/loadingPanel"
             android:layout_width="match_parent"
-            android:layout_height="428dp"
-            android:gravity="center">
+            android:layout_height="377dp"
+            android:gravity="center"
+            android:visibility="gone">
 
             <ProgressBar
                 android:layout_width="wrap_content"
@@ -295,7 +349,8 @@ tools:context=".find.hotel.FindHotelFragment">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/hotelsFind_layout">
+            android:id="@+id/hotelsFind_layout"
+            android:visibility="gone">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/hotels_recyclerview"
@@ -306,6 +361,8 @@ tools:context=".find.hotel.FindHotelFragment">
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
                 tools:listitem="@layout/hotel_view"
                 android:nestedScrollingEnabled="false"/>
 

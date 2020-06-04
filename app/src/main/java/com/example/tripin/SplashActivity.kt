@@ -89,14 +89,6 @@ class SplashActivity : AppCompatActivity() {
 //            writeToFile(list, this@SplashActivity)
         }
 
-        /*runBlocking {
-            val service2 = retrofitHotel().create(HotelAPI::class.java)
-            val result2 = service2.getLocation("fr_FR","paris","d82ce245cbmsh006f040e3753b19p1d57ddjsna1fe19bfba68")
-            Log.d("EPFF","$result2")
-        }*/
-
-
-
         Handler().postDelayed({
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)

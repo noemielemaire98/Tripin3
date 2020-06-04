@@ -33,6 +33,12 @@
         <activity android:name=".saved.SavedActivites" android:label="Activités sauvegardées"/>
         <activity android:name=".saved.SavedHotel" android:label="Hotels sauvegardés"/>
         <activity android:name=".saved.SavedFlight" android:label="Vols sauvegardés" />
+        <activity
+            android:name=".find.hotel.DetailsRoom"
+            android:label="Room" />
+        <activity
+            android:name=".find.hotel.RoomsGestion"
+            android:label="Room2" />
 
         <activity
             android:name=".SplashActivity"
