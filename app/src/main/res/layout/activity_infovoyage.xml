@@ -9,7 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        android:layout_marginTop="10dp">
 
         <TextView
             android:id="@+id/voyage_title_textview"
@@ -24,7 +25,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        android:layout_margin="10dp">
 
         <TextView
             android:id="@+id/voyage_date_textview"
@@ -41,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints"
-        android:layout_marginVertical="10dp"
+        android:layout_marginVertical="15dp"
         android:layout_marginHorizontal="8dp"
         android:orientation="vertical">
 
@@ -110,19 +112,29 @@
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_margin="10dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Détails"
-        android:textSize="20dp"
+        android:textSize="25dp"
         android:textColor="@color/colorPrimary"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginHorizontal="8dp"
         android:orientation="vertical">
 
