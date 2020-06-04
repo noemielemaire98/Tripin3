@@ -19,7 +19,7 @@ class RoomsGestion : AppCompatActivity() {
 
     private var adultsList : ArrayList<String> ?= arrayListOf()
     //private var childrenList : ArrayList<String> = arrayListOf()
-    private var adultsNumber : Int = 0
+    private var adultsNumber : Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +32,7 @@ class RoomsGestion : AppCompatActivity() {
 
         decrease_rooms.setOnClickListener {
             hideKeyboard()
-            if (adultsNumber == 0) {
+            if (adultsNumber == 1) {
             } else {
                 adultsNumber = adultsNumber.minus(1)
             }
@@ -55,17 +55,21 @@ class RoomsGestion : AppCompatActivity() {
             if(adultsList?.size == 3){
                 Toast.makeText(this,"Nombre de chambre maximal atteint", Toast.LENGTH_SHORT).show()
 
-            }else {
+            } else {
                 val nbadults = add_room_number_adults.text.toString()
                 adultsList?.add(nbadults)
                 add_room_recyclerview.adapter = AddRoomAdapter(adultsList)
 
             }
-            adultsNumber = 0
+            adultsNumber = 1
             add_room_number_adults.text = adultsNumber.toString()
     }
 
         add_rooms_ok.setOnClickListener{
+            if(adultsList.isNullOrEmpty()){
+                Toast.makeText(this, "Aucune chambre n'a été ajoutée", Toast.LENGTH_LONG ).show()
+                this.finish()
+            }
             val intent = Intent(this, FindHotelFragment::class.java)
             intent.putExtra("listAdults", adultsList.toString())
             setResult(Activity.RESULT_OK, intent)

@@ -212,7 +212,7 @@ object ModelRapid {
         val id: Long, //TODO : hotelID
         val name: String, //TODO : hotelName
         val thumbnailUrl: String, //TODO : image_url
-        val starRating: Long, //TODO : rate
+        val starRating: Float, //TODO : rate
         //val urls: Badging,
         val address: Address, //TODO : adresse
         val guestReviews: GuestReviews,

@@ -78,7 +78,8 @@ class DetailsRoom : AppCompatActivity() {
                 url ="https://fr.hotels.com/dl/hotel/details.html?hotelId=${room.idHotel}&q-check-in=${room.checkIn}&q-check-out=${room.checkOut}&q-rooms=4&q-room-0-adults=${room.listOccupants?.get(0)}&q-room-0-children=0&q-room-1-adults=${room.listOccupants?.get(1)}&q-room-1-children=0&q-room-2-adults=${room.listOccupants?.get(1)}&q-room-2-children=0&q-room-3-adults=${room.listOccupants?.get(3)}&q-room-3-children=0"
             }
             else -> {
-                Toast.makeText(this, "Pas d'occupant", Toast.LENGTH_SHORT).show()
+                room_price_cardview.visibility = View.GONE
+                booking_button.visibility = View.GONE
             }
         }
 

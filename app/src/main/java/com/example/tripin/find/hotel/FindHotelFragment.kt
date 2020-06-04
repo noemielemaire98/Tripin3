@@ -194,6 +194,7 @@ class FindHotelFragment : Fragment() {
         //Lancer la recherche
         bt_search.setOnClickListener {
             loadingPanel.visibility = View.VISIBLE
+            layoutNoHotelAvailable.visibility = View.GONE
             hideKeyboard()
             editText.clearFocus()
 
@@ -231,22 +232,22 @@ class FindHotelFragment : Fragment() {
                 when (adultsList?.size) {
                     1 -> {
                         result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
-                            adultsList!!.get(0).toInt(), null,null, null,
+                            adultsList!![0].toInt(), null,null, null,
                             sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR",hotelKey )
                     }
                     2 -> {
                         result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
-                            adultsList!!.get(0).toInt(),  adultsList!!.get(1).toInt(),null, null,
+                            adultsList!![0].toInt(),  adultsList!!.get(1).toInt(),null, null,
                             sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR",hotelKey )
                     }
                     3 -> {
                         result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
-                            adultsList!!.get(0).toInt(),  adultsList!!.get(1).toInt(),adultsList!!.get(2).toInt(), null,
+                            adultsList!![0].toInt(),  adultsList!!.get(1).toInt(),adultsList!!.get(2).toInt(), null,
                             sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR",hotelKey )
                     }
                     4 -> {
                         result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
-                            adultsList!!.get(0).toInt(), adultsList!!.get(1).toInt(),adultsList!!.get(2).toInt(), adultsList!!.get(3).toInt(),
+                            adultsList!![0].toInt(), adultsList!!.get(1).toInt(),adultsList!!.get(2).toInt(), adultsList!!.get(3).toInt(),
                             sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR",hotelKey)
                     }
                     else -> {
@@ -259,7 +260,6 @@ class FindHotelFragment : Fragment() {
 
 
                 if(result!=null) {
-                    Log.d("IMAGESPB", "tout : ${result}")
 
                     result.data.body.searchResults.results.map {
                         var idHotel = it.id.toString()
@@ -270,7 +270,6 @@ class FindHotelFragment : Fragment() {
                             it.coordinate.lon,
                             1
                         )
-                        Log.d("IMAGES", "test : ${it}")
 
 
                         //Gestion de l'adresse
@@ -281,8 +280,14 @@ class FindHotelFragment : Fragment() {
                             } else {
                                 adresse.add(it.thoroughfare)
                             }
+
                             adresse.add(it.postalCode)
-                            adresse.add(it.locality)
+                            if(it.locality == null){
+                                adresse.add("null")
+                            } else{
+                                adresse.add(it.locality)
+                            }
+
                             adresse.add(it.countryName)
                         }
 

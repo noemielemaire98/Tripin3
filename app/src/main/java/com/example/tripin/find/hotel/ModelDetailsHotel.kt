@@ -148,7 +148,7 @@ object ModelDetailsHotel {
         val priceMatchEnabled: Boolean,
         val name: String,
         val starRatingTitle: String,
-        val starRating: Long,
+        val starRating: Float,
         val featuredPrice: FeaturedPrice,
         val mapWidget: MapWidget,
         val roomTypeNames: List<String>,
