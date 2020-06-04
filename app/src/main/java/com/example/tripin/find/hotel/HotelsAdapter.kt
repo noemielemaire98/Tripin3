@@ -19,7 +19,7 @@ import com.example.tripin.model.Hotel
 import kotlinx.android.synthetic.main.hotel_view.view.*
 import kotlinx.coroutines.runBlocking
 
-class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>, val listAdults : MutableList<String>): RecyclerView.Adapter<HotelsAdapter.HotelViewHolder>(){
+class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>, val listAdults : MutableList<String>, val dateArrivee : String, val dateDepart : String): RecyclerView.Adapter<HotelsAdapter.HotelViewHolder>(){
 
     class HotelViewHolder(val hotelView : View):RecyclerView.ViewHolder(hotelView)
 
@@ -62,11 +62,26 @@ class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>
         holder.hotelView.hotel_name_textview.setTypeface(null, Typeface.BOLD)
         holder.hotelView.hotel_name_textview.text= formatNomHotel(nom)
 
+        hotel.adresse.forEach {
+            if (it == "null"){
+
+            }
+        }
+
         //Definition de l'adresse
+
+        var adresse = mutableListOf<String>()
+        hotel.adresse.forEach {
+            if(it == "null"){
+                adresse.add("NC")
+            }else{
+        adresse.add(it)
+            }
+        }
         holder.hotelView.hotel_adresse1_textview.setTypeface(null, Typeface.ITALIC)
-        holder.hotelView.hotel_adresse1_textview.text = "${hotel.adresse[0]}, ${hotel.adresse[1]} "
+        holder.hotelView.hotel_adresse1_textview.text = "${adresse[0]}, ${adresse[1]} "
         holder.hotelView.hotel_adresse2_textview.setTypeface(null, Typeface.ITALIC)
-        holder.hotelView.hotel_adresse2_textview.text = "${hotel.adresse[2]}, ${hotel.adresse[3]}, ${hotel.adresse[4].toUpperCase()}"
+        holder.hotelView.hotel_adresse2_textview.text = "${adresse[2]}, ${adresse[3]?.toUpperCase()}"
 
         //Definition de la note
 
@@ -78,7 +93,7 @@ class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>
         }
 
 
-        holder.hotelView.hotel_prix_textview.text = "A partir de : ${hotel.prix}"
+        holder.hotelView.hotel_prix_textview.text = "Séjour à partir de : ${hotel.prix}"
 
 
         //Récupération de l'image
@@ -106,6 +121,8 @@ class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>
             intent.putExtra("hotel", hotel)
             intent.putExtra("favoris", favoris[position])
             intent.putExtra("listAdults", listAdults.toString())
+            intent.putExtra("dateArrivee", dateArrivee)
+            intent.putExtra("dateDepart", dateDepart)
             it.context.startActivity(intent)
         }
 

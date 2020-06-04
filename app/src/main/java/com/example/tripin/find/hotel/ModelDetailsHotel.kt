@@ -193,7 +193,7 @@ object ModelDetailsHotel {
 
     data class Room (
         val name: String,
-        val images: List<Image>,
+        val images: List<Image> ?,
         val bedChoices: BedChoices,
         val maxOccupancy: MaxOccupancy,
         val additionalInfo: AdditionalInfo,
@@ -224,8 +224,8 @@ object ModelDetailsHotel {
     data class MaxOccupancy (
         val children: Long,
         val total: Long,
-        val messageChildren: String,
-        val messageTotal: String
+        val messageChildren: String ?,
+        val messageTotal: String ?
     )
 
 

@@ -78,6 +78,8 @@ class DetailsHotel : AppCompatActivity() {
         hotel = intent.getParcelableExtra("hotel")
         favoris = intent.getBooleanExtra("favoris", false)
         var Adults = intent.getStringExtra("listAdults")
+        val dateArrivee = intent.getStringExtra("dateArrivee")
+        val dateDepart = intent.getStringExtra("dateDepart")
         if(Adults!="[]"){
             initializeAdultsList(Adults)
         }
@@ -149,9 +151,9 @@ Log.d("Test", result.toString())
             if( result.data.body.roomsAndRates!=null){
             result.data.body.roomsAndRates.rooms?.forEach {
                 var nameRoom = it.name
-                var image = it.images[0]?.fullSizeUrl
+                var image:String? = it.images?.get(0)?.fullSizeUrl
                 var descriptionRoom = it.additionalInfo.description
-                var occupancyRoom = "${it.maxOccupancy.messageTotal} ${it.maxOccupancy.messageChildren}"
+                var occupancyRoom:String?  = "${it.maxOccupancy.messageTotal} ${it.maxOccupancy.messageChildren}"
                 amenitiesRoom = it.additionalInfo.details.amenities as MutableList<String>
                 var priceNight  = it.ratePlans[0].price.nightlyPriceBreakdown.additionalColumns[0].value
                 var price = it.ratePlans[0].price.current
@@ -167,8 +169,8 @@ Log.d("Test", result.toString())
                     priceNight,
                     price,
                     promo,
-                    "2020-08-01",
-                    "2020-08-03",
+                    dateArrivee,
+                    dateDepart,
                     listAdults
                     )
 
@@ -225,7 +227,7 @@ Log.d("Test", result.toString())
         }
 
 
-        offers_recyclerview.adapter = OffersAdapter(listRooms)
+        offers_recyclerview.adapter = RoomAdapter(listRooms)
 
      if (hotel?.image_url==null){
         detail_hotel_imageview.setImageResource(R.drawable.hotel)
@@ -249,14 +251,21 @@ Log.d("Test", result.toString())
             }
         }
 
+        var adresse = mutableListOf<String>()
+        hotel?.adresse!!.forEach {
+            if(it == "null"){
+                adresse.add("NC")
+            }else{
+                adresse.add(it)
+            }
+        }
 
         var nom = "${hotel?.hotelName}".toLowerCase()
         detail_hotel_nom_textview.text = formatString(nom)
         detail_hotel_adresse_texview.setTypeface(null, Typeface.ITALIC)
         detail_hotel_adresse_texview.text =
-            "${hotel?.adresse?.get(0)} ${hotel?.adresse?.get(1)}, ${hotel?.adresse?.get(2)}, ${hotel?.adresse?.get(
-                3
-            )}, ${hotel?.adresse?.get(4)}"
+            "${adresse.get(0)} ${adresse.get(1)}, ${adresse.get(2)}, ${adresse.get(
+                3)}"
 
 
 
