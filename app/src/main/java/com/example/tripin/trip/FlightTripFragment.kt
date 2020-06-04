@@ -16,6 +16,8 @@ import com.example.tripin.R
 import com.example.tripin.find.flight.FlightsAdapterTrip
 import com.example.tripin.model.Flight
 import com.example.tripin.model.Voyage
+import com.example.tripin.saved.DetailVoyageSave
+import com.google.android.gms.maps.model.Marker
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -31,7 +33,17 @@ class FlightTripFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        val voyage = arguments?.getSerializable("voyage") as Voyage
+        val fragment = arguments?.getString("fragment")
+
+        val voyage: Voyage?
+
+        voyage = if(fragment == "DetailVoyage2") {
+
+            (activity as? DetailVoyage2)!!.voyage
+
+        } else {
+            (activity as? DetailVoyageSave)!!.voyage
+        }
 
 
         val view = inflater.inflate(R.layout.activity_saved_flight, container, false)

@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.tripin.model.Voyage
+import com.example.tripin.saved.DetailVoyageSave
 import kotlinx.coroutines.runBlocking
 
 
@@ -42,9 +43,20 @@ class ActivityTripFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val voyage = (activity as? DetailVoyage2)!!.voyage
-        var listMarker2 = (activity as? DetailVoyage2)!!.listMarker2
-        val voyage = arguments?.getSerializable("voyage") as Voyage
+        val fragment = arguments?.getString("fragment")
+
+        val voyage: Voyage?
+        val listMarker2: ArrayList<Marker>
+
+        if(fragment == "DetailVoyage2") {
+
+            voyage = (activity as? DetailVoyage2)!!.voyage
+            listMarker2 = (activity as? DetailVoyage2)!!.listMarker2
+
+        } else {
+            voyage = (activity as? DetailVoyageSave)!!.voyage
+            listMarker2 = (activity as? DetailVoyageSave)!!.listMarker2
+        }
 
 
         val view = inflater.inflate(R.layout.activity_tripdetails_activites, container, false)

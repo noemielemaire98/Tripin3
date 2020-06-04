@@ -56,7 +56,7 @@ class DetailVoyage2 : AppCompatActivity() {
         runBlocking {
             voyage = voyageDao!!.getVoyage(id)
         }
-        bundle.putSerializable("voyage", voyage)
+        bundle.putString("fragment", "DetailVoyage2")
         setupViewPager(viewpager_detail_voyage)
         viewpager_detail_voyage.offscreenPageLimit = 3
         tablayout_detail_voyage.setupWithViewPager(viewpager_detail_voyage)
@@ -144,7 +144,7 @@ class DetailVoyage2 : AppCompatActivity() {
         val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
         scope.launch {
-            val adapter = FindTabAdapterTrip(supportFragmentManager,voyage_map_layout,imageView)
+            val adapter = FindTabAdapterTrip(supportFragmentManager,voyage_map_layout,imageView, bundle)
             adapter.addFragment(InfoVoyageFrangment(), "Aperçu")
             adapter.addFragment(FlightTripFragment(), "Vol")
             adapter.addFragment(HotelTripFragment(), "Hotel")

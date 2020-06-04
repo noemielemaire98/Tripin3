@@ -971,7 +971,7 @@ class FindVoyage : Fragment() {
     }
 
     // Lancement de la recherche
-    @RequiresApi(Build.VERSION_CODES.O)
+
     private fun beginSearchExported(dateRetour: String) {
         dateDepart = aller_date.text.toString()
         val nbActivities = activities_number.text.toString()
@@ -1364,7 +1364,7 @@ class FindVoyage : Fragment() {
                     }
 
                     if (!listHotels.isNullOrEmpty()) {
-                        hotelsAdapter = HotelsAdapter(listHotels, listFavorisHotels,mutableListOf())
+                        hotelsAdapter = HotelsAdapter(listHotels!!, listFavorisHotels,mutableListOf())
                         try {
                             mergeAdapter.addAdapter(1, hotelsAdapter!!)
                         } catch (e: Exception) {
