@@ -9,6 +9,7 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "allActivities")
 data class Activity (@PrimaryKey val uuid:String,
                      val title: String,
+                     val ville : String,
                      val cover_image_url:String?,
                      val formatted_iso_value : String?,
                      val operational_days : String?,
@@ -29,7 +30,7 @@ data class Activity (@PrimaryKey val uuid:String,
 
             val ll = listOf<String>("aa","bb")
 
-            Activity("id$it","Titre$it", "R.drawable.activite1","10€", "tous les jours",5.5,ll,"url",false,false,"description","about",7.3,88.77)
+            Activity("id$it","Titre$it","Ville$it", "R.drawable.activite1","10€", "tous les jours",5.5,ll,"url",false,false,"description","about",7.3,88.77)
         }.toMutableList()
 
     }

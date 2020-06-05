@@ -226,6 +226,7 @@ class FindActivityFragment : Fragment()  {
                       val activity = Activity(
                           it.uuid,
                           it.title,
+                          it.city.name,
                           it.cover_image_url,
                           it.retail_price.formatted_iso_value,
                           it.operational_days,

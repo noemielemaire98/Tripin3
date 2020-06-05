@@ -45,7 +45,7 @@ class ListActivityConverter {
         val arrayList = arrayListOf<String>()
         listActivity.map {
             val string =
-                "${it.uuid};${it.title};${it.cover_image_url};${it.formatted_iso_value};${it.operational_days};${it.reviews_avg};${it.category};${it.url};${it.top_seller};${it.must_see};${it.description};${it.about};${it.latitude};${it.longitude}"
+                "${it.uuid};${it.title};${it.cover_image_url};${it.ville};${it.formatted_iso_value};${it.operational_days};${it.reviews_avg};${it.category};${it.url};${it.top_seller};${it.must_see};${it.description};${it.about};${it.latitude};${it.longitude}"
             arrayList.add(string)
         }
 
@@ -58,7 +58,7 @@ class ListActivityConverter {
         listString.map {
             val items = it.split(";")
             Log.d("RRR", "$items")
-            val cat = items[6].substring(1, items[6].length - 1)
+            val cat = items[7].substring(1, items[7].length - 1)
             val categories: List<String> = cat.split(",")
             val activity = Activity(
                 items[0],
@@ -66,15 +66,16 @@ class ListActivityConverter {
                 items[2],
                 items[3],
                 items[4],
-                items[5].toDouble(),
+                items[5],
+                items[6].toDouble(),
                 categories,
-                items[7],
-                items[8].toBoolean(),
+                items[8],
                 items[9].toBoolean(),
-                items[10],
+                items[10].toBoolean(),
                 items[11],
-                items[12].toDouble(),
-                items[13].toDouble()
+                items[12],
+                items[13].toDouble(),
+                items[14].toDouble()
             )
 
             arrayList.add(activity)
