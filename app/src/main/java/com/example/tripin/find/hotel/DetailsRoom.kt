@@ -36,6 +36,7 @@ class DetailsRoom : AppCompatActivity() {
 
 
         room = intent.getParcelableExtra("room")
+        Log.d("ROOMCCC", room.toString())
 
 
        Glide.with(this)
@@ -56,17 +57,18 @@ class DetailsRoom : AppCompatActivity() {
         details_occupancy_room.text = room.occupancyRoom
 
 
+        if(room.listOccupants?.size != 0){
+            price_room.text ="${room.price}"
+            val checkIn =  SimpleDateFormat("yyyy-MM-dd").parse(room.checkIn)
+            val checkOut =  SimpleDateFormat("yyyy-MM-dd").parse(room.checkOut)
+            val diff: Long = checkOut.time - checkIn.time
+            val nbNuits = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+            price_night.text = "${room.priceNight}"
 
-        price_room.text ="${room.price}"
+            date_room_details.text = "${room.checkIn} au ${room.checkOut}"
+            nb_night_details.text = "$nbNuits nuit(s)"
+        }
 
-        val checkIn =  SimpleDateFormat("yyyy-MM-dd").parse(room.checkIn)
-        val checkOut =  SimpleDateFormat("yyyy-MM-dd").parse(room.checkOut)
-        val diff: Long = checkOut.time - checkIn.time
-        val nbNuits = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
-        price_night.text = "${room.priceNight}"
-
-        date_room_details.text = "${room.checkIn} au ${room.checkOut}"
-        nb_night_details.text = "$nbNuits nuit(s)"
 
         when (room.listOccupants?.size) {
             1 -> {

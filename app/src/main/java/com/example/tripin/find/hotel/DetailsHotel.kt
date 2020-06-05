@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide
 import com.example.tripin.R
 import com.example.tripin.data.*
 import com.example.tripin.model.*
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import kotlinx.android.synthetic.main.activity_details_hotel.*
 import kotlinx.coroutines.runBlocking
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -60,6 +61,7 @@ class DetailsHotel : AppCompatActivity() {
     private val service = retrofitHotel().create(HotelAPI::class.java)
     private val hotelKey = "e510fb173emsh2748fdaccbfd76dp19ee52jsnc2bda03d8b6d"
     private var listEquipements : MutableList<Equipement> = mutableListOf()
+    private var drawableNameList : MutableList<String> = mutableListOf()
     private var listProche : String = ""
     private var listRooms : MutableList<Rooms> = mutableListOf()
     private var listAdults : MutableList<String> = mutableListOf()
@@ -84,6 +86,7 @@ class DetailsHotel : AppCompatActivity() {
             initializeAdultsList(Adults)
         }
         listEquipements.clear()
+        drawableNameList.clear()
 
 
         val databasesaved =
@@ -179,8 +182,27 @@ Log.d("Test", result.toString())
 
 
             }}
+            val equipementCsv = resources.openRawResource(R.raw.equipements)
+            val listCvs = csvReader().readAll(equipementCsv)
+            var drawableName = ""
 
-            Log.d("Equipements", listEquipements.toString())
+            listEquipements.forEach {
+                val heading = it.heading
+                listCvs.forEach {
+                    if (heading == it[0]){
+                        drawableName = it[1]
+                        Log.d("DrawableName", it[1])
+                    }
+
+                    if(drawableName == ""){
+                        drawableName = "wifi"
+                    }
+
+            }
+                drawableNameList.add(drawableName)
+
+            }
+
 
         }
 
@@ -188,11 +210,11 @@ Log.d("Test", result.toString())
         if(listEquipements.size > 2){
             val newList = mutableListOf<Equipement>(listEquipements[0],listEquipements[1])
             equipement_recyclerview.adapter =
-                EquipementAdapter(newList, this@DetailsHotel)
+                EquipementAdapter(newList, drawableNameList, this@DetailsHotel)
                 button_description.visibility  = View.VISIBLE
         }else{
             equipement_recyclerview.adapter =
-                EquipementAdapter(listEquipements, this@DetailsHotel)
+                EquipementAdapter(listEquipements, drawableNameList,this@DetailsHotel)
             button_description.visibility  = View.GONE
         }
 
@@ -217,7 +239,7 @@ Log.d("Test", result.toString())
             recyclerview.layoutManager =
                 LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
             recyclerview.adapter =
-                EquipementAdapter(listEquipements,this)
+                EquipementAdapter(listEquipements,drawableNameList,this)
             val alert = createdialog.create()
             alert.show()
             okbutton.setOnClickListener {
