@@ -1,14 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".trip.HotelTripFragment">
+    tools:context=".trip.HotelTripFragment"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:gravity="center"
+        android:id="@+id/layout_nosavedHotel"
+        android:visibility="visible">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/noSavedHotelAvailable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Aucun hôtel enregistré"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/noSavedActivityDetail"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/noSavedHotelAvailable"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:layout_centerInParent="true"
+            android:text="@string/noSavedFlights"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/noHotelImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/noSavedActivityDetail"
+            android:layout_marginTop="30dp"
+            android:contentDescription="@string/imageDescription_no_favoriteFlight"
+            android:gravity="center"
+            android:src="@drawable/nosavedflights" />
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/hotelsaved_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/hotel_trip_view" />
+
+</LinearLayout>

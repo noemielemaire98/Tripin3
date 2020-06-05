@@ -19,17 +19,13 @@ data class Hotel(
     val hotelDescription: String?,
     val rate: Int?,
     val image_url: String?,
-
     @TypeConverters(Converters:: class)
     val adresse: MutableList<String>,
-
-    val telephone: String?, //null
     val latitude: Double,
     val longitude: Double,
     val prix: String,
-
     @TypeConverters(Converters:: class)
-    val equipements: MutableList<String>? //null : details
+    val equipements: MutableList<String>?
 
 ) : Parcelable {
     companion object {
@@ -40,14 +36,12 @@ data class Hotel(
                 "Name$it",
                 "Description$it",
                 it,
-                "R.drawable.activite1",
+                "R.drawable.hotel",
                 mutableListOf("A", "B", "C"),
-                "telephone$it",
                 0.1,
                 0.1,
                 "0.1",
                 mutableListOf("A", "B", "C")
-
             )
         }.toMutableList()
     }

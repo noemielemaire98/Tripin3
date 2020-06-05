@@ -1,33 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginBottom="10dp"
+    android:layout_marginTop="10dp">
 
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp">
-        <LinearLayout
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/room_layout"
+            android:orientation="horizontal">
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="Chambre n°1"
                 android:layout_marginLeft="10dp"
-                android:textSize="20dp"
+                app:layout_constraintLeft_toLeftOf="@id/room_layout"
+                app:layout_constraintTop_toTopOf="@id/room_layout"
+                app:layout_constraintBottom_toBottomOf="@id/room_layout"
+                android:textSize="17dp"
                 android:id="@+id/add_room_number_view"/>
+            <Button
+                android:id="@+id/delete_room_view"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="right"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintRight_toRightOf="@id/room_layout"
+                app:layout_constraintTop_toTopOf="@id/room_layout"
+                app:layout_constraintBottom_toBottomOf="@id/room_layout"
+                android:background="@drawable/close"
+                android:adjustViewBounds="true"
+                android:backgroundTint="@color/contrast_blue" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
                 <TextView
                     android:layout_width="wrap_content"
@@ -57,19 +83,10 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/delete_room_view"
-                android:layout_marginTop="20dp"
-                android:layout_gravity="right"
-                android:textColor="@color/white"
-                android:backgroundTint="@color/contrast_blue"
-                android:text=" Supprimer"/>
 
 
-        </LinearLayout>
+
+    </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
-
-</androidx.cardview.widget.CardView>

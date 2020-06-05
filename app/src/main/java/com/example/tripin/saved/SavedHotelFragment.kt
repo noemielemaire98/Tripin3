@@ -65,7 +65,7 @@ class SavedHotelFragment : Fragment() {
             if(!hotels.isNullOrEmpty()){
                 layout_nohotel.visibility = View.GONE
                rv.adapter =
-                    HotelsAdapter(hotels!!, list_favoris,mutableListOf())
+                    HotelsAdapter(hotels!!, list_favoris,mutableListOf(),"","")
 
             }else{
                 layout_nohotel.visibility = View.VISIBLE

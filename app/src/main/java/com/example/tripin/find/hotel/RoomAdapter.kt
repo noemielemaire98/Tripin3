@@ -13,32 +13,32 @@ import com.example.tripin.model.Offer
 import com.example.tripin.model.Rooms
 import kotlinx.android.synthetic.main.offer_view.view.*
 
-class OffersAdapter (val offers : List<Rooms>): RecyclerView.Adapter<OffersAdapter.OfferViewHolder>() {
+class RoomAdapter (val rooms : List<Rooms>): RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
 
     private lateinit var context: Context
 
-    class OfferViewHolder(val offerView: View) : RecyclerView.ViewHolder(offerView)
+    class RoomViewHolder(val roomView: View) : RecyclerView.ViewHolder(roomView)
 
-    override fun getItemCount(): Int = offers.size
+    override fun getItemCount(): Int = rooms.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OfferViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomViewHolder {
         val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
         val view: View = layoutInflater.inflate(R.layout.offer_view, parent, false)
 
         context = parent.context
 
-        return OfferViewHolder(view)
+        return RoomViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: OfferViewHolder, position: Int) {
-        val offer = offers?.get(position)
-        holder.offerView.price_room_recyclerview.text = "${offer?.price}"
-        holder.offerView.name_room_recyclerview.text = offer.nameRoom
+    override fun onBindViewHolder(holder: RoomViewHolder, position: Int) {
+        val room = rooms?.get(position)
+        holder.roomView.price_room_recyclerview.text = "${room?.priceNight}/nuit"
+        holder.roomView.name_room_recyclerview.text = room.nameRoom
 
 
-        holder.offerView.setOnClickListener {
+        holder.roomView.setOnClickListener {
             val intent= Intent(it.context, DetailsRoom::class.java)
-            intent.putExtra("room", offer)
+            intent.putExtra("room", room)
             it.context.startActivity(intent)
         }
 
