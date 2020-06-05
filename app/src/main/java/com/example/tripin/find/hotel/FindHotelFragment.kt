@@ -1,10 +1,13 @@
 package com.example.tripin.find.hotel
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
@@ -59,9 +63,13 @@ class FindHotelFragment : Fragment() {
     private val hotelKey = "e510fb173emsh2748fdaccbfd76dp19ee52jsnc2bda03d8b6d"
     private var sortBy : String = ""
     var adultsList : ArrayList<String> ?= arrayListOf()
+    private var animatedHide = false
+    private var animatedShow = false
 
 
 
+
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -87,12 +95,55 @@ class FindHotelFragment : Fragment() {
         val bt_lowest_first = view.findViewById<Button>(R.id.lowest_first)
         val bt_price_sort = view.findViewById<Button>(R.id.price)
         val bt_highest_price = view.findViewById<Button>(R.id.highest_price)
-
+        val scrollToTopArrow = view.findViewById<de.hdodenhof.circleimageview.CircleImageView>(R.id.scroll_to_top_arrow)
+        val findTopLevelScrollView = view.findViewById<ScrollView>(R.id.findTopLevel_scrollView)
 
         //Initialisation Recyclerview
         recyclerViewHotels.layoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 
+        scrollToTopArrow.setOnClickListener { findTopLevelScrollView.smoothScrollTo(0, 0) }
+
+        val whenVisibleMargin = convertDpToPixel(15f, requireContext())
+        val whenHideMargin = convertDpToPixel(-85f, requireContext())
+
+        // Hide the arrow at the beginning when the screen starts
+        scrollToTopArrow.visibility = View.GONE
+
+        findTopLevelScrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
+            if (scrollY >= 600) {
+                if (!animatedShow) {
+                    scrollToTopArrow.visibility = View.VISIBLE
+                    val params = scrollToTopArrow.layoutParams as RelativeLayout.LayoutParams
+                    val animator =
+                        ValueAnimator.ofInt(params.rightMargin, whenVisibleMargin.toInt())
+                    animator.addUpdateListener { valueAnimator ->
+                        params.rightMargin = valueAnimator.animatedValue as Int
+                        scrollToTopArrow.requestLayout()
+                    }
+                    animator.duration = 300
+                    animator.start()
+                    animatedShow = true
+                    animatedHide = false
+                }
+            } else {
+                if (!animatedHide) {
+                    scrollToTopArrow.visibility = View.VISIBLE
+                    val params = scrollToTopArrow.layoutParams as RelativeLayout.LayoutParams
+                    val animator =
+                        ValueAnimator.ofInt(params.rightMargin, whenHideMargin.toInt())
+                    animator.addUpdateListener { valueAnimator ->
+                        params.rightMargin = valueAnimator.animatedValue as Int
+                        scrollToTopArrow.requestLayout()
+                    }
+                    animator.duration = 300
+                    animator.start()
+                    animatedHide = true
+                    animatedShow = false
+                }
+            }
+
+        }
 
 
         //Initialisation Database
@@ -463,6 +514,10 @@ class FindHotelFragment : Fragment() {
 
         return bt
 
+    }
+
+    private fun convertDpToPixel(dp: Float, context: Context): Float {
+        return dp * (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
     }
 
     private fun rangeDatePickerPrimeCalendar() {
