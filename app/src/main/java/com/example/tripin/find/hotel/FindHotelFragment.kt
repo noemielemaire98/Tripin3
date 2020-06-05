@@ -34,6 +34,7 @@ import kotlinx.android.synthetic.main.activity_find_hotel.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.jetbrains.anko.support.v4.runOnUiThread
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -250,163 +251,210 @@ class FindHotelFragment : Fragment() {
 
             //Récupération des dates
 
-                dateArrivee = arriveeDate.text.toString()
-                dateDepart = departDate.text.toString()
+            dateArrivee = arriveeDate.text.toString()
+            dateDepart = departDate.text.toString()
 
-                //Récupération du filtre de recherche
-                sortBy =
-                    liste_cat_active(bt_best_seller, bt_highest_first, bt_lowest_first, bt_price_sort, bt_highest_price)
+            //Récupération du filtre de recherche
+            sortBy =
+                liste_cat_active(
+                    bt_best_seller,
+                    bt_highest_first,
+                    bt_lowest_first,
+                    bt_price_sort,
+                    bt_highest_price
+                )
 
             //Recuperation du code de la ville de l'API
-           runBlocking{
-                   val searchCity = editText.text.toString()
-                   var result = service.getLocation("fr_FR",searchCity.toLowerCase(),hotelKey)
+            GlobalScope.launch {
+                val searchCity = editText.text.toString()
+                var result = service.getLocation("fr_FR", searchCity.toLowerCase(), hotelKey)
 
-                   result.suggestions.map {
-                       if (it.group == "CITY_GROUP"){
-                           cityCode = it.entities[0].destinationId.toInt()
-                       }
-                   }
-
-
-                   if(dateArrivee==""||dateDepart ==""){
-                       Toast.makeText(requireContext(), "Dates invalides", Toast.LENGTH_SHORT).show()
-                   }else {
-
-                       //Lancement de la recherche
-
-                       hotelDaoSearch?.deleteHotels()
-                       val hotels_saved_bdd = hotelDaoSaved?.getHotels()
-                       list_favoris.clear()
+                result.suggestions.map {
+                    if (it.group == "CITY_GROUP") {
+                        cityCode = it.entities[0].destinationId.toInt()
+                    }
+                }
 
 
-                       Log.d("Hotel", "Début de la récupération des données")
-                       var result: ModelRapid.Hotels? = null
-                       when (adultsList?.size) {
-                           1 -> {
-                               result = service.getHotelsList(
-                                   cityCode, 1, dateArrivee, dateDepart, 10,
-                                   adultsList!![0].toInt(), null, null, null,
-                                   sortBy, priceMinChosen, priceMaxChosen, "fr_FR", "EUR", hotelKey
-                               )
-                           }
-                           2 -> {
-                               result = service.getHotelsList(
-                                   cityCode, 1, dateArrivee, dateDepart, 10,
-                                   adultsList!![0].toInt(), adultsList!!.get(1).toInt(), null, null,
-                                   sortBy, priceMinChosen, priceMaxChosen, "fr_FR", "EUR", hotelKey
-                               )
-                           }
-                           3 -> {
-                               result = service.getHotelsList(
-                                   cityCode,
-                                   1,
-                                   dateArrivee,
-                                   dateDepart,
-                                   10,
-                                   adultsList!![0].toInt(),
-                                   adultsList!!.get(1).toInt(),
-                                   adultsList!!.get(2).toInt(),
-                                   null,
-                                   sortBy,
-                                   priceMinChosen,
-                                   priceMaxChosen,
-                                   "fr_FR",
-                                   "EUR",
-                                   hotelKey
-                               )
-                           }
-                           4 -> {
-                               result = service.getHotelsList(
-                                   cityCode,
-                                   1,
-                                   dateArrivee,
-                                   dateDepart,
-                                   10,
-                                   adultsList!![0].toInt(),
-                                   adultsList!!.get(1).toInt(),
-                                   adultsList!!.get(2).toInt(),
-                                   adultsList!!.get(3).toInt(),
-                                   sortBy,
-                                   priceMinChosen,
-                                   priceMaxChosen,
-                                   "fr_FR",
-                                   "EUR",
-                                   hotelKey
-                               )
-                           }
-                           else -> {
-                               Toast.makeText(
-                                   requireActivity().baseContext,
-                                   "Veuillez ajouter des chambres",
-                                   Toast.LENGTH_SHORT
-                               ).show()
-                           }
-                       }
+                if (dateArrivee == "" || dateDepart == "") {
+                    Toast.makeText(requireContext(), "Dates invalides", Toast.LENGTH_SHORT).show()
+                } else {
 
-                       Log.d("Hotel", "Récupération des données terminée")
+                    //Lancement de la recherche
+
+                    runBlocking {
+                        hotelDaoSearch?.deleteHotels()
+                        val hotels_saved_bdd = hotelDaoSaved?.getHotels()
+                        list_favoris.clear()
 
 
+                        Log.d("Hotel", "Début de la récupération des données")
+                        var result: ModelRapid.Hotels? = null
+                        when (adultsList?.size) {
+                            1 -> {
+                                result = service.getHotelsList(
+                                    cityCode,
+                                    1,
+                                    dateArrivee,
+                                    dateDepart,
+                                    10,
+                                    adultsList!![0].toInt(),
+                                    null,
+                                    null,
+                                    null,
+                                    sortBy,
+                                    priceMinChosen,
+                                    priceMaxChosen,
+                                    "fr_FR",
+                                    "EUR",
+                                    hotelKey
+                                )
+                            }
+                            2 -> {
+                                result = service.getHotelsList(
+                                    cityCode,
+                                    1,
+                                    dateArrivee,
+                                    dateDepart,
+                                    10,
+                                    adultsList!![0].toInt(),
+                                    adultsList!!.get(1).toInt(),
+                                    null,
+                                    null,
+                                    sortBy,
+                                    priceMinChosen,
+                                    priceMaxChosen,
+                                    "fr_FR",
+                                    "EUR",
+                                    hotelKey
+                                )
+                            }
+                            3 -> {
+                                result = service.getHotelsList(
+                                    cityCode,
+                                    1,
+                                    dateArrivee,
+                                    dateDepart,
+                                    10,
+                                    adultsList!![0].toInt(),
+                                    adultsList!!.get(1).toInt(),
+                                    adultsList!!.get(2).toInt(),
+                                    null,
+                                    sortBy,
+                                    priceMinChosen,
+                                    priceMaxChosen,
+                                    "fr_FR",
+                                    "EUR",
+                                    hotelKey
+                                )
+                            }
+                            4 -> {
+                                result = service.getHotelsList(
+                                    cityCode,
+                                    1,
+                                    dateArrivee,
+                                    dateDepart,
+                                    10,
+                                    adultsList!![0].toInt(),
+                                    adultsList!!.get(1).toInt(),
+                                    adultsList!!.get(2).toInt(),
+                                    adultsList!!.get(3).toInt(),
+                                    sortBy,
+                                    priceMinChosen,
+                                    priceMaxChosen,
+                                    "fr_FR",
+                                    "EUR",
+                                    hotelKey
+                                )
+                            }
+                            else -> {
+                                Toast.makeText(
+                                    requireActivity().baseContext,
+                                    "Veuillez ajouter des chambres",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
 
-                       if (result != null) {
-
-                           result.data.body.searchResults.results.map {
-                               var idHotel = it.id.toString()
-                               var adresse: MutableList<String> = mutableListOf()
-                               adresse.add(it.address.streetAddress)
-                               adresse.add(it.address.postalCode)
-                               adresse.add(it.address.locality)
-                               adresse.add(it.address.countryName)
+                        Log.d("Hotel", "Récupération des données terminée")
 
 
-                               //Récupération des hôtels favoris
-                               var match_bdd = false
-                               var favori = false
-                               hotels_saved_bdd?.forEach {
-                                   if (it.hotelId == idHotel.toInt()) {
-                                       list_favoris.add(true)
-                                       match_bdd = true
-                                       favori = true
-                                   }
-                               }
-                               if (!match_bdd) {
-                                   list_favoris.add(false)
-                               }
+
+                        if (result != null) {
+
+                            result.data.body.searchResults.results.map {
+                                var idHotel = it.id.toString()
+                                var adresse: MutableList<String> = mutableListOf()
+                                adresse.add(it.address.streetAddress)
+                                adresse.add(it.address.postalCode)
+                                adresse.add(it.address.locality)
+                                adresse.add(it.address.countryName)
 
 
-                               val hotel = Hotel(
-                                   0,
-                                   it.id.toInt(),
-                                   it.name,
-                                   null,
-                                   it.starRating.toInt(),
-                                   it.thumbnailUrl,
-                                   adresse,
-                                   it.coordinate.lat,
-                                   it.coordinate.lon,
-                                   it.ratePlan.price.current,
-                                   null
-                               )
+                                //Récupération des hôtels favoris
+                                var match_bdd = false
+                                var favori = false
+                                hotels_saved_bdd?.forEach {
+                                    if (it.hotelId == idHotel.toInt()) {
+                                        list_favoris.add(true)
+                                        match_bdd = true
+                                        favori = true
+                                    }
+                                }
+                                if (!match_bdd) {
+                                    list_favoris.add(false)
+                                }
 
-                               hotelDaoSearch?.addHotel(hotel)
-                               Log.d("Hotel", hotel.toString())
 
-                           }
-                       }
-                   }
-           }
-            runBlocking {  var hotels_search_bdd: List<Hotel>? = null
+                                val hotel = Hotel(
+                                    0,
+                                    it.id.toInt(),
+                                    it.name,
+                                    null,
+                                    it.starRating.toInt(),
+                                    it.thumbnailUrl,
+                                    adresse,
+                                    it.coordinate.lat,
+                                    it.coordinate.lon,
+                                    it.ratePlan.price.current,
+                                    null
+                                )
 
-                   hotels_search_bdd = hotelDaoSearch?.getHotels()
-                   if (!hotels_search_bdd.isNullOrEmpty()) {
-                       loadingPanel.visibility = View.GONE
-                       hotelsLayout.visibility = View.VISIBLE
-                       recyclerViewHotels.adapter =
-                           HotelsAdapter(hotels_search_bdd ?: emptyList(), list_favoris, adultsList!!, dateArrivee, dateDepart)
-                   } else {
-                       layoutNoHotelAvailable.visibility = View.VISIBLE
-                   }}
+                                hotelDaoSearch?.addHotel(hotel)
+                                Log.d("Hotel", hotel.toString())
 
+                            }
+                        }
+
+                    }
+                    runBlocking {
+                        var hotels_search_bdd: List<Hotel>? = null
+
+                        hotels_search_bdd = hotelDaoSearch?.getHotels()
+                        if (!hotels_search_bdd.isNullOrEmpty()) {
+                            runOnUiThread {
+                                loadingPanel.visibility = View.GONE
+                                hotelsLayout.visibility = View.VISIBLE
+                            }
+
+                            recyclerViewHotels.adapter =
+                                HotelsAdapter(
+                                    hotels_search_bdd ?: emptyList(),
+                                    list_favoris,
+                                    adultsList!!,
+                                    dateArrivee,
+                                    dateDepart
+                                )
+                        } else {
+                            runOnUiThread {
+                                layoutNoHotelAvailable.visibility = View.VISIBLE
+
+                            }
+                        }
+                    }
+                }
+
+            }
         }
 
         return view
