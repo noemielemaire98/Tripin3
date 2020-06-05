@@ -13,6 +13,14 @@
         android:textStyle="bold"
         android:textSize="17sp"
         android:textColor="@color/black"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Vos Activités :"
+        android:layout_marginTop="15dp"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:textColor="@color/black"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -45,20 +53,31 @@
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <androidx.recyclerview.widget.RecyclerView
             android:orientation="horizontal"
             android:id="@+id/activities_recyclerview_home"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="?attr/actionBarSize"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_height="wrap_content"
             tools:listitem="@layout/activities_view" />
+        <TextView
+            android:layout_below="@+id/activities_recyclerview_home"
+            android:id="@+id/txt_view_hotels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Vos Hôtels : "
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textColor="@color/black"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_below="@+id/txt_view_hotels"
+            android:id="@+id/hotels_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="?attr/actionBarSize"
+            tools:listitem="@layout/hotel_view"
+            android:nestedScrollingEnabled="false"/>
 
     </RelativeLayout>
 

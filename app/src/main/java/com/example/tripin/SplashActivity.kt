@@ -61,7 +61,7 @@ class SplashActivity : AppCompatActivity() {
                     }
                 }
                 var dest = "Au soleil"
-                if(it.name == "Paris" || it.name == "Amsterdam" || it.name == "Rome" || it.name == "New York" || it.name == "Londres" || it.name == "Chicago" || it.name == "Denver" || it.name == "Seattle" || it.name == "Shanghai" || it.name == "Singapour" || it.name == "Bangkok" || it.name == "Washington DC"){
+                if(it.name == "Paris" || it.name == "Amsterdam" || it.name == "Rome" || it.name == "New York" || it.name == "Singapour" || it.name == "Bangkok"){
                     dest = "Pour visiter"
                 }
                 if(it.name == "La Grand île - Hawaii" || it.name == "Honolulu" || it.name == "Oahu" || it.name == "Buenos Aires" || it.name == "Abu dhabi" || it.name == "Medina" || it.name == "Denver" || it.name == "Seattle" || it.name == "Chiang Mai"){

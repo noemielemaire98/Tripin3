@@ -234,6 +234,7 @@ class FindHotelFragment : Fragment() {
                         result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
                             adultsList!![0].toInt(), null,null, null,
                             sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR",hotelKey )
+                        Log.d("tyui", "${adultsList!![0].toInt()}")
                     }
                     2 -> {
                         result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
