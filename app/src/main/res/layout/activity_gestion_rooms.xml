@@ -5,18 +5,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="?attr/actionBarSize"
     android:orientation="vertical">
 
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_rooms_ok"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:backgroundTint="@color/white"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_gravity="right"
+        android:src="@drawable/success"
+        app:backgroundTint="@color/white"
+        android:tint="#4CAF50"
+        app:fabSize="mini"
+        app:layout_anchor="@id/add_room_layout"
+        app:layout_anchorGravity="top|end" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginLeft="10dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/add_room_layout"
             android:orientation="vertical">
             <TextView
                 android:layout_width="match_parent"
@@ -112,16 +129,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:listitem="@layout/add_room_view" />
 
-
-            <Button
-                android:id="@+id/add_rooms_ok"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="30dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-                android:text="OK" />
 
 
         </LinearLayout>
