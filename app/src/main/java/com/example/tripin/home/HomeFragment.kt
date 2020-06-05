@@ -89,24 +89,16 @@ class HomeFragment : Fragment() {
 
         // récupère la ville saisie
         val city_name = city_query
+        Log.d("tyui", "$city_query")
         val service = retrofit().create(ActivitybyCity::class.java)
         runBlocking {
             val city = citydao?.getCity(city_name)
+            Log.d("tyui", "$city")
             if (city != null) {
-
-
+            Log.d("tyui", "ca marche ")
                 var result = service.listActivitybyCity(city.id, "relevance", "", lang, monnaie)
-
-//                if(btn_museum_activate.isActivated||btn_sport_activate.isActivated||btn_night_activate.isActivated||btn_food_activate.isActivated||btn_fun_activate.isActivated||btn_other_activate.isActivated){
-//                    var categories = liste_cat_active(btn_museum,btn_food,btn_night,btn_fun,btn_other,btn_sport)
-//                    result = service.listActivitybyCityandCategory(city.id,categories,lang, monnaie)
-//                }
-
-                if (result.meta.count == 0L) {
-                    noActivity_home.visibility = View.VISIBLE
-                } else {
-                    noActivity_home.visibility = View.GONE
-                }
+                Log.d("tyui", "$result")
+                noActivity_home.visibility = View.GONE
 
                 val list_activities_bdd = activityDaoSaved?.getActivity()
                 result.data.map {
@@ -153,20 +145,27 @@ class HomeFragment : Fragment() {
                 recyclerview_home.adapter =
                     ActivityAdapterGlobalFormatted(activities!!.toMutableList(), list_favoris)
             }
+            if(city == null || (city == null && list_destination.isEmpty())){
+                Log.d("tyui", "ca marche mais c'est null")
+                Toast.makeText(requireContext(), "La ville que vous avez saisie n'est pas reconnue", Toast.LENGTH_SHORT).show()
+                noActivity_home.visibility = View.VISIBLE
+
+            }
             if(city == null && list_destination.isNotEmpty()){
                 for (x in list_destination.indices){
                     var result = service.listActivitybyCity(list_destination[x].id, "relevance", "", lang, monnaie)
+                    noActivity_home.visibility = View.GONE
 
 //                if(btn_museum_activate.isActivated||btn_sport_activate.isActivated||btn_night_activate.isActivated||btn_food_activate.isActivated||btn_fun_activate.isActivated||btn_other_activate.isActivated){
 //                    var categories = liste_cat_active(btn_museum,btn_food,btn_night,btn_fun,btn_other,btn_sport)
 //                    result = service.listActivitybyCityandCategory(city.id,categories,lang, monnaie)
 //                }
 
-                    if (result.meta.count == 0L) {
-                        noActivity_home.visibility = View.VISIBLE
-                    } else {
-                        noActivity_home.visibility = View.GONE
-                    }
+//                    if (result.meta.count == 0L) {
+//                        noActivity_home.visibility = View.VISIBLE
+//                    } else {
+//                        noActivity_home.visibility = View.GONE
+//                    }
 
                     val list_activities_bdd = activityDaoSaved?.getActivity()
                     result.data.map {
@@ -213,10 +212,10 @@ class HomeFragment : Fragment() {
                 recyclerview_home.adapter =
                     ActivityAdapterGlobalFormatted(activities!!.toMutableList(), list_favoris)
             }
-            else {
-                noActivity_home.visibility = View.VISIBLE
-                Toast.makeText(requireContext(), "La ville que vous avez saisie n'est pas reconnue", Toast.LENGTH_SHORT).show()
-            }
+//            else {
+////                noActivity_home.visibility = View.VISIBLE
+//                Toast.makeText(requireContext(), "La ville que vous avez saisie n'est pas reconnue", Toast.LENGTH_SHORT).show()
+//            }
         }
 
         return root
