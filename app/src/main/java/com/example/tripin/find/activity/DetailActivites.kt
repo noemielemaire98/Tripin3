@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide
 import com.example.tripin.R
 import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
+import com.example.tripin.data.CityDao
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Activity
 import com.example.tripin.model.Voyage
@@ -40,9 +41,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-
 class DetailActivites : AppCompatActivity() {
 
+
+    private lateinit var citydao: CityDao
     private var activite: Activity? = null
     private var activityDaoSaved: ActivityDao? = null
     private var voyageDao: VoyageDao? = null
@@ -52,7 +54,7 @@ class DetailActivites : AppCompatActivity() {
     private lateinit var googleMap: GoogleMap
     var date_debut = ""
     var date_fin = ""
-    private var destination = ""
+    var destination = ""
     private var budget = ""
     var image = ""
 
@@ -255,6 +257,13 @@ class DetailActivites : AppCompatActivity() {
                 val returnbutton = view.findViewById<Button>(R.id.bt_retour)
                 val editTitre = view.findViewById<EditText>(R.id.et_titre)
                 val editDate = view.findViewById<EditText>(R.id.et_date)
+
+                destination = activite!!.ville
+                Log.d(
+                    "zzzzzzzzz",
+                    "//////////////////////////////////////////////////////////////////////////////////////// destination = ${destination} ////////////////////////////////////////////////////////////////////////////////////////"
+                )
+
                 createdialog.setView(view)
                 createdialog.setTitle("Créer")
                 val alert = createdialog.show()
@@ -262,6 +271,7 @@ class DetailActivites : AppCompatActivity() {
                     rangeDatePickerPrimeCalendar(editText)
                 }
                 okbutton.setOnClickListener {
+
                     var exist = false
                     list_voyage.map { itL ->
                         if (editTitre.text.toString() == itL) {
@@ -275,8 +285,21 @@ class DetailActivites : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                         editTitre.setText("")
-                    }
-                    else if (!editTitre.text.isEmpty() && !editDate.text.isEmpty()) {
+                    } else if (!editTitre.text.isEmpty() && !editDate.text.isEmpty()) {
+
+
+                        val database =
+                            Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
+                                .build()
+
+                        citydao = database.getCityDao()
+                        runBlocking {
+                            val citie = citydao.getCity(destination)
+                                image = citie.cover_image_url.toString()
+
+                        }
+
+
                         val voyage = Voyage(
                             0,
                             view.et_titre.text.toString(),
@@ -289,6 +312,9 @@ class DetailActivites : AppCompatActivity() {
                             emptyList(),
                             destination,
                             budget
+                        )
+                        Log.d(
+                            "zzzzzzzzz"," voyage = ${voyage} ////////////////////////////////////////////////////////////////////////////////////////"
                         )
                         runBlocking {
                             voyageDao?.addVoyage(voyage)
@@ -401,7 +427,6 @@ class DetailActivites : AppCompatActivity() {
             .build()
 
         datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
-
 
     }
 }
