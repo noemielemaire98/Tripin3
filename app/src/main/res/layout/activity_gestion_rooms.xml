@@ -8,27 +8,12 @@
     android:layout_marginBottom="?attr/actionBarSize"
     android:orientation="vertical">
 
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_rooms_ok"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:backgroundTint="@color/white"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_gravity="right"
-        android:src="@drawable/success"
-        app:backgroundTint="@color/white"
-        android:tint="#4CAF50"
-        app:fabSize="mini"
-        app:layout_anchor="@id/add_room_layout"
-        app:layout_anchorGravity="top|end" />
-
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        app:cardElevation="0dp"
         android:layout_marginLeft="10dp">
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,7 +25,8 @@
                 android:layout_height="wrap_content"
                 android:text="Ajouter une chambre"
                 android:layout_marginLeft="10dp"
-                android:textSize="17dp"
+                android:textSize="18sp"
+                android:textColor="@color/contrast_blue"
                 android:id="@+id/add_room_number"/>
 
         <LinearLayout
@@ -53,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:textSize="18dp"
+                android:textSize="15dp"
                 android:text="Nombre d'occupant(s) : "/>
 
             <LinearLayout
@@ -109,6 +95,10 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:background="@android:color/darker_gray"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -118,6 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/add_room_recyclerview"
                 android:layout_width="match_parent"
@@ -129,13 +120,23 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:listitem="@layout/add_room_view" />
 
-
+            <Button
+                android:id="@+id/add_rooms_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:layout_marginEnd="15dp"
+                android:elevation="5dp"
+                android:layout_gravity="right"
+                android:background="@null"
+                android:enabled="true"
+                android:text="Ok"
+                android:textColor="@color/colorAccent" />
 
         </LinearLayout>
+
+
+
     </ScrollView>
-
-
-
-
-
 </LinearLayout>

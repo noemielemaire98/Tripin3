@@ -1672,8 +1672,6 @@ class FindVoyage : Fragment() {
                 ",adventure,sports"
             }
         }
-
         return string
     }
 }
-

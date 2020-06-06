@@ -3,6 +3,7 @@ package com.example.tripin.trip
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -18,6 +19,7 @@ import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.find.voyage.FindVoyage
 import com.example.tripin.model.Activity
+import com.example.tripin.model.Hotel
 import com.example.tripin.model.Voyage
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -73,19 +75,26 @@ class DetailVoyage2 : AppCompatActivity() {
         tablayout_detail_voyage.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabReselected(tab: TabLayout.Tab?) {}
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                if ((tab!!.position == 0 || tab!!.position == 1 || tab!!.position == 2)||(tab!!.position == 3 && voyage!!.list_activity.isNullOrEmpty())){
-                    voyage_map_layout.visibility = View.GONE
-                    imageView.visibility = View.VISIBLE
-                }else {
+
+                if(tab!!.position == 3 && !voyage!!.list_activity.isNullOrEmpty()){
                     voyage_map_layout.visibility = View.VISIBLE
                     imageView.visibility = View.GONE
                     setUpMapActivities(voyage!!.list_activity!!.toMutableList())
+
+                } else if ((tab!!.position == 2 && !voyage!!.list_hotels.isNullOrEmpty())){
+                    voyage_map_layout.visibility = View.VISIBLE
+                    imageView.visibility = View.GONE
+                    setUpMapHotels(voyage!!.list_hotels!!.toMutableList())
+                }
+                else{
+                    voyage_map_layout.visibility = View.GONE
+                    imageView.visibility = View.VISIBLE
                 }
 
-            }
+        }
 
         })
     }
@@ -156,22 +165,50 @@ class DetailVoyage2 : AppCompatActivity() {
 
     }
 
-    private fun setUpMapActivities(activityList : MutableList<Activity>){
+    private fun setUpMapActivities(activityList : MutableList<Activity>) {
 
         mapFragment.getMapAsync {
             map = it
+            it.clear()
             activityList.map {
-                val marker : Marker = map.addMarker(
+                val marker: Marker = map.addMarker(
                     MarkerOptions()
                         .position(LatLng(it.latitude, it.longitude))
-                        .title(it.title))
+                        .title(it.title)
+                )
                 listMarker2.add(marker)
             }
-            if(!activityList.isEmpty()){
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(activityList[0].latitude,activityList[0].longitude), 10f))
+            if (!activityList.isEmpty()) {
+                map.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                        LatLng(
+                            activityList[0].latitude,
+                            activityList[0].longitude
+                        ), 10f
+                    )
+                )
             }
 
         }
+    }
+
+        private fun setUpMapHotels(hotelList : MutableList<Hotel>){
+
+            mapFragment.getMapAsync {
+                map = it
+                it.clear()
+                hotelList.map {
+                    val marker : Marker = map.addMarker(
+                        MarkerOptions()
+                            .position(LatLng(it.latitude, it.longitude))
+                            .title(it.hotelName))
+                    listMarker2.add(marker)
+                }
+                if(!hotelList.isEmpty()){
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(hotelList[0].latitude,hotelList[0].longitude), 10f))
+                }
+
+            }
 
     }
 
