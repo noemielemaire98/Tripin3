@@ -204,4 +204,11 @@
         </LinearLayout>
 
     </LinearLayout>
+    <Button
+        android:id="@+id/generer_voyage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        android:layout_gravity="center"
+        android:text="Générer un voyage"/>
 </LinearLayout>

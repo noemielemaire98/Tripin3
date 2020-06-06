@@ -9,6 +9,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Parcelable
+import android.text.Editable
+import android.text.SpannableStringBuilder
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
@@ -113,6 +115,10 @@ class FindVoyage : Fragment() {
     private var mBundleRecyclerViewState: Bundle? = null
     private var mListState: Parcelable? = null
 
+
+    var voyage: Voyage?=null
+    var voyageDao : VoyageDao? = null
+
     private val amadeus: Amadeus = Amadeus
         .builder("TGvUHAv2qE6aoqa2Gg44ZZGpvDIEGwYs", "a16JGxtWdWBPtTGB")
         .build()
@@ -124,6 +130,7 @@ class FindVoyage : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_find_voyage, container, false)
+//        val voyage = (activity as MainActivity).voyage
 
         globalRecyclerView = view.findViewById(R.id.global_recyclerview)
         globalRecyclerView.layoutManager = LinearLayoutManager(activity)
@@ -136,7 +143,7 @@ class FindVoyage : Fragment() {
         val autoTextViewDepart = view.findViewById<AutoCompleteTextView>(R.id.autoTextViewDepart)
         val autoTextViewRetour = view.findViewById<AutoCompleteTextView>(R.id.autoTextViewRetour)
         val allertypeRadiogroup = view.findViewById<RadioGroup>(R.id.allerType_radiogroup)
-        val passengersNumberTextView =
+        var passengersNumberTextView =
             view.findViewById<AutoCompleteTextView>(R.id.passengers_number)
         val activitiesNumberTextView =
             view.findViewById<AutoCompleteTextView>(R.id.activities_number)
@@ -155,6 +162,29 @@ class FindVoyage : Fragment() {
         val btPrice = view.findViewById<ImageButton>(R.id.bt_price_filter)
         val fabAddVoyage = view.findViewById<ImageView>(R.id.fab_addVoyage)
         val fabFavVoyage = view.findViewById<ImageView>(R.id.fab_favVoyage)
+
+            var id = arguments?.getInt("TAG")
+        Log.d("zzz", "id findvoyage =$id")
+
+        if (id != null) {
+            val database =
+                Room.databaseBuilder(requireContext(), AppDatabase::class.java, "savedDatabase")
+                    .build()
+            voyageDao = database.getVoyageDao()
+            runBlocking {
+                voyage = voyageDao!!.getVoyage(id)
+                Log.d("zzz", "voyage1 = $voyage")
+            }
+
+            if (voyage !=null) {
+                allerDate.text = SpannableStringBuilder(voyage!!.date)
+                returnDate.text = SpannableStringBuilder(voyage!!.dateRetour)
+                autoTextViewRetour.text = SpannableStringBuilder(voyage!!.destination)
+                passengersNumberTextView.text = SpannableStringBuilder(voyage!!.nb_voyageur.toString())
+
+            }
+        }
+
 
 
         // Initialise la BDD
@@ -180,6 +210,9 @@ class FindVoyage : Fragment() {
         hotelDaoSearch = databaseVoyage.getHotelDao()
         hotelDaoSaved = databaseSaved.getHotelDao()
         voyageDaoSaved = databaseSaved.getVoyageDao()
+
+
+
 
         val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 

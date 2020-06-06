@@ -1,13 +1,19 @@
 package com.example.tripin
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.room.Room
+import com.example.tripin.data.AppDatabase
+import com.example.tripin.data.VoyageDao
+import com.example.tripin.model.Voyage
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,7 +21,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
+
 
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
@@ -33,9 +42,11 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         val switchView = intent.getIntExtra("switchView", 0)
+        val id = intent.getIntExtra("id",0)
 
-        if (switchView == 1 || switchView == 2 || switchView == 3) {
-            val bundle = bundleOf("switchView" to switchView)
+        if ( switchView == 1 || switchView == 2 || switchView == 3 || switchView == 4 ) {
+            val bundle = bundleOf("switchView" to switchView, "id" to id)
+
             navController.navigate(R.id.navigation_find, bundle)
         }
     }

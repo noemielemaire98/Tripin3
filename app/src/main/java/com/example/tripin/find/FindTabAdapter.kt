@@ -1,18 +1,21 @@
 package com.example.tripin.find
 
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
-class FindTabAdapter (fm : FragmentManager): FragmentPagerAdapter(fm) {
+class FindTabAdapter (fm : FragmentManager, data: Bundle): FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
 
-    val fragment_list = arrayListOf<Fragment>()
-    val fragment_title = arrayListOf<String>()
+    private val fragment_list = arrayListOf<Fragment>()
+    private val fragment_title = arrayListOf<String>()
+    private val fragmentBundle: Bundle = data
 
 
 
     override fun getItem(position: Int): Fragment {
+        fragment_list[position].arguments = fragmentBundle
         return fragment_list[position]
     }
 

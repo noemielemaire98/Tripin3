@@ -1,8 +1,10 @@
 package com.example.tripin.trip
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -38,12 +40,13 @@ class EditVoyage() : AppCompatActivity() {
     var dateRetour: String ?= "000"
     var nbvoyageur: Int ?= 0
     var destination = ""
-    var budget = ""
+    var budget: String = "1000"
     var city : City? = null
 
     private var voyageDao: VoyageDao? = null
     var cal: Calendar = Calendar.getInstance()
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_voyage)
@@ -61,9 +64,10 @@ class EditVoyage() : AppCompatActivity() {
         Log.d("EPF"," $id, $titre, $dateDepart, $dateRetour, $nbvoyageur")
 
         editv_titre_editText.hint = titre
-        editv_dateDepart.hint = dateDepart
-        editv_dateRetour.hint = dateRetour
+        editv_dateDepart.text = SpannableStringBuilder(dateDepart)
+        editv_dateRetour.text = SpannableStringBuilder(dateRetour)
         editv_destination.hint = destination
+
         editv_budget.progress = budget.toInt()
         editv_valeur_budget.text = "Budget : $budget "
 

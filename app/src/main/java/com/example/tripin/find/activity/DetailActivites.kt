@@ -38,6 +38,7 @@ import kotlinx.android.synthetic.main.fragment_find_flight2.*
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.anko.find
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -55,7 +56,7 @@ class DetailActivites : AppCompatActivity() {
     var date_debut = ""
     var date_fin = ""
     var destination = ""
-    private var budget = ""
+    private var budget = "1000"
     var image = ""
 
     @SuppressLint("SetTextI18n")
@@ -259,10 +260,7 @@ class DetailActivites : AppCompatActivity() {
                 val editDate = view.findViewById<EditText>(R.id.et_date)
 
                 destination = activite!!.ville
-                Log.d(
-                    "zzzzzzzzz",
-                    "//////////////////////////////////////////////////////////////////////////////////////// destination = ${destination} ////////////////////////////////////////////////////////////////////////////////////////"
-                )
+
 
                 createdialog.setView(view)
                 createdialog.setTitle("Créer")
@@ -300,6 +298,14 @@ class DetailActivites : AppCompatActivity() {
                         }
 
 
+
+                        var somme = view.et_nb_voyageur.selectedItem.toString().toInt() * 100 //*jour
+                        Log.d("zzz", " somme =$somme")
+
+//                        var jour = LocalDate.parse(date_fin) //date_debut.toInt())
+//                        Log.d("zzz", "jour =$jour ")
+
+                        budget = somme.toString()
                         val voyage = Voyage(
                             0,
                             view.et_titre.text.toString(),
@@ -312,9 +318,6 @@ class DetailActivites : AppCompatActivity() {
                             emptyList(),
                             destination,
                             budget
-                        )
-                        Log.d(
-                            "zzzzzzzzz"," voyage = ${voyage} ////////////////////////////////////////////////////////////////////////////////////////"
                         )
                         runBlocking {
                             voyageDao?.addVoyage(voyage)

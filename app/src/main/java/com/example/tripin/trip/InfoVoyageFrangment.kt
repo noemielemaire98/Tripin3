@@ -13,9 +13,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.room.Room
 import androidx.viewpager.widget.ViewPager
+import com.example.tripin.MainActivity
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
+import com.example.tripin.find.FindFragment
+import com.example.tripin.find.voyage.FindVoyage
 import com.example.tripin.model.Voyage
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_detail_voyage.*
@@ -47,6 +50,7 @@ class InfoVoyageFrangment : Fragment() {
         val nbVol = view.findViewById<TextView>(R.id.voyage_flight_textview)
         val nbHotel = view.findViewById<TextView>(R.id.voyage_hotel_textview)
         val date = view.findViewById<TextView>(R.id.voyage_date_textview)
+        val button = view.findViewById<Button>(R.id.generer_voyage)
 
 
         title.text = "${voyage?.titre}"
@@ -57,6 +61,21 @@ class InfoVoyageFrangment : Fragment() {
         nbActivité.text ="${voyage?.list_activity?.size}"
         nbVol.text ="${voyage?.list_flights?.size}"
         nbHotel.text ="${voyage?.list_hotels?.size}"
+
+        button.setOnClickListener  {
+            Log.d("zzz", "boutonnnnn")
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            intent.putExtra("switchView", 4)
+
+            intent.putExtra("id", voyage?.id)
+//            intent.putExtra("dateDepart",voyage?.date)
+//            intent.putExtra("dateRetour",voyage?.dateRetour)
+//            intent.putExtra("nbvoyager",voyage?.nb_voyageur)
+//            intent.putExtra("destination",voyage?.destination)
+//            intent.putExtra("budget",voyage?.budget)
+
+            startActivity(intent)
+        }
 
 //        Log.d("zzzz" , "id =$voyage")
 //        title.text = "Titre : ${voyage?.titre}"
