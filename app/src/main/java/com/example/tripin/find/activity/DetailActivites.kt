@@ -301,10 +301,6 @@ class DetailActivites : AppCompatActivity() {
 
                         }
 
-
-
-
-
                         var jourfin = LocalDate.parse(date_fin, DateTimeFormatter.ISO_DATE)
                         var jourdebut = LocalDate.parse(date_debut, DateTimeFormatter.ISO_DATE)
                         var jour = jourfin.compareTo(jourdebut) + 1
@@ -313,6 +309,7 @@ class DetailActivites : AppCompatActivity() {
                         Log.d("zzz", " somme =$somme")
 
                         budget = somme.toString()
+
                         val voyage = Voyage(
                             0,
                             view.et_titre.text.toString(),

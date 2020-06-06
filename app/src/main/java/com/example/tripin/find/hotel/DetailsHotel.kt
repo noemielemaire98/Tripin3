@@ -3,6 +3,7 @@ package com.example.tripin.find.hotel
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -10,6 +11,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,6 +39,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.nio.file.Path
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -67,6 +71,7 @@ class DetailsHotel : AppCompatActivity() {
     private var listAdults : MutableList<String> = mutableListOf()
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details_hotel)
@@ -409,14 +414,30 @@ Log.d("Price", room.toString())
                 val returnbutton = view.findViewById<Button>(R.id.bt_retour)
                 val editTitre = view.findViewById<EditText>(R.id.et_titre)
                 val editDate = view.findViewById<EditText>(R.id.et_date)
+
+
                 createdialog.setView(view)
                 createdialog.setTitle("Créer")
                 val alert = createdialog.show()
                 editText.setOnClickListener {
                     rangeDatePickerPrimeCalendar(editText)
                 }
+
+
                 okbutton.setOnClickListener {
+
+
                     if (!editTitre.text.isEmpty() && !editDate.text.isEmpty()) {
+
+                        var jourfin = LocalDate.parse(date_fin, DateTimeFormatter.ISO_DATE)
+                        var jourdebut = LocalDate.parse(date_debut, DateTimeFormatter.ISO_DATE)
+                        var jour = jourfin.compareTo(jourdebut) + 1
+                        Log.d("zzz", "jour =$jour ")
+                        var somme = view.et_nb_voyageur.selectedItem.toString().toInt() * 100 *jour
+                        Log.d("zzz", " somme =$somme")
+
+                        budget = somme.toString()
+
                         val voyage = Voyage(
                             0,
                             view.et_titre.text.toString(),
