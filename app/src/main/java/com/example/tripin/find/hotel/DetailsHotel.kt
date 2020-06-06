@@ -46,6 +46,7 @@ import kotlin.collections.ArrayList
 
 class DetailsHotel : AppCompatActivity() {
 
+    private lateinit var citydao: CityDao
     private var hotel: Hotel? = null
     private var favoris: Boolean? = null
     private var id: Int = 0
@@ -93,6 +94,7 @@ class DetailsHotel : AppCompatActivity() {
         listEquipements.clear()
         drawableNameList.clear()
 
+        Log.d("zzz", "hotel = $hotel")
 
         val databasesaved =
             Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
@@ -415,6 +417,9 @@ Log.d("Price", room.toString())
                 val editTitre = view.findViewById<EditText>(R.id.et_titre)
                 val editDate = view.findViewById<EditText>(R.id.et_date)
 
+                destination = adresse[2]
+                Log.d("zzz", " somme =$destination")
+
 
                 createdialog.setView(view)
                 createdialog.setTitle("Créer")
@@ -428,6 +433,17 @@ Log.d("Price", room.toString())
 
 
                     if (!editTitre.text.isEmpty() && !editDate.text.isEmpty()) {
+
+                        val database =
+                            Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
+                                .build()
+
+                        citydao = database.getCityDao()
+                        runBlocking {
+                            val citie = citydao.getCity(destination)
+                            image = citie.cover_image_url.toString()
+
+                        }
 
                         var jourfin = LocalDate.parse(date_fin, DateTimeFormatter.ISO_DATE)
                         var jourdebut = LocalDate.parse(date_debut, DateTimeFormatter.ISO_DATE)
