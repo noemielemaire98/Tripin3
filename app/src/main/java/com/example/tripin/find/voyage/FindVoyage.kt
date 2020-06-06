@@ -946,7 +946,7 @@ class FindVoyage : Fragment() {
                     }
                 }
                 withContext(Dispatchers.Main) {
-                    hotelsAdapter = HotelsAdapter(hotels, listFavorisHotels, mutableListOf())
+                    hotelsAdapter = HotelsAdapter(hotels, listFavorisHotels, mutableListOf(),"","")
                     mergeAdapter.addAdapter(hotelsAdapter!!)
                 }
             }
@@ -1384,7 +1384,6 @@ class FindVoyage : Fragment() {
                             rate,
                             uri,
                             adresse,
-                            telephone,
                             latitude,
                             longitude,
                             price.toString(),
@@ -1397,7 +1396,7 @@ class FindVoyage : Fragment() {
                     }
 
                     if (!listHotels.isNullOrEmpty()) {
-                        hotelsAdapter = HotelsAdapter(listHotels!!, listFavorisHotels,mutableListOf())
+                        hotelsAdapter = HotelsAdapter(listHotels, listFavorisHotels,mutableListOf(),"","")
                         try {
                             mergeAdapter.addAdapter(1, hotelsAdapter!!)
                         } catch (e: Exception) {

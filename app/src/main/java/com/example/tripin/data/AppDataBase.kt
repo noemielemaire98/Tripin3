@@ -139,7 +139,7 @@ class ListHotelsConverter {
         listHotels.map {
 
             val string =
-                "${it.id};${it.hotelId};${it.hotelName};${it.hotelDescription};${it.rate};${it.image_url};${it.adresse};${it.telephone};${it.latitude};${it.longitude};${it.prix};${it.equipements}"
+                "${it.id};${it.hotelId};${it.hotelName};${it.hotelDescription};${it.rate};${it.image_url};${it.adresse};${it.latitude};${it.longitude};${it.prix};${it.equipements}"
 
             arrayList.add(string)
 
@@ -155,11 +155,9 @@ class ListHotelsConverter {
             var cat = items[6].substring(1, items[6].length - 1)
             val adresse: MutableList<String> = cat.split(",") as MutableList<String>
 
-            cat = items[11].substring(1, items[11].length - 1)
+            cat = items[10].substring(1, items[10].length - 1)
             val equipements: MutableList<String> = cat.split(",") as MutableList<String>
 
-            cat = items[12].substring(1, items[12].length - 1)
-            val offers: MutableList<String> = cat.split(",") as MutableList<String>
 
             var rate: Int? = null
             if(items[4] != null){
@@ -170,13 +168,12 @@ class ListHotelsConverter {
                 items[1].toInt(),
                 items[2],
                 items[3],
-                items[4]?.toInt(),
+                rate,
                 items[5],
                 adresse,
-                items[7],
+                items[7].toDouble(),
                 items[8].toDouble(),
-                items[9].toDouble(),
-                items[10],
+                items[9],
                 equipements
             )
             arrayList.add(hotel)

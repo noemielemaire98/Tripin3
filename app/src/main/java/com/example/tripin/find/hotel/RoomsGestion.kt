@@ -52,8 +52,8 @@ class RoomsGestion : AppCompatActivity() {
         add_room_button.setOnClickListener {
             hideKeyboard()
 
-            if(adultsList?.size == 3){
-                Toast.makeText(this,"Nombre de chambre maximal atteint", Toast.LENGTH_SHORT).show()
+            if(adultsList?.size == 4){
+                Toast.makeText(this,"Nombre de chambres maximal atteint", Toast.LENGTH_SHORT).show()
 
             } else {
                 val nbadults = add_room_number_adults.text.toString()

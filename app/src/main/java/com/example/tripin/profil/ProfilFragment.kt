@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -36,11 +37,14 @@ class ProfilFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_profil, container, false)
 
         var uid = FirebaseAuth.getInstance().uid    //not the appropriate way to switch value
-        val profilbutton: Button = root.findViewById(R.id.auth_button_profil)
+//        val profilbutton: Button = root.findViewById(R.id.auth_button_profil)
         val signoutbutton: Button = root.findViewById(R.id.signout_button_profil)
         val username : TextView = root.findViewById(R.id.username_profil)
+        val noProfilLayout : RelativeLayout = root.findViewById(R.id.noProfil_layout)
+        val connexionButton : Button = root.findViewById(R.id.connexion_button)
 
         if(uid != null){
+            noProfilLayout.visibility = View.GONE
             val database = FirebaseDatabase.getInstance()
             val myRef = database.getReference("users/$uid")
             val users = myRef.orderByKey().addChildEventListener(object: ChildEventListener{
@@ -71,23 +75,27 @@ class ProfilFragment : Fragment() {
                     TODO("Not yet implemented")
                 }
             })
-            //Log.d("tata", "$users")
+
         }
 
-
-        profilbutton.setOnClickListener { view ->
-            if (uid != null) {
-                Toast.makeText(this.context,
-                    "Vous êtes déjà connecté",
-                    Toast.LENGTH_SHORT)
-                    .show()
-                //makeText(this, "Vous êtes déjà connecté", Toast.LENGTH_SHORT).show()
-            }
-            if (uid == null) {
-                val intent = Intent(this.context, LoginActivity::class.java)
-                startActivity(intent)
-            }
+        connexionButton.setOnClickListener {
+            val intent = Intent(this.context, LoginActivity::class.java)
+            startActivity(intent)
         }
+
+//        profilbutton.setOnClickListener { view ->
+//            if (uid != null) {
+//                Toast.makeText(this.context,
+//                    "Vous êtes déjà connecté",
+//                    Toast.LENGTH_SHORT)
+//                    .show()
+//                //makeText(this, "Vous êtes déjà connecté", Toast.LENGTH_SHORT).show()
+//            }
+//            if (uid == null) {
+//                val intent = Intent(this.context, LoginActivity::class.java)
+//                startActivity(intent)
+//            }
+//        }
 
         signoutbutton.setOnClickListener {
             if (uid != null) {

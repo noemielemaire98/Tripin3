@@ -127,14 +127,6 @@ class FindHotelActivity : AppCompatActivity() {
         // Bouton pour lancer la recherche
         btn_search.setOnClickListener {
             hideKeyboard()
-            /* if (autoTextViewDepart.text.toString() == "" || autoTextViewRetour.text.toString() == "") { // Si les lieux ne sont pas bien spécifiés
-                Toast.makeText(
-                    requireContext(),
-                    "Veuillez choisir les destinations dans les listes déroulantes",
-                    Toast.LENGTH_SHORT
-                ).show()
-                return@setOnClickListener
-            }*/
 
             runBlocking {
 
@@ -207,10 +199,6 @@ class FindHotelActivity : AppCompatActivity() {
 
                     }
                 }
-
-
-
-
 
                 runBlocking {
 

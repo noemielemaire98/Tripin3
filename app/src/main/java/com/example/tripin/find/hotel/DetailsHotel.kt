@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide
 import com.example.tripin.R
 import com.example.tripin.data.*
 import com.example.tripin.model.*
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import kotlinx.android.synthetic.main.activity_details_hotel.*
 import kotlinx.coroutines.runBlocking
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -60,6 +61,7 @@ class DetailsHotel : AppCompatActivity() {
     private val service = retrofitHotel().create(HotelAPI::class.java)
     private val hotelKey = "e510fb173emsh2748fdaccbfd76dp19ee52jsnc2bda03d8b6d"
     private var listEquipements : MutableList<Equipement> = mutableListOf()
+    private var drawableNameList : MutableList<String> = mutableListOf()
     private var listProche : String = ""
     private var listRooms : MutableList<Rooms> = mutableListOf()
     private var listAdults : MutableList<String> = mutableListOf()
@@ -78,10 +80,13 @@ class DetailsHotel : AppCompatActivity() {
         hotel = intent.getParcelableExtra("hotel")
         favoris = intent.getBooleanExtra("favoris", false)
         var Adults = intent.getStringExtra("listAdults")
+        val dateArrivee = intent.getStringExtra("dateArrivee")
+        val dateDepart = intent.getStringExtra("dateDepart")
         if(Adults!="[]"){
             initializeAdultsList(Adults)
         }
         listEquipements.clear()
+        drawableNameList.clear()
 
 
         val databasesaved =
@@ -149,9 +154,9 @@ Log.d("Test", result.toString())
             if( result.data.body.roomsAndRates!=null){
             result.data.body.roomsAndRates.rooms?.forEach {
                 var nameRoom = it.name
-                var image = it.images[0]?.fullSizeUrl
+                var image:String? = it.images?.get(0)?.fullSizeUrl
                 var descriptionRoom = it.additionalInfo.description
-                var occupancyRoom = "${it.maxOccupancy.messageTotal} ${it.maxOccupancy.messageChildren}"
+                var occupancyRoom:String?  = "${it.maxOccupancy.messageTotal} ${it.maxOccupancy.messageChildren}"
                 amenitiesRoom = it.additionalInfo.details.amenities as MutableList<String>
                 var priceNight  = it.ratePlans[0].price.nightlyPriceBreakdown.additionalColumns[0].value
                 var price = it.ratePlans[0].price.current
@@ -167,8 +172,8 @@ Log.d("Test", result.toString())
                     priceNight,
                     price,
                     promo,
-                    "2020-08-01",
-                    "2020-08-03",
+                    dateArrivee,
+                    dateDepart,
                     listAdults
                     )
 
@@ -177,8 +182,27 @@ Log.d("Test", result.toString())
 
 
             }}
+            val equipementCsv = resources.openRawResource(R.raw.equipements)
+            val listCvs = csvReader().readAll(equipementCsv)
+            var drawableName = ""
 
-            Log.d("Equipements", listEquipements.toString())
+            listEquipements.forEach {
+                val heading = it.heading
+                listCvs.forEach {
+                    if (heading == it[0]){
+                        drawableName = it[1]
+                        Log.d("DrawableName", it[1])
+                    }
+
+                    if(drawableName == ""){
+                        drawableName = "wifi"
+                    }
+
+            }
+                drawableNameList.add(drawableName)
+
+            }
+
 
         }
 
@@ -186,11 +210,11 @@ Log.d("Test", result.toString())
         if(listEquipements.size > 2){
             val newList = mutableListOf<Equipement>(listEquipements[0],listEquipements[1])
             equipement_recyclerview.adapter =
-                EquipementAdapter(newList, this@DetailsHotel)
+                EquipementAdapter(newList, drawableNameList, this@DetailsHotel)
                 button_description.visibility  = View.VISIBLE
         }else{
             equipement_recyclerview.adapter =
-                EquipementAdapter(listEquipements, this@DetailsHotel)
+                EquipementAdapter(listEquipements, drawableNameList,this@DetailsHotel)
             button_description.visibility  = View.GONE
         }
 
@@ -215,7 +239,7 @@ Log.d("Test", result.toString())
             recyclerview.layoutManager =
                 LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
             recyclerview.adapter =
-                EquipementAdapter(listEquipements,this)
+                EquipementAdapter(listEquipements,drawableNameList,this)
             val alert = createdialog.create()
             alert.show()
             okbutton.setOnClickListener {
@@ -225,7 +249,7 @@ Log.d("Test", result.toString())
         }
 
 
-        offers_recyclerview.adapter = OffersAdapter(listRooms)
+        offers_recyclerview.adapter = RoomAdapter(listRooms)
 
      if (hotel?.image_url==null){
         detail_hotel_imageview.setImageResource(R.drawable.hotel)
@@ -249,14 +273,21 @@ Log.d("Test", result.toString())
             }
         }
 
+        var adresse = mutableListOf<String>()
+        hotel?.adresse!!.forEach {
+            if(it == "null"){
+                adresse.add("NC")
+            }else{
+                adresse.add(it)
+            }
+        }
 
         var nom = "${hotel?.hotelName}".toLowerCase()
         detail_hotel_nom_textview.text = formatString(nom)
         detail_hotel_adresse_texview.setTypeface(null, Typeface.ITALIC)
         detail_hotel_adresse_texview.text =
-            "${hotel?.adresse?.get(0)} ${hotel?.adresse?.get(1)}, ${hotel?.adresse?.get(2)}, ${hotel?.adresse?.get(
-                3
-            )}, ${hotel?.adresse?.get(4)}"
+            "${adresse.get(0)} ${adresse.get(1)}, ${adresse.get(2)}, ${adresse.get(
+                3)}"
 
 
 
