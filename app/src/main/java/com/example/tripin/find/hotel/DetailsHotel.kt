@@ -178,7 +178,7 @@ Log.d("Test", result.toString())
                     )
 
                 listRooms.add(room)
-
+Log.d("Price", room.toString())
 
 
             }}
