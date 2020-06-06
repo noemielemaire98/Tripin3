@@ -1396,7 +1396,7 @@ class FindVoyage : Fragment() {
                     }
 
                     if (!listHotels.isNullOrEmpty()) {
-                        hotelsAdapter = HotelsAdapter(listHotels, listFavorisHotels,mutableListOf(),"","")
+                        hotelsAdapter = HotelsAdapter(listHotels!!, listFavorisHotels,mutableListOf(),"","")
                         try {
                             mergeAdapter.addAdapter(1, hotelsAdapter!!)
                         } catch (e: Exception) {
