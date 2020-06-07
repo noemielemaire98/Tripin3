@@ -40,7 +40,7 @@ class HomeFragment : Fragment() {
 
     private var hotelDaoSearch: HotelDao? = null
     private var hotelDaoSaved: HotelDao? = null
-    private val hotelKey = "5f672e716bmsh702ca7444dd484cp121785jsn039c3a4937f8"
+    private val hotelKey = "9a6f295efemsh9dd64f537c1e62bp194635jsn1c7a940b93ba"
 
     override fun onCreateView(
         inflater: LayoutInflater,

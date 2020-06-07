@@ -11,10 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.bumptech.glide.Glide
+import com.example.tripin.MainActivity
 import com.example.tripin.R
 import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.model.Activity
+import com.example.tripin.saved.SavedActivitiesFragment
 import kotlinx.android.synthetic.main.activities_view.view.*
 import kotlinx.coroutines.runBlocking
 
@@ -85,24 +87,40 @@ class ActivityAdapterGlobal(val list_activity: MutableList<Activity>, val attrib
 
         holder.activtyView.rv_categorie.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         holder.activtyView.rv_categorie.adapter =
-            CategoryAdapter(activity.category  ?: emptyList())
+            CategoryAdapter(activity.category)
 
 
 
         // Listener sur les favoris
 
         holder.activtyView.fab_favActivity.setOnClickListener {
-            if(attribut_favoris[position] == true){
+            if(attribut_favoris[position]){
                 holder.activtyView.fab_favActivity.setImageResource(R.drawable.ic_favorite_border_black_24dp)
                 runBlocking {
                     activityDaoSaved?.deleteActivity(activity.uuid)
                 }
                 attribut_favoris[position] = false
-                list_activity.removeAt(position)
-                notifyItemRemoved(position)
-                notifyItemRangeChanged(position,list_activity.size)
 
-                Toast.makeText(context, "L'activité a bien été supprimé des favoris", Toast.LENGTH_SHORT).show()
+                val fragmentFavorisViewPager = try {
+                    // https://stackoverflow.com/a/54829516/13289762
+                    (context as MainActivity).supportFragmentManager.fragments[0].childFragmentManager.fragments[0]?.childFragmentManager?.fragments
+                        ?.get(3)?.javaClass?.simpleName
+                } catch (ex: Exception) {
+                    ""
+                }
+
+                if (fragmentFavorisViewPager == SavedActivitiesFragment().javaClass.simpleName) {
+                    list_activity.removeAt(position)
+                    attribut_favoris.removeAt(position)
+                    notifyItemRemoved(position)
+                    notifyItemRangeChanged(position, list_activity.size)
+
+                    Toast.makeText(
+                        context,
+                        "L'activité a bien été supprimé des favoris",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
 
             }else {
                 holder.activtyView.fab_favActivity.setImageResource(R.drawable.ic_favorite_black_24dp)

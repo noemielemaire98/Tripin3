@@ -13,11 +13,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-<!--        <androidx.appcompat.widget.SearchView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:id="@+id/searchtext"/>-->
-
         <AutoCompleteTextView
             android:id="@+id/search_voyage"
             android:layout_width="match_parent"
@@ -32,22 +27,6 @@
             android:imeOptions="actionSearch"
             android:inputType="textAutoComplete" />
 
-
-        <Button
-            android:id="@+id/bt_recherche"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Rechercher"
-            app:backgroundTint="@color/contrast_blue"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp">
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/voyage_recyclerview"
             android:layout_width="match_parent"
@@ -57,8 +36,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/voyage_view"
-            />
+            tools:listitem="@layout/voyage_view" />
     </LinearLayout>
 
 
