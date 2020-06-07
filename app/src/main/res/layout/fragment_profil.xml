@@ -29,6 +29,17 @@
             android:background="@drawable/rounded_button"
             android:text="Veuillez vous connectez pour accéder aux options"
             android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/inscription_button"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/img_worried_profil"
+            android:layout_marginTop="75dp"
+            android:text="S'incrire"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textAlignment="center" />
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
