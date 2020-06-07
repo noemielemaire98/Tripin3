@@ -64,7 +64,7 @@ class ActivityAdapterGlobal(val list_activity: MutableList<Activity>, val attrib
             .centerCrop()
             .into(holder.activtyView.activity_imageview)
 
-        holder.activtyView.activity_price_textview.text = "Prix : ${activity.formatted_iso_value}"
+        holder.activtyView.activity_price_textview.text = "A partir de ${activity.formatted_iso_value}"
         /*if (activity.operational_days != null){
             holder.activtyView.activity_days_textview.text = "Dispo : ${activity.operational_days}"
         }else {
