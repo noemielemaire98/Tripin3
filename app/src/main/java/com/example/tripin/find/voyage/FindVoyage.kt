@@ -54,6 +54,7 @@ import java.text.SimpleDateFormat
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 import android.app.Activity as AppActivity
 
@@ -116,7 +117,7 @@ class FindVoyage : Fragment() {
     private var mListState: Parcelable? = null
 
     private var cityCode: Int = 0
-    private val hotelKey = "5f672e716bmsh702ca7444dd484cp121785jsn039c3a4937f8"
+    private val hotelKey = "9a6f295efemsh9dd64f537c1e62bp194635jsn1c7a940b93ba"
     private val adultsList = mutableListOf<String>()
 
     var voyage: Voyage? = null
@@ -172,7 +173,6 @@ class FindVoyage : Fragment() {
         val btHighestPriceHot = view.findViewById<Button>(R.id.highest_price)
 
 
-
         var id = arguments?.getInt("id")
 
         if (id != null) {
@@ -191,7 +191,8 @@ class FindVoyage : Fragment() {
 //                var a = "${voyage!!.destination.toString()} (PAR)"
 //                Log.d("zzz", "a = $a ")
 //                autoTextViewRetour.text = SpannableStringBuilder(a)
-                passengersNumberTextView.text = SpannableStringBuilder(voyage!!.nb_voyageur.toString())
+                passengersNumberTextView.text =
+                    SpannableStringBuilder(voyage!!.nb_voyageur.toString())
             }
         }
 
@@ -322,22 +323,22 @@ class FindVoyage : Fragment() {
             // Affiche uniquement les infos utiles des villes dans une liste
 
             listCities?.map { itMap ->
-                    if (itMap.name == voyage?.destination) {
-                        var destination = itMap.name.toString() + " (" + itMap.iataCode.toUpperCase(Locale.ROOT) + ")"
-                        withContext(Dispatchers.Main) {
-                            autoTextViewRetour.text = SpannableStringBuilder(destination)
-                        }
+                if (itMap.name == voyage?.destination) {
+                    var destination =
+                        itMap.name.toString() + " (" + itMap.iataCode.toUpperCase(Locale.ROOT) + ")"
+                    withContext(Dispatchers.Main) {
+                        autoTextViewRetour.text = SpannableStringBuilder(destination)
                     }
+                }
 
-                    listAirportsFormatted.add(
-                        itMap.name.toString() + " (" + itMap.iataCode
-                            .toUpperCase(
-                                Locale.ROOT
-                            ) + ")"
-                    )
+                listAirportsFormatted.add(
+                    itMap.name.toString() + " (" + itMap.iataCode
+                        .toUpperCase(
+                            Locale.ROOT
+                        ) + ")"
+                )
 
             }
-
 
 
             // Initialise la liste déroulante du lieu de départ
@@ -684,7 +685,7 @@ class FindVoyage : Fragment() {
                 }
 
 
-                val listVoyageSaved: ArrayList<String> = arrayListOf()
+                var listVoyageSaved: ArrayList<String> = arrayListOf()
 
                 flightsListSimple = flightDao?.getFlights()?.toMutableList()
                 activitiesList = activityDaoSearch?.getActivity()
@@ -717,6 +718,8 @@ class FindVoyage : Fragment() {
                     }
                     val sizeTotal =
                         flightsListSimple?.size!! + listHotels?.size!! + activitiesList?.size!!
+
+                    Log.d("tototo", "$sizeTotal  $equalsNumber")
 
                     voyageFavoris = if (sizeTotal == equalsNumber) {
                         fab_favVoyage.setImageResource(R.drawable.ic_favorite_black_24dp)
@@ -841,8 +844,6 @@ class FindVoyage : Fragment() {
                     runBlocking {
                         listVoyagesBdd = voyageDaoSavedSave?.getVoyage()?.toMutableList()
                     }
-
-                    Log.d("totototo", "onCreateView: $listVoyagesBdd")
                 }
 
             }
@@ -1095,6 +1096,48 @@ class FindVoyage : Fragment() {
             Handler().postDelayed({
                 view.voyageTopLevel_ScrollView.smoothScrollTo(0, cardVoyage.y.toInt())
             }, 1)
+            runBlocking {
+
+                val listVoyageSaved: ArrayList<String> = arrayListOf()
+
+                listVoyagesBdd?.map {
+
+                    listVoyageSaved.add(it.titre)
+                    var equalsNumber = 0
+                    it.list_flights?.map {
+                        flightsListSimple?.map { itF ->
+                            if (it.uuid == itF.uuid && it.lieuDepart == itF.lieuDepart) {
+                                equalsNumber += 1
+                            }
+                        }
+                    }
+
+                    it.list_hotels?.map {
+                        listHotels?.map { itH ->
+                            if (it.hotelId == itH.hotelId) {
+                                equalsNumber += 1
+                            }
+                        }
+                    }
+                    it.list_activity?.map {
+                        activitiesList?.map { itA ->
+                            if (it.title == itA.title) {
+                                equalsNumber += 1
+                            }
+                        }
+                    }
+                    val sizeTotal =
+                        flightsListSimple?.size!! + listHotels?.size!! + activitiesList?.size!!
+
+                    voyageFavoris = if (sizeTotal == equalsNumber) {
+                        fab_favVoyage.setImageResource(R.drawable.ic_favorite_black_24dp)
+                        true
+                    } else {
+                        fab_favVoyage.setImageResource(R.drawable.ic_favorite_border_black_24dp)
+                        false
+                    }
+                }
+            }
             if (flightsList.isNullOrEmpty() && listHotels.isNullOrEmpty() && activitiesList.isNullOrEmpty()) {
                 view.layoutNoFlightAvailable.visibility = View.VISIBLE
             }

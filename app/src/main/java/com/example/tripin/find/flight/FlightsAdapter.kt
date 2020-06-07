@@ -25,6 +25,7 @@ import com.example.tripin.data.FlightDao
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Flight
 import com.example.tripin.model.Voyage
+import com.example.tripin.saved.SavedFlightFragment
 import kotlinx.android.synthetic.main.activity_saved_flight.view.*
 import kotlinx.android.synthetic.main.createvoyage_popup.view.*
 import kotlinx.android.synthetic.main.flights_view.view.*
@@ -309,7 +310,7 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>, 
                         ""
                     }
 
-                    if (fragmentFavorisViewPager == "SavedFlightFragment") {
+                    if (fragmentFavorisViewPager == SavedFlightFragment().javaClass.simpleName) {
                         flightsList.remove(flights)
 
                         notifyItemRemoved(position)
