@@ -205,7 +205,6 @@ class FindFlightFragment : Fragment() {
                         autoTextViewRetour.text = SpannableStringBuilder(destination)
                     }
                 }
-
                 listAirportsFormatted.add(
                     itMap.name.toString() + " (" + itMap.iataCode
                         .toUpperCase(
