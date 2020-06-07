@@ -172,6 +172,33 @@ class FindVoyage : Fragment() {
         val btHighestPriceHot = view.findViewById<Button>(R.id.highest_price)
 
 
+
+        var id = arguments?.getInt("id")
+
+        if (id != null) {
+            val database =
+                Room.databaseBuilder(requireContext(), AppDatabase::class.java, "savedDatabase")
+                    .build()
+            voyageDao = database.getVoyageDao()
+            runBlocking {
+                voyage = voyageDao!!.getVoyage(id)
+
+            }
+
+            if (voyage != null) {
+//                var a = "${voyage!!.destination.toString()} (PAR)"
+//                Log.d("zzz", "a = $a ")
+                allerDate.text = SpannableStringBuilder(voyage!!.date)
+                returnDate.text = SpannableStringBuilder(voyage!!.dateRetour)
+                autoTextViewRetour.text = SpannableStringBuilder(voyage!!.destination)
+//                autoTextViewRetour.text = SpannableStringBuilder(a)
+                passengersNumberTextView.text =
+                    SpannableStringBuilder(voyage!!.nb_voyageur.toString())
+
+            }
+        }
+
+
         // Initialise la BDD
         val databaseVoyage =
             Room.databaseBuilder(requireContext(), AppDatabase::class.java, "voyageSearchDatabase")
@@ -195,26 +222,6 @@ class FindVoyage : Fragment() {
         hotelDaoSearch = databaseVoyage.getHotelDao()
         hotelDaoSaved = databaseSaved.getHotelDao()
         voyageDaoSaved = databaseSaved.getVoyageDao()
-
-        val id = arguments?.getInt("TAG")
-        Log.d("zzz", "id findvoyage =$id")
-
-        if (id != null) {
-            runBlocking {
-                voyage = voyageDaoSaved!!.getVoyage(id)
-                Log.d("zzz", "voyage1 = $voyage")
-            }
-
-            if (voyage != null) {
-                allerDate.text = SpannableStringBuilder(voyage!!.date)
-                returnDate.text = SpannableStringBuilder(voyage!!.dateRetour)
-                autoTextViewRetour.text = SpannableStringBuilder(voyage!!.destination)
-                passengersNumberTextView.text =
-                    SpannableStringBuilder(voyage!!.nb_voyageur.toString())
-
-            }
-        }
-
 
         val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
@@ -1443,6 +1450,7 @@ class FindVoyage : Fragment() {
                     } catch (e: Exception) {
                         mergeAdapter.addAdapter(hotelsAdapter!!)
                     }
+
                 }
 
                 hotelsDone = true

@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.util.DisplayMetrics
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -24,11 +25,9 @@ import com.aminography.primedatepicker.picker.PrimeDatePicker
 import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
 
 import com.example.tripin.R
-import com.example.tripin.data.AppDatabase
-import com.example.tripin.data.CityDao
-import com.example.tripin.data.HotelDao
-import com.example.tripin.data.retrofitHotel
+import com.example.tripin.data.*
 import com.example.tripin.model.Hotel
+import com.example.tripin.model.Voyage
 import io.apptik.widget.MultiSlider
 import kotlinx.android.synthetic.main.activity_find_hotel.*
 import kotlinx.coroutines.GlobalScope
@@ -68,6 +67,9 @@ class FindHotelFragment : Fragment() {
     private var animatedShow = false
 
 
+    var voyage: Voyage?=null
+    var voyageDao : VoyageDao? = null
+
 
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -99,7 +101,28 @@ class FindHotelFragment : Fragment() {
         val scrollToTopArrow = view.findViewById<de.hdodenhof.circleimageview.CircleImageView>(R.id.scroll_to_top_arrow)
         val findTopLevelScrollView = view.findViewById<ScrollView>(R.id.findTopLevel_scrollView)
 
-        //Initialisation Recyclerview
+
+        //Si arriver depuis detailsvoyage
+        var id = arguments?.getInt("id")
+
+        if (id != null) {
+            val database =
+                Room.databaseBuilder(requireContext(), AppDatabase::class.java, "savedDatabase")
+                    .build()
+            voyageDao = database.getVoyageDao()
+            runBlocking {
+                voyage = voyageDao!!.getVoyage(id)
+            }
+
+            if (voyage != null){
+                editText.text = SpannableStringBuilder(voyage!!.destination)
+                arriveeDate.text = SpannableStringBuilder(voyage!!.date)
+                departDate.text = SpannableStringBuilder(voyage!!.dateRetour)
+            }
+
+        }
+
+            //Initialisation Recyclerview
         recyclerViewHotels.layoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 

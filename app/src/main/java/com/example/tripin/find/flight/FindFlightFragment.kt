@@ -7,7 +7,9 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.text.SpannableStringBuilder
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
@@ -30,7 +32,9 @@ import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.CityDao
 import com.example.tripin.data.FlightDao
+import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Flight
+import com.example.tripin.model.Voyage
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import kotlinx.android.synthetic.main.fragment_find_flight2.*
 import kotlinx.coroutines.*
@@ -64,6 +68,10 @@ class FindFlightFragment : Fragment() {
     private val amadeus: Amadeus = Amadeus
         .builder("TGvUHAv2qE6aoqa2Gg44ZZGpvDIEGwYs", "a16JGxtWdWBPtTGB")
         .build()
+
+
+    var voyage: Voyage?=null
+    var voyageDao : VoyageDao? = null
 
     @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("SimpleDateFormat")
@@ -102,6 +110,27 @@ class FindFlightFragment : Fragment() {
 
         // Hide the arrow at the beginning when the screen starts
         scrollToTopArrow.visibility = View.GONE
+
+        var id = arguments?.getInt("id")
+
+        if (id != null) {
+            val database =
+                Room.databaseBuilder(requireContext(), AppDatabase::class.java, "savedDatabase")
+                    .build()
+            voyageDao = database.getVoyageDao()
+            runBlocking {
+                voyage = voyageDao!!.getVoyage(id)
+            }
+
+            if (voyage != null) {
+                allerDate.text = SpannableStringBuilder(voyage!!.date)
+                returnDate.text = SpannableStringBuilder(voyage!!.dateRetour)
+                autoTextViewRetour.text = SpannableStringBuilder(voyage!!.destination)
+                passengersNumberTextView.text =
+                    SpannableStringBuilder(voyage!!.nb_voyageur.toString())
+
+            }
+        }
 
         findTopLevelScrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
             if (scrollY >= 600) {

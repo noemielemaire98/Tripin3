@@ -50,10 +50,9 @@ class FindFragment : Fragment() {
 //         id =  .getIntExtra("id",0)
 
         val id =arguments?.getInt("id")
-        Log.d("zzz", "id findfragment =$id")
 
         if (id != null)
-        bundle.putInt("TAG", id)
+        bundle.putInt("id", id)
 
 
         val switchView = arguments?.getInt("switchView")
