@@ -10,7 +10,6 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="?attr/actionBarSize"
         android:orientation="vertical">
 
         <ImageView
@@ -44,8 +43,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
                         android:text="Nom de l'hôtel"
-                        android:textSize="25dp" />
+                        android:textSize="25sp" />
 
 
                     <RelativeLayout
@@ -252,24 +253,6 @@
                         android:layout_height="0.1dp"
                         android:background="@android:color/darker_gray"/>
 
-
-
-
-
-                   <!--     <TextView
-                            android:id="@+id/detail_hotel_description_textview"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            android:ellipsize="end"
-                            android:justificationMode="inter_word"
-                            android:maxLines="5"
-                            android:text="Description"
-                            android:textSize="16dp" /> -->
-
-
-
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -313,6 +296,7 @@
                         android:layout_height="wrap_content"
                         android:text="Carte"
                         android:layout_marginLeft="20dp"
+                        android:layout_marginBottom="10dp"
                         android:textSize="16dp"
                         android:textColor="@color/contrast_blue"/>
 
@@ -331,7 +315,7 @@
                         android:id="@+id/detail_hotel_adresse_texview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:text="Adresse"/>
 
@@ -364,13 +348,13 @@
                     <Button
                         android:id="@+id/button_proche"
                         style="@style/Widget.MaterialComponents.Button"
-                        android:layout_width="match_parent"
+                        android:layout_width="300dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
                         android:gravity="center"
-                        android:text="..."
+                        android:text="Lire plus"
                         app:backgroundTint="@color/contrast_blue" />
 
                     <View
