@@ -53,7 +53,6 @@ class DetailVoyageSave : AppCompatActivity() {
         runBlocking {
             voyage = voyageDao!!.getVoyage(id)
         }
-        bundle.putString("fragment", "DetailVoyageSave")
         setupViewPager(viewpager_detail_voyage)
         viewpager_detail_voyage.offscreenPageLimit = 3
         tablayout_detail_voyage.setupWithViewPager(viewpager_detail_voyage)

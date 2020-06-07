@@ -20,6 +20,7 @@ import com.example.tripin.data.VoyageDao
 import com.example.tripin.find.FindFragment
 import com.example.tripin.find.voyage.FindVoyage
 import com.example.tripin.model.Voyage
+import com.example.tripin.saved.DetailVoyageSave
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_detail_voyage.*
 import kotlinx.coroutines.runBlocking
@@ -38,8 +39,13 @@ class InfoVoyageFrangment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val voyage = (activity as? DetailVoyage2)!!.voyage
-        val view = inflater.inflate(R.layout.activity_infovoyage , container, false)
+        val voyage = if (activity is DetailVoyage2) {
+            (activity as? DetailVoyage2)!!.voyage
+        } else {
+            (activity as? DetailVoyageSave)!!.voyage
+        }
+
+        val view = inflater.inflate(R.layout.activity_infovoyage, container, false)
         val title = view.findViewById<TextView>(R.id.voyage_title_textview)
         val destination = view.findViewById<TextView>(R.id.voyage_destination_textview)
         val dateDepart = view.findViewById<TextView>(R.id.voyage_dateDepart_textview)
@@ -58,11 +64,11 @@ class InfoVoyageFrangment : Fragment() {
         date.text = "Du ${voyage?.date} au ${voyage?.dateRetour}"
         nbVoyageur.text = "${voyage?.nb_voyageur}"
         budget.text = "${voyage?.budget} €"
-        nbActivité.text ="${voyage?.list_activity?.size}"
-        nbVol.text ="${voyage?.list_flights?.size}"
-        nbHotel.text ="${voyage?.list_hotels?.size}"
+        nbActivité.text = "${voyage?.list_activity?.size}"
+        nbVol.text = "${voyage?.list_flights?.size}"
+        nbHotel.text = "${voyage?.list_hotels?.size}"
 
-        button.setOnClickListener  {
+        button.setOnClickListener {
             Log.d("zzz", "boutonnnnn")
             val intent = Intent(requireContext(), MainActivity::class.java)
             intent.putExtra("switchView", 4)

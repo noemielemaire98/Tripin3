@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
-class FindTabAdapter (fm : FragmentManager, data: Bundle): FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class FindTabAdapter (fm : FragmentManager, data: Bundle): FragmentPagerAdapter(fm) {
 
 
     private val fragment_list = arrayListOf<Fragment>()

@@ -1,15 +1,14 @@
 package com.example.tripin.find.voyage
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.app.AlertDialog
 import android.content.Context
-import android.location.Address
-import android.location.Geocoder
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Parcelable
-import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.util.DisplayMetrics
 import android.util.Log
@@ -19,6 +18,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.MergeAdapter
@@ -27,7 +27,6 @@ import androidx.room.Room
 import com.amadeus.Amadeus
 import com.amadeus.Params
 import com.amadeus.resources.FlightOfferSearch
-import com.amadeus.resources.HotelOffer
 import com.aminography.primecalendar.civil.CivilCalendar
 import com.aminography.primedatepicker.picker.PrimeDatePicker
 import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
@@ -38,7 +37,9 @@ import com.example.tripin.find.activity.ActivityAdapterGlobal
 import com.example.tripin.find.activity.ActivitybyCity
 import com.example.tripin.find.flight.FlightsAdapter
 import com.example.tripin.find.flight.IgnoreAccentsArrayAdapter
+import com.example.tripin.find.hotel.HotelAPI
 import com.example.tripin.find.hotel.HotelsAdapter
+import com.example.tripin.find.hotel.ModelRapid
 import com.example.tripin.model.Activity
 import com.example.tripin.model.Flight
 import com.example.tripin.model.Hotel
@@ -71,7 +72,6 @@ class FindVoyage : Fragment() {
     private var listFavoris = arrayListOf<Boolean>()
     private var listFavorisHotels = arrayListOf<Boolean>()
     private var listHotels: MutableList<Hotel>? = mutableListOf()
-    private val listEquipementFormatted = mutableListOf<List<String>>()
     private var flightsList: MutableList<MutableList<Flight>> = mutableListOf()
     private var flightsListSimple: MutableList<Flight>? = mutableListOf()
     private var activitiesList: List<Activity>? = emptyList()
@@ -115,9 +115,12 @@ class FindVoyage : Fragment() {
     private var mBundleRecyclerViewState: Bundle? = null
     private var mListState: Parcelable? = null
 
+    private var cityCode: Int = 0
+    private val hotelKey = "5f672e716bmsh702ca7444dd484cp121785jsn039c3a4937f8"
+    private val adultsList = mutableListOf<String>()
 
-    var voyage: Voyage?=null
-    var voyageDao : VoyageDao? = null
+    var voyage: Voyage? = null
+    var voyageDao: VoyageDao? = null
 
     private val amadeus: Amadeus = Amadeus
         .builder("TGvUHAv2qE6aoqa2Gg44ZZGpvDIEGwYs", "a16JGxtWdWBPtTGB")
@@ -143,7 +146,7 @@ class FindVoyage : Fragment() {
         val autoTextViewDepart = view.findViewById<AutoCompleteTextView>(R.id.autoTextViewDepart)
         val autoTextViewRetour = view.findViewById<AutoCompleteTextView>(R.id.autoTextViewRetour)
         val allertypeRadiogroup = view.findViewById<RadioGroup>(R.id.allerType_radiogroup)
-        var passengersNumberTextView =
+        val passengersNumberTextView =
             view.findViewById<AutoCompleteTextView>(R.id.passengers_number)
         val activitiesNumberTextView =
             view.findViewById<AutoCompleteTextView>(R.id.activities_number)
@@ -153,38 +156,20 @@ class FindVoyage : Fragment() {
         val voyageTopLevelScrollView = view.findViewById<ScrollView>(R.id.voyageTopLevel_ScrollView)
         val voyageTopLevelLayout = view.findViewById<RelativeLayout>(R.id.voyageTopLevel_Layout)
         val travelClassEdit = view.findViewById<AutoCompleteTextView>(R.id.travelClassEdit)
-        val btnMuseum = view.findViewById<Button>(R.id.cat_museum)
-        val btnSport = view.findViewById<Button>(R.id.cat_sport)
-        val btnFood = view.findViewById<Button>(R.id.cat_food)
-        val btnFun = view.findViewById<Button>(R.id.cat_fun)
-        val btnNight = view.findViewById<Button>(R.id.cat_night)
-        val btnOther = view.findViewById<Button>(R.id.cat_other)
-        val btPrice = view.findViewById<ImageButton>(R.id.bt_price_filter)
+        val btnMuseumAct = view.findViewById<Button>(R.id.cat_museum)
+        val btnSportAct = view.findViewById<Button>(R.id.cat_sport)
+        val btnFoodAct = view.findViewById<Button>(R.id.cat_food)
+        val btnFunAct = view.findViewById<Button>(R.id.cat_fun)
+        val btnNightAct = view.findViewById<Button>(R.id.cat_night)
+        val btnOtherAct = view.findViewById<Button>(R.id.cat_other)
+        val btPriceAct = view.findViewById<ImageButton>(R.id.bt_price_filter)
         val fabAddVoyage = view.findViewById<ImageView>(R.id.fab_addVoyage)
         val fabFavVoyage = view.findViewById<ImageView>(R.id.fab_favVoyage)
-
-            var id = arguments?.getInt("TAG")
-        Log.d("zzz", "id findvoyage =$id")
-
-        if (id != null) {
-            val database =
-                Room.databaseBuilder(requireContext(), AppDatabase::class.java, "savedDatabase")
-                    .build()
-            voyageDao = database.getVoyageDao()
-            runBlocking {
-                voyage = voyageDao!!.getVoyage(id)
-                Log.d("zzz", "voyage1 = $voyage")
-            }
-
-            if (voyage !=null) {
-                allerDate.text = SpannableStringBuilder(voyage!!.date)
-                returnDate.text = SpannableStringBuilder(voyage!!.dateRetour)
-                autoTextViewRetour.text = SpannableStringBuilder(voyage!!.destination)
-                passengersNumberTextView.text = SpannableStringBuilder(voyage!!.nb_voyageur.toString())
-
-            }
-        }
-
+        val btBestSellerHot = view.findViewById<Button>(R.id.best_seller)
+        val btHighestFirstHot = view.findViewById<Button>(R.id.highest_first)
+        val btLowestFirstHot = view.findViewById<Button>(R.id.lowest_first)
+        val btPriceSortHot = view.findViewById<Button>(R.id.price)
+        val btHighestPriceHot = view.findViewById<Button>(R.id.highest_price)
 
 
         // Initialise la BDD
@@ -211,21 +196,52 @@ class FindVoyage : Fragment() {
         hotelDaoSaved = databaseSaved.getHotelDao()
         voyageDaoSaved = databaseSaved.getVoyageDao()
 
+        val id = arguments?.getInt("TAG")
+        Log.d("zzz", "id findvoyage =$id")
 
+        if (id != null) {
+            runBlocking {
+                voyage = voyageDaoSaved!!.getVoyage(id)
+                Log.d("zzz", "voyage1 = $voyage")
+            }
+
+            if (voyage != null) {
+                allerDate.text = SpannableStringBuilder(voyage!!.date)
+                returnDate.text = SpannableStringBuilder(voyage!!.dateRetour)
+                autoTextViewRetour.text = SpannableStringBuilder(voyage!!.destination)
+                passengersNumberTextView.text =
+                    SpannableStringBuilder(voyage!!.nb_voyageur.toString())
+
+            }
+        }
 
 
         val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
         // listener sur les boutons activités = change de couleur
-        listenerBouton(btnMuseum, requireContext())
-        listenerBouton(btnSport, requireContext())
-        listenerBouton(btnFun, requireContext())
-        listenerBouton(btnNight, requireContext())
-        listenerBouton(btnFood, requireContext())
-        listenerBouton(btnOther, requireContext())
+        listenerBouton(btnMuseumAct, requireContext())
+        listenerBouton(btnSportAct, requireContext())
+        listenerBouton(btnFunAct, requireContext())
+        listenerBouton(btnNightAct, requireContext())
+        listenerBouton(btnFoodAct, requireContext())
+        listenerBouton(btnOtherAct, requireContext())
+
+        //Initialisation du nombre de filtres de recherche
+        val listButtons = listOf<Button>(
+            btBestSellerHot,
+            btHighestFirstHot,
+            btLowestFirstHot,
+            btPriceSortHot,
+            btHighestPriceHot
+        )
+        listenerBouton(btBestSellerHot, listButtons, requireContext())
+        listenerBouton(btHighestFirstHot, listButtons, requireContext())
+        listenerBouton(btLowestFirstHot, listButtons, requireContext())
+        listenerBouton(btPriceSortHot, listButtons, requireContext())
+        listenerBouton(btHighestPriceHot, listButtons, requireContext())
 
         // listener sur le prix
-        btPrice.setOnClickListener {
+        btPriceAct.setOnClickListener {
 
             val dialog = AlertDialog.Builder(activity)
             val dialogView = layoutInflater.inflate(
@@ -463,12 +479,12 @@ class FindVoyage : Fragment() {
                     if (allerDate.text.toString() != "" && returnDate.text.toString() != "") { // Si lieux bien spécifiés et voyage aller-retour
 
                         dateRetour = returnDate.text.toString()
-                        beginSearchExported(dateRetour)
+                        beginSearchExported(dateRetour, view)
 
                     } else if (allerDate.text.toString() != "" && return_dateLayout.visibility == View.GONE) { // Si voyage aller-simple
 
                         dateRetour = ""
-                        beginSearchExported(dateRetour)
+                        beginSearchExported(dateRetour, view)
 
                     } else {
                         Toast.makeText(
@@ -946,7 +962,8 @@ class FindVoyage : Fragment() {
                     }
                 }
                 withContext(Dispatchers.Main) {
-                    hotelsAdapter = HotelsAdapter(hotels, listFavorisHotels, mutableListOf(),"","")
+                    hotelsAdapter =
+                        HotelsAdapter(hotels, listFavorisHotels, mutableListOf(), "", "")
                     mergeAdapter.addAdapter(hotelsAdapter!!)
                 }
             }
@@ -979,7 +996,6 @@ class FindVoyage : Fragment() {
             }
             if (!flights.isNullOrEmpty() || !hotels.isNullOrEmpty() || !activities.isNullOrEmpty()) {
                 withContext(Dispatchers.Main) {
-                    loadingPanel.visibility = View.GONE // cache roue de chargement
                     layoutRecyclerViewVoyage.visibility = View.VISIBLE
                     cardViewVoyage.visibility = View.VISIBLE
                     globalRecyclerView.adapter = mergeAdapter
@@ -1005,7 +1021,7 @@ class FindVoyage : Fragment() {
 
     // Lancement de la recherche
 
-    private fun beginSearchExported(dateRetour: String) {
+    private fun beginSearchExported(dateRetour: String, view: View) {
         dateDepart = aller_date.text.toString()
         val nbActivities = activities_number.text.toString()
         val nbHotels = hotels_number.text.toString().toInt()
@@ -1017,7 +1033,8 @@ class FindVoyage : Fragment() {
         //     layout_search.visibility = View.GONE // cache le formulaire
         layoutRecyclerViewVoyage.visibility = View.GONE
         cardViewVoyage.visibility = View.GONE
-        loadingPanel.visibility = View.VISIBLE // affiche la roue de chargement
+        val progressOverlay = view.findViewById<FrameLayout>(R.id.progress_overlay)
+        animateView(progressOverlay, View.VISIBLE, 0.4f, 200)
         layoutNoFlightAvailable.visibility = View.GONE // cache l'image aucun vol dispo
 
         runBlocking {
@@ -1036,7 +1053,15 @@ class FindVoyage : Fragment() {
             )
             searchActivities(lieuRetourName, nbActivities, dateDepart, dateRetour, priceRange)
             Handler().postDelayed({
-                searchHotels(lieuRetourIata, nbHotels, dateDepart, dateRetour, "0", priceMaxhotels)
+                searchHotels(
+                    lieuRetourName,
+                    nbHotels,
+                    nbAdults,
+                    dateDepart,
+                    dateRetour,
+                    0,
+                    priceMaxhotels.toInt()
+                )
             }, 100)
         }
         activityCreate = false
@@ -1045,13 +1070,39 @@ class FindVoyage : Fragment() {
 
     private fun searchCompleted(view: View) {
         if (flightsDone && hotelsDone && activitiesDone) {
-            view.loadingPanel.visibility = View.GONE // cache roue de chargement
             layoutRecyclerViewVoyage.visibility = View.VISIBLE
             cardViewVoyage.visibility = View.VISIBLE
+            val progressOverlay = view.findViewById<FrameLayout>(R.id.progress_overlay)
+            animateView(progressOverlay, View.GONE, 0f, 200)
+            val cardVoyage = view.findViewById<Button>(R.id.btn_search)
+            Handler().postDelayed({
+                view.voyageTopLevel_ScrollView.smoothScrollTo(0, cardVoyage.y.toInt())
+            }, 1)
             if (flightsList.isNullOrEmpty() && listHotels.isNullOrEmpty() && activitiesList.isNullOrEmpty()) {
                 view.layoutNoFlightAvailable.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun animateView(
+        view: View,
+        toVisibility: Int,
+        toAlpha: Float,
+        duration: Int
+    ) {
+        val show = toVisibility == View.VISIBLE
+        if (show) {
+            view.alpha = 0f
+        }
+        view.visibility = View.VISIBLE
+        view.animate()
+            .setDuration(duration.toLong())
+            .alpha(if (show) toAlpha else 0f)
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    view.visibility = toVisibility
+                }
+            })
     }
 
     // Appel API et enregistrement BDD
@@ -1211,204 +1262,193 @@ class FindVoyage : Fragment() {
     private fun searchHotels(
         searchCity: String,
         nbHot: Int,
+        nbAd: Int,
         dateDepart: String,
         dateArrivee: String,
-        priceMinChosen: String,
-        priceMaxChosen: String
+        priceMinChosen: Int,
+        priceMaxChosen: Int
     ) {
 
-        runBlocking {
+        //Récupération du filtre de recherche
+        val sortBy =
+            listeCatActiveHotel(
+                best_seller,
+                highest_price,
+                lowest_first,
+                price,
+                highest_price
+            )
 
-            val equipementsCsv = resources.openRawResource(R.raw.equipements)
-            val listEquipements: List<Map<String, String>> =
-                csvReader().readAllWithHeader(equipementsCsv)
-
-
-            listEquipements.map { itMap ->
-                val amenityCode = itMap["amenity_code"].toString()
-                val amenityName = itMap["amenity_name"].toString()
-                val listEquipement: List<String> =
-                    listOf(amenityCode, amenityName)
-                listEquipementFormatted.add(listEquipement)
-
-            }
+        val retourDateChanged: String
+        if (dateArrivee == "") {
+            val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val c = Calendar.getInstance()
+            c.time = df.parse(dateDepart)!!
+            c.add(Calendar.DATE, 5)
+            retourDateChanged = df.format(c.time)
+        } else {
+            retourDateChanged = dateArrivee
         }
 
-        runBlocking {
+        //Recuperation du code de la ville de l'API
+        GlobalScope.launch {
+            val service = retrofitHotel().create(HotelAPI::class.java)
+            val resultLoc =
+                service.getLocation("fr_FR", searchCity.toLowerCase(Locale.ROOT), hotelKey)
 
-            listHotels?.clear()
-            listFavorisHotels.clear()
+            resultLoc.suggestions.map {
+                if (it.group == "CITY_GROUP") {
+                    cityCode = it.entities[0].destinationId.toInt()
+                }
+            }
+
+            //Lancement de la recherche
             hotelDaoSearch?.deleteHotels()
-            val bddHotels = hotelDaoSaved?.getHotels()
+            val hotelsSavedBdd = hotelDaoSaved?.getHotels()
+            listFavorisHotels.clear()
+            listHotels?.clear()
 
-            GlobalScope.launch {
-                val hotelOffersSearches: Array<HotelOffer>
-                //     if (dateArrivee != "") {
-                hotelOffersSearches = try {
-                    amadeus.shopping.hotelOffers[Params
-                        .with("cityCode", searchCity)
-                        .and("priceRange", "$priceMinChosen-$priceMaxChosen")
-                        .and("checkInDate", dateDepart)
-                        .and("checkOutDate", dateArrivee)
-                        .and("currency", "EUR")
-                        .and("lang", "FR")]
 
-                } catch (e: Exception) {
-                    Log.d("Error", e.toString())
-                    emptyArray()
+            var result: ModelRapid.Hotels? = null
+            adultsList.clear()
+
+            if (nbAd > 4) {
+                adultsList.add("4")
+                if (nbAd > 8) {
+                    adultsList.add("4")
+                    adultsList.add((nbAd - 8).toString())
+                } else {
+                    adultsList.add((nbAd - 4).toString())
                 }
-//                } else {
-//                    try {
-//                        hotelOffersSearches = amadeus.shopping.hotelOffers[Params
-//                            .with("cityCode", searchCity)
-//                            .and("priceRange", "$priceMinChosen-$priceMaxChosen")
-//                            .and("checkInDate", dateDepart)
-//                            .and("currency", "EUR")
-//                            .and("lang", "FR")]
-//
-//                    } catch (e: Exception) {
-//                        Log.d("Error", e.toString())
-//                        return@launch
-//                    }
-//                }
-                val hotelNb: MutableList<HotelOffer>? = mutableListOf()
+            } else {
+                adultsList.add(nbAd.toString())
+            }
 
-                try {
-                    val nbH =
-                        if (nbHot > hotelOffersSearches.size) hotelOffersSearches.size else nbHot
-                    for (h in 1..nbH) {
-                        hotelNb?.add(hotelOffersSearches[h - 1])
-                    }
-                } catch (e: Exception) {
-                    Log.d("ErrorFilter", e.toString())
+            when (adultsList.size) {
+                1 -> {
+                    result = service.getHotelsList(
+                        cityCode,
+                        1,
+                        dateArrivee,
+                        dateDepart,
+                        nbHot,
+                        adultsList[0].toInt(),
+                        null,
+                        null,
+                        null,
+                        sortBy,
+                        priceMinChosen,
+                        priceMaxChosen,
+                        "fr_FR",
+                        "EUR",
+                        hotelKey
+                    )
                 }
-                withContext(Dispatchers.Main) {
-                    //permet d'appeler le block sur chacun des éléments d'une collection (== boucle for)
-                    hotelNb?.map { itHotelOffer ->
-                        var favoris = false
-                        val idHotel = itHotelOffer.hotel.hotelId
-
-                        val name = itHotelOffer.hotel.name
-
-                        val description = if (itHotelOffer.hotel.description == null) {
-                            "Description non disponible"
-                        } else {
-                            itHotelOffer.hotel.description.text
-                        }
-
-                        val rate = itHotelOffer.hotel.rating
-
-                        val uri: String = if (itHotelOffer.hotel.media == null) {
-                            "0"
-                        } else {
-                            itHotelOffer.hotel.media[0].uri
-                        }
-
-                        val adresse: MutableList<String> = mutableListOf()
-                        val geocoder = Geocoder(activity)
-                        try {
-                            val adresseList: MutableList<Address> = geocoder.getFromLocation(
-                                itHotelOffer.hotel.latitude,
-                                itHotelOffer.hotel.longitude,
-                                1
-                            )
-                            adresseList.map {
-                                adresse.add(it.featureName)
-                                adresse.add(it.thoroughfare)
-                                adresse.add(it.postalCode)
-                                adresse.add(it.locality)
-                                adresse.add(it.countryName)
-                            }
-                        } catch (e: Exception) {
-                            Log.d("ErrorGeoCoder", e.toString())
-                            adresse.add("featureName")
-                            adresse.add("thoroughfare")
-                            adresse.add("postalCode")
-                            adresse.add("locality")
-                            adresse.add("countryName")
-                        }
-
-
-                        val telephone: String = if (itHotelOffer.hotel.contact == null) {
-                            "Téléphone non disponible"
-                        } else {
-                            itHotelOffer.hotel.contact.phone
-                        }
-
-                        val latitude = itHotelOffer.hotel.latitude
-                        val longitude = itHotelOffer.hotel.longitude
-
-                        var price: Double = -1.0
-                        itHotelOffer.offers.map {
-                            if (price < 0) {
-                                price = it.price.total.toDouble()
-                            } else if (price > it.price.total.toDouble()) {
-                                price = it.price.total.toDouble()
-                            }
-                        }
-                        val equipements = mutableListOf<String>()
-                        if (!itHotelOffer.hotel.amenities.isNullOrEmpty()) {
-                            itHotelOffer.hotel.amenities.forEach { itAmenity ->
-                                listEquipementFormatted.forEach {
-                                    if (itAmenity == it[0]) {
-                                        equipements.add(it[1])
-                                    }
-                                }
-                            }
-                        }
-
-                        val listOfferId: MutableList<String> = mutableListOf()
-                        itHotelOffer.offers.map {
-                            val offerId = it.id
-                            listOfferId.add(offerId)
-                        }
-
-
-                        var matchBdd = false
-                        bddHotels?.forEach {
-                            if (it.hotelId == idHotel.toInt()) {
-                                listFavorisHotels.add(true)
-                                matchBdd = true
-                                favoris = true
-                            }
-                        }
-                        if (!matchBdd) {
-                            listFavorisHotels.add(false)
-                        }
-
-                        val hotel = Hotel(
-                            0,
-                            idHotel.toInt(),
-                            name,
-                            description,
-                            rate,
-                            uri,
-                            adresse,
-                            latitude,
-                            longitude,
-                            price.toString(),
-                            equipements
-                        )
-                        runBlocking {
-                            listHotels?.add(hotel)
-                            hotelDaoSearch?.addHotel(hotel)
-                        }
-                    }
-
-                    if (!listHotels.isNullOrEmpty()) {
-                        hotelsAdapter = HotelsAdapter(listHotels!!, listFavorisHotels,mutableListOf(),"","")
-                        try {
-                            mergeAdapter.addAdapter(1, hotelsAdapter!!)
-                        } catch (e: Exception) {
-                            mergeAdapter.addAdapter(hotelsAdapter!!)
-                        }
-                    }
-                    hotelsDone = true
-                    searchCompleted(requireView())
+                2 -> {
+                    result = service.getHotelsList(
+                        cityCode,
+                        1,
+                        dateArrivee,
+                        dateDepart,
+                        nbHot,
+                        adultsList[0].toInt(),
+                        adultsList[1].toInt(),
+                        null,
+                        null,
+                        sortBy,
+                        priceMinChosen,
+                        priceMaxChosen,
+                        "fr_FR",
+                        "EUR",
+                        hotelKey
+                    )
+                }
+                3 -> {
+                    result = service.getHotelsList(
+                        cityCode,
+                        1,
+                        dateArrivee,
+                        dateDepart,
+                        nbHot,
+                        adultsList[0].toInt(),
+                        adultsList[1].toInt(),
+                        adultsList[2].toInt(),
+                        null,
+                        sortBy,
+                        priceMinChosen,
+                        priceMaxChosen,
+                        "fr_FR",
+                        "EUR",
+                        hotelKey
+                    )
                 }
             }
-        }
 
+
+            Log.d("Hotel", result.toString())
+
+            result?.data?.body?.searchResults?.results?.map {
+                val idHotel = it.id.toString()
+                val adresse: MutableList<String> = mutableListOf()
+                adresse.add(it.address.streetAddress)
+                adresse.add(it.address.postalCode)
+                adresse.add(it.address.locality)
+                adresse.add(it.address.countryName)
+
+
+                //Récupération des hôtels favoris
+                var matchBdd = false
+                hotelsSavedBdd?.forEach { itH ->
+                    if (itH.hotelId == idHotel.toInt()) {
+                        listFavorisHotels.add(true)
+                        matchBdd = true
+                    }
+                }
+                if (!matchBdd) {
+                    listFavorisHotels.add(false)
+                }
+
+
+                val hotel = Hotel(
+                    0,
+                    it.id.toInt(),
+                    it.name,
+                    null,
+                    it.starRating.toInt(),
+                    it.thumbnailUrl,
+                    adresse,
+                    it.coordinate.lat,
+                    it.coordinate.lon,
+                    it.ratePlan.price.current,
+                    null
+                )
+
+                listHotels?.add(hotel)
+                hotelDaoSearch?.addHotel(hotel)
+
+            }
+
+            withContext(Dispatchers.Main) {
+                if (!listHotels.isNullOrEmpty()) {
+                    hotelsAdapter =
+                        HotelsAdapter(
+                            listHotels!!,
+                            listFavorisHotels,
+                            mutableListOf(),
+                            dateDepart,
+                            retourDateChanged
+                        )
+                    try {
+                        mergeAdapter.addAdapter(1, hotelsAdapter!!)
+                    } catch (e: Exception) {
+                        mergeAdapter.addAdapter(hotelsAdapter!!)
+                    }
+                }
+
+                hotelsDone = true
+                searchCompleted(requireView())
+            }
+        }
     }
 
 
@@ -1450,7 +1490,14 @@ class FindVoyage : Fragment() {
             }
 
             categories =
-                listeCatActive(cat_museum, cat_food, cat_night, cat_fun, cat_other, cat_sport)
+                listeCatActiveActivite(
+                    cat_museum,
+                    cat_food,
+                    cat_night,
+                    cat_fun,
+                    cat_other,
+                    cat_sport
+                )
 
             //lancement de la requête api
             val result = service.listAct(
@@ -1608,12 +1655,38 @@ class FindVoyage : Fragment() {
                     context.resources!!.getColorStateList(R.color.butn_pressed)
             }
         }
-
         return bt
-
     }
 
-    private fun listeCatActive(
+    private fun listenerBouton(
+        bt: Button,
+        listButtons: List<Button>,
+        context: Context
+    ): Button {
+        bt.setOnClickListener {
+            listButtons.forEach {
+                if (bt == it) {
+                    if (it.isActivated) {
+                        bt.isActivated = false
+                        it.isActivated = false
+                        bt.backgroundTintList =
+                            context.resources!!.getColorStateList(R.color.white)
+                    } else {
+                        bt.isActivated = true
+                        it.isActivated = true
+                        bt.backgroundTintList =
+                            context.resources!!.getColorStateList(R.color.butn_pressed)
+                    }
+                } else {
+                    it.isActivated = false
+                    it.backgroundTintList = context.resources!!.getColorStateList(R.color.white)
+                }
+            }
+        }
+        return bt
+    }
+
+    private fun listeCatActiveActivite(
         bt_musee: Button,
         bt_food: Button,
         bt_night: Button,
@@ -1672,6 +1745,36 @@ class FindVoyage : Fragment() {
                 ",adventure,sports"
             }
         }
+        return string
+    }
+
+    private fun listeCatActiveHotel(
+        bt_best_seller: Button,
+        bt_highest_first: Button,
+        bt_lowest_first: Button,
+        bt_price_sort: Button,
+        bt_highest_price: Button
+    ): String {
+        var string = ""
+        if (bt_best_seller.isActivated) {
+            string = "BEST_SELLER"
+
+        }
+        if (bt_highest_first.isActivated) {
+            string = "STAR_RATING_HIGHEST_FIRST"
+        }
+        if (bt_lowest_first.isActivated) {
+            string = "STAR_RATING_LOWEST_FIRST"
+
+        }
+        if (bt_price_sort.isActivated) {
+            string = "PRICE"
+
+        }
+        if (bt_highest_price.isActivated) {
+            string = "PRICE_HIGHEST_FIRST"
+        }
+
         return string
     }
 }

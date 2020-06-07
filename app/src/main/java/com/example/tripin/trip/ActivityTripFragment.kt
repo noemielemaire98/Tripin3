@@ -43,12 +43,10 @@ class ActivityTripFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val fragment = arguments?.getString("fragment")
-
         val voyage: Voyage?
         val listMarker2: ArrayList<Marker>
 
-        if(fragment == "DetailVoyage2") {
+        if (activity is DetailVoyage2) {
 
             voyage = (activity as? DetailVoyage2)!!.voyage
             listMarker2 = (activity as? DetailVoyage2)!!.listMarker2
@@ -74,7 +72,7 @@ class ActivityTripFragment : Fragment() {
             activity?.finish()
         }
 
-       // mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        // mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         runBlocking {
             val activities = voyage!!.list_activity
             activities?.map {
@@ -85,8 +83,8 @@ class ActivityTripFragment : Fragment() {
             } else {
                 rl.visibility = View.GONE
                 val activities2 = activities.toMutableList()
-               // val listMarker = setUpMap(activities2)
-                rv.adapter = ActivityAdapterTrip(activities2, list_fav, voyage,listMarker2,rl)
+                // val listMarker = setUpMap(activities2)
+                rv.adapter = ActivityAdapterTrip(activities2, list_fav, voyage, listMarker2, rl)
             }
         }
 
@@ -100,18 +98,27 @@ class ActivityTripFragment : Fragment() {
     }
 
 
-    private fun setUpMap(activityList : MutableList<Activity>) : ArrayList<Marker>{
+    private fun setUpMap(activityList: MutableList<Activity>): ArrayList<Marker> {
         var listMarker = arrayListOf<Marker>()
 
         mapFragment.getMapAsync {
             map = it
             activityList.map {
-                val marker : Marker = map.addMarker(MarkerOptions()
-                    .position(LatLng(it.latitude, it.longitude))
-                    .title(it.title))
+                val marker: Marker = map.addMarker(
+                    MarkerOptions()
+                        .position(LatLng(it.latitude, it.longitude))
+                        .title(it.title)
+                )
                 listMarker.add(marker)
             }
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(activityList[0].latitude,activityList[0].longitude), 10f))
+            map.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    LatLng(
+                        activityList[0].latitude,
+                        activityList[0].longitude
+                    ), 10f
+                )
+            )
         }
 
         return listMarker

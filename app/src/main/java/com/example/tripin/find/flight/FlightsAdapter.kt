@@ -225,11 +225,11 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>, 
                 }
             }
 
-            view.setOnClickListener { itView ->
-                val intent = Intent(itView.context, DetailFlights::class.java)
-                intent.putExtra("flights", flights.toTypedArray())
-                itView.context.startActivity(intent)
-            }
+//            view.setOnClickListener { itView ->
+//                val intent = Intent(itView.context, DetailFlights::class.java)
+//                intent.putExtra("flights", flights.toTypedArray())
+//                itView.context.startActivity(intent)
+//            }
 
             listFlightsBdd?.map { itList ->
 

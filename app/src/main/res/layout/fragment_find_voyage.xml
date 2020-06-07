@@ -10,6 +10,8 @@
     android:focusableInTouchMode="true"
     tools:context=".find.voyage.FindVoyage">
 
+    <include layout="@layout/include_progress_overlay"/>
+
     <ScrollView
         android:id="@+id/voyageTopLevel_ScrollView"
         android:layout_width="match_parent"
@@ -244,13 +246,22 @@
                         android:id="@+id/bt_price_filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginHorizontal="5dp"
-                        android:src="@drawable/ic_euro_symbol_black_24dp"
                         android:layout_gravity="center_vertical"
-                        android:backgroundTint="@color/colorAccent"/>
+                        android:layout_marginHorizontal="5dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/colorAccent"
+                        android:src="@drawable/ic_euro_symbol_black_24dp" />
 
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="2dp"
+                    android:text="Filtres activités : " />
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -300,7 +311,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
                             android:backgroundTint="@color/white"
-                            android:text="Vie nocture"
+                            android:text="Vie nocturne"
                             android:textAllCaps="false" />
 
                         <Button
@@ -322,6 +333,76 @@
                             android:backgroundTint="@color/white"
                             android:text="Activités et visites"
                             android:textAllCaps="false" />
+                    </LinearLayout>
+
+                </HorizontalScrollView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginVertical="2dp"
+                    android:text="Filtres hotels : " />
+
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/best_seller"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:backgroundTint="@color/white"
+                            android:text="Coups de coeur"
+                            android:textAllCaps="false" />
+
+                        <Button
+                            android:id="@+id/highest_first"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:backgroundTint="@color/white"
+                            android:text="Les mieux notés"
+                            android:textAllCaps="false" />
+
+                        <Button
+                            android:id="@+id/lowest_first"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:backgroundTint="@color/white"
+                            android:backgroundTintMode="src_in"
+                            android:text="Les moins bien notés"
+                            android:textAllCaps="false" />
+
+                        <Button
+                            android:id="@+id/price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:backgroundTint="@color/white"
+                            android:text="Prix croissants"
+                            android:textAllCaps="false" />
+
+                        <Button
+                            android:id="@+id/highest_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:backgroundTint="@color/white"
+                            android:text="Prix décroissants"
+                            android:textAllCaps="false" />
+
+
                     </LinearLayout>
 
                 </HorizontalScrollView>
@@ -416,25 +497,6 @@
                     android:contentDescription="@string/imageDescription_no_flights"
                     android:gravity="center"
                     android:src="@drawable/noflightsavalaible" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/loadingPanel"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_marginBottom="?attr/actionBarSize"
-                android:visibility="gone">
-
-                <ProgressBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:indeterminate="true"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
             </RelativeLayout>
 
             <RelativeLayout
