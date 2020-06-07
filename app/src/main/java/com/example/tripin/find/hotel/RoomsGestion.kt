@@ -24,6 +24,13 @@ class RoomsGestion : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gestion_rooms)
+        adultsList = intent.getStringArrayListExtra("adultsList")
+
+        var listEmpty = false
+        if(adultsList!!.isEmpty()){
+            listEmpty = true
+        }
+        add_room_recyclerview.adapter = AddRoomAdapter(adultsList)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         add_room_recyclerview.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -68,9 +75,14 @@ class RoomsGestion : AppCompatActivity() {
         add_rooms_ok.setOnClickListener{
             if(adultsList.isNullOrEmpty()){
                 Toast.makeText(this, "Aucune chambre n'a été ajoutée", Toast.LENGTH_LONG ).show()
-                this.finish()
+                listEmpty = true
+            }else{
+                listEmpty = false
             }
             val intent = Intent(this, FindHotelFragment::class.java)
+            Log.d("TestLists", "Intent ${adultsList}")
+            Log.d ("TestLists", "Intent ${listEmpty}")
+            intent.putExtra("listEmpty", listEmpty)
             intent.putExtra("listAdults", adultsList.toString())
             setResult(Activity.RESULT_OK, intent)
             this.finish()

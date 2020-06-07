@@ -357,7 +357,7 @@ class FlightsAdapter(private val flightsList: MutableList<MutableList<Flight>>, 
                 val listChoix = arrayListOf<String>()
 
                 if (listVoyage.isNullOrEmpty()) {
-                    plusdialog.setMessage("Vous n'avez constitué aucun dossier de voyage, cliquez sur créer")
+                    plusdialog.setMessage("Vous n'avez constitué aucun dossier de voyage, cliquez sur créer.")
                 } else {
                     hasVoyage(listVoyage, listCheckeditems, plusdialog, listChoix, flights)
                 }

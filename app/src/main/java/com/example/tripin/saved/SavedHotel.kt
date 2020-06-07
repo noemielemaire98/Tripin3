@@ -3,6 +3,7 @@ package com.example.tripin.saved
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -81,7 +82,6 @@ class SavedHotel : AppCompatActivity() {
 
        runBlocking {
             val hotels = hotelDaoSaved?.getHotels()
-
            hotels?.map {
                list_favoris.add(true)
            }

@@ -19,10 +19,10 @@ interface HotelDao {
     @Query("delete from allhotels")
     suspend fun deleteHotels()
 
-    @Query ("delete from allhotels where id=:id")
+    @Query ("delete from allhotels where hotelId=:id")
     suspend fun deleteHotel(id : Int)
 
-    @Query("select * from allhotels where id=:id")
+    @Query("select * from allhotels where hotelId=:id")
     suspend fun getHotel(id: Int) : Hotel
 
 }
