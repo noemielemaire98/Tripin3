@@ -299,6 +299,45 @@ class FindHotelFragment : Fragment() {
                         cityCode = it.entities[0].destinationId.toInt()
                     }
                 }
+            }
+
+            //Lancement de la recherche
+            runBlocking {
+                hotelDaoSearch?.deleteHotels()
+                val hotels_saved_bdd = hotelDaoSaved?.getHotels()
+                list_favoris.clear()
+
+
+                Log.d("Hotel", "Début de la récupération des données")
+                var result: ModelRapid.Hotels? = null
+                when (adultsList?.size) {
+                    1 -> {
+                        result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
+                            adultsList!![0].toInt(), null,null, null,
+                            sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR",hotelKey )
+                        Log.d("tyui", "${adultsList!![0].toInt()}")
+                    }
+                    2 -> {
+                        result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
+                            adultsList!![0].toInt(),  adultsList!!.get(1).toInt(),null, null,
+                            sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR",hotelKey )
+                    }
+                    3 -> {
+                        result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
+                            adultsList!![0].toInt(),  adultsList!!.get(1).toInt(),adultsList!!.get(2).toInt(), null,
+                            sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR",hotelKey )
+                    }
+                    4 -> {
+                        result = service.getHotelsList(cityCode,1, dateArrivee, dateDepart,10,
+                            adultsList!![0].toInt(), adultsList!!.get(1).toInt(),adultsList!!.get(2).toInt(), adultsList!!.get(3).toInt(),
+                            sortBy,priceMinChosen, priceMaxChosen,"fr_FR","EUR",hotelKey)
+                    }
+                    else -> {
+                        Toast.makeText(requireActivity().baseContext, "Veuillez ajouter des chambres", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                Log.d("Hotel", "Récupération des données terminée")
 
 
                 if (cityCode == 0){
@@ -333,10 +372,10 @@ class FindHotelFragment : Fragment() {
 
 
                         Log.d("Hotel", "Début de la récupération des données")
-                        var result: ModelRapid.Hotels? = null
+                        var resultss: ModelRapid.Hotels? = null
                         when (adultsList?.size) {
                             1 -> {
-                                result = service.getHotelsList(
+                                resultss = service.getHotelsList(
                                     cityCode,
                                     1,
                                     dateArrivee,
@@ -355,7 +394,7 @@ class FindHotelFragment : Fragment() {
                                 )
                             }
                             2 -> {
-                                result = service.getHotelsList(
+                                resultss = service.getHotelsList(
                                     cityCode,
                                     1,
                                     dateArrivee,
@@ -374,7 +413,7 @@ class FindHotelFragment : Fragment() {
                                 )
                             }
                             3 -> {
-                                result = service.getHotelsList(
+                                resultss = service.getHotelsList(
                                     cityCode,
                                     1,
                                     dateArrivee,
@@ -393,7 +432,7 @@ class FindHotelFragment : Fragment() {
                                 )
                             }
                             4 -> {
-                                result = service.getHotelsList(
+                                resultss = service.getHotelsList(
                                     cityCode,
                                     1,
                                     dateArrivee,
@@ -424,9 +463,9 @@ class FindHotelFragment : Fragment() {
 
 
 
-                        if (result != null) {
+                        if (resultss != null) {
 
-                            result.data.body.searchResults.results.map {
+                            resultss.data.body.searchResults.results.map {
                                 var idHotel = it.id.toString()
                                 var adresse: MutableList<String> = mutableListOf()
                                 adresse.add(it.address.streetAddress)
