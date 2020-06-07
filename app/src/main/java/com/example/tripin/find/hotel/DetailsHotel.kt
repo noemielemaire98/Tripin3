@@ -52,10 +52,7 @@ class DetailsHotel : AppCompatActivity() {
     private var id: Int = 0
     private var hotelDaoSaved: HotelDao? = null
     private var voyageDao: VoyageDao? = null
-    private var offerDao: OfferDao? = null
     private var hotels_saved_bdd = emptyList<Hotel>()
-    private var hotels_search_bdd = emptyList<Hotel>()
-    private var offersList: MutableList<Offer>? = null
     lateinit var mapFragment: SupportMapFragment
     lateinit var googleMap: GoogleMap
     var date_debut = ""
@@ -64,7 +61,7 @@ class DetailsHotel : AppCompatActivity() {
     private var budget = ""
     var image = ""
     private val service = retrofitHotel().create(HotelAPI::class.java)
-    private val hotelKey = "e510fb173emsh2748fdaccbfd76dp19ee52jsnc2bda03d8b6d"
+    private val hotelKey = "5f672e716bmsh702ca7444dd484cp121785jsn039c3a4937f8"
     private var listEquipements : MutableList<Equipement> = mutableListOf()
     private var drawableNameList : MutableList<String> = mutableListOf()
     private var listProche : String = ""
@@ -85,6 +82,7 @@ class DetailsHotel : AppCompatActivity() {
 
         hotel = intent.getParcelableExtra("hotel")
         favoris = intent.getBooleanExtra("favoris", false)
+        Log.d("favorisPB", "Détail = ${favoris}")
         var Adults = intent.getStringExtra("listAdults")
         val dateArrivee = intent.getStringExtra("dateArrivee")
         val dateDepart = intent.getStringExtra("dateDepart")
@@ -94,7 +92,6 @@ class DetailsHotel : AppCompatActivity() {
         listEquipements.clear()
         drawableNameList.clear()
 
-        Log.d("zzz", "hotel = $hotel")
 
         val databasesaved =
             Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
@@ -104,6 +101,9 @@ class DetailsHotel : AppCompatActivity() {
         runBlocking {
             hotels_saved_bdd = hotelDaoSaved!!.getHotels()
         }
+
+        Log.d("favorisPB", "Détail22 = $hotels_saved_bdd")
+
 
         hotels_saved_bdd?.forEach {
             if (it.hotelId == hotel!!.hotelId) {
@@ -163,7 +163,7 @@ Log.d("Test", result.toString())
                 var nameRoom = it.name
                 var image:String? = it.images?.get(0)?.fullSizeUrl
                 var descriptionRoom = it.additionalInfo.description
-                var occupancyRoom:String?  = "${it.maxOccupancy.messageTotal} ${it.maxOccupancy.messageChildren}"
+                var occupancyRoom:String?  = "${it.maxOccupancy?.messageTotal} ${it.maxOccupancy?.messageChildren}"
                 amenitiesRoom = it.additionalInfo.details.amenities as MutableList<String>
                 var priceNight  = it.ratePlans[0].price.nightlyPriceBreakdown.additionalColumns[0].value
                 var price = it.ratePlans[0].price.current
@@ -185,7 +185,7 @@ Log.d("Test", result.toString())
                     )
 
                 listRooms.add(room)
-Log.d("Price", room.toString())
+            Log.d("Price", room.toString())
 
 
             }}
@@ -297,17 +297,12 @@ Log.d("Price", room.toString())
                 3)}"
 
 
-
-
-
-
-
-
-
-        fab_fav.setOnClickListener {
+       fab_fav.setOnClickListener {
             if (favoris == false) {
                 runBlocking {
                     hotelDaoSaved?.addHotel(hotel!!)
+                    Log.d("favorisPB", "Détail + true")
+
                 }
                 favoris = true
                 fab_fav.setImageResource(R.drawable.ic_favorite_black_24dp)
@@ -319,7 +314,8 @@ Log.d("Price", room.toString())
 
             } else if (favoris == true) {
                 runBlocking {
-                    hotelDaoSaved?.deleteHotel(hotel!!.id)
+                    hotelDaoSaved?.deleteHotel(hotel!!.hotelId)
+                    Log.d("favorisPB", "Détail + false")
                 }
                 favoris = false
                 fab_fav.setImageResource(R.drawable.ic_favorite_border_black_24dp)
@@ -335,44 +331,47 @@ Log.d("Price", room.toString())
 
         //Ajout voyage
         fab_plus.setOnClickListener {
-            Log.d("POP-UP", "Click")
             voyageDao = databasesaved.getVoyageDao()
-            val list_voyage: ArrayList<String> = arrayListOf<String>()
+            val list_voyage: ArrayList<String> = arrayListOf()
             val list_checkedItems = ArrayList<Boolean>()
             val selectedList = ArrayList<Int>()
+
+
             // je récupère la liste des titres des dossiers de voyage et si oui ou non l'activité appartient à ce voyage
             runBlocking {
                 val voyages = voyageDao?.getVoyage()
-                if (voyages != null) {
-                    voyages.map {
+
+                    voyages?.map {
                         var deja_ajoute = false
                         list_voyage.add(it.titre!!)
                         it.list_hotels?.map {
-                            if (it.id == hotel!!.id) {
+                            if (it.hotelId == hotel!!.hotelId) {
                                 deja_ajoute = true
                             }
                         }
                         list_checkedItems.add(deja_ajoute)
                     }
-                }
+
             }
             // j'ouvre la pop-up
             val plusdialog = androidx.appcompat.app.AlertDialog.Builder(this)
             plusdialog.setTitle("Dossier de voyage")
             val list_choix = arrayListOf<String>()
+
             if (list_voyage.isEmpty()) {
-                plusdialog.setMessage("Vous n'avez constitué aucun dossier de voyage, cliquez sur créer")
+                plusdialog.setMessage("Vous n'avez constitué aucun dossier de voyage, cliquez sur créer.")
             } else {
                 plusdialog.setMultiChoiceItems(
                     list_voyage.toTypedArray(),
                     list_checkedItems.toBooleanArray()
                 ) { dialog, which: Int, isChecked ->
+
                     // Update the current focused item's checked status
                     list_checkedItems[which] = isChecked
                     if (isChecked) {
                         list_choix.add(list_voyage.get(which))
                         runBlocking {
-                            val voyage = voyageDao?.getVoyageByTitre(list_voyage.get(which))
+                            val voyage = voyageDao?.getVoyageByTitre(list_voyage[which])
                             val ancienne_list = voyage!!.list_hotels?.toMutableList()
                             ancienne_list?.add(hotel!!)
                             val nouvelle_liste = ancienne_list?.toList()
@@ -382,23 +381,23 @@ Log.d("Price", room.toString())
                         }
                         Toast.makeText(
                             this,
-                            "L'hôtel a bien été ajouté à ${list_voyage.get(which)}",
+                            "L'hôtel a bien été ajouté à ${list_voyage[which]}",
                             Toast.LENGTH_SHORT
                         ).show()
 
                     } else {
-                        list_choix.remove(list_voyage.get(which))
+                        list_choix.remove(list_voyage[which])
                         runBlocking {
-                            val voyage = voyageDao?.getVoyageByTitre(list_voyage.get(which))
-                            var ancienne_list = voyage?.list_hotels?.toMutableList()
-                            ancienne_list?.remove(hotel!!)
-                            val nouvelle_liste = ancienne_list?.toList()
+                            val voyage = voyageDao?.getVoyageByTitre(list_voyage[which])
+                            var ancienne_list2 = voyage?.list_hotels?.toMutableList()
+                            ancienne_list2?.remove(hotel!!)
+                            val nouvelle_liste = ancienne_list2?.toList()
                             voyage!!.list_hotels = nouvelle_liste
                             voyageDao?.updateVoyage(voyage!!)
                         }
                         Toast.makeText(
                             this,
-                            "L'hôtel a bien été supprimé de ${list_voyage.get(which)}",
+                            "L'hôtel a bien été supprimé de ${list_voyage[which]}",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -513,7 +512,8 @@ Log.d("Price", room.toString())
                             }
                         }
                         alert.dismiss()
-                        plusdialog.show()
+                        plusdialog.show().dismiss()
+                        fab_plus.performClick()
                     } else {
                         Toast.makeText(this, "Veuillez saisir tous les champs", Toast.LENGTH_SHORT)
                             .show()
@@ -521,7 +521,8 @@ Log.d("Price", room.toString())
                 }
                 returnbutton.setOnClickListener {
                     alert.dismiss()
-                    plusdialog.show()
+                    plusdialog.show().dismiss()
+                    fab_plus.performClick()
                 }
             }
 
@@ -541,6 +542,7 @@ Log.d("Price", room.toString())
         }
 
 
+
         fun formatString(nom: String): String {
             var stringFormat: String = nom
             val nomSplit = nom.split(" ")
@@ -558,7 +560,6 @@ Log.d("Price", room.toString())
     @SuppressLint("SetTextI18n")
     private fun rangeDatePickerPrimeCalendar(editText: EditText) {
         val rangeDaysPickCallback = RangeDaysPickCallback { startDate, endDate ->
-            // TODO
             Log.d("Date", "${startDate.shortDateString} ${endDate.shortDateString}")
             val parser =
                 SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())

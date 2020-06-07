@@ -54,6 +54,7 @@ class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>
     }
 
     override fun onBindViewHolder(holder: HotelViewHolder, position: Int) {
+        Log.d("favorisPB", "Adapter = $favoris")
 
         val hotel = hotels[position]
 
@@ -96,8 +97,6 @@ class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>
         holder.hotelView.hotel_prix_textview.text = "Séjour à partir de : ${hotel.prix}"
 
 
-        //Récupération de l'image
-        // TODO : Vérifier si les images "test" se mettent à jour
 
         if(hotel.image_url==null) {
             holder.hotelView.hotels_imageview.setImageResource(R.drawable.hotel)
@@ -131,9 +130,11 @@ class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>
             if(favoris[position] == true){
                 holder.hotelView.fab_favActivity.setImageResource(R.drawable.ic_favorite_border_black_24dp)
                 runBlocking {
-                    hotelDaoSaved?.deleteHotel(hotel.id)
+                    hotelDaoSaved?.deleteHotel(hotel.hotelId)
                 }
                 favoris[position] = false
+                Log.d("favorisPB", "Adapter = ${favoris}")
+
                 Toast.makeText(context, "L'hôtel a bien été supprimé des favoris", Toast.LENGTH_SHORT).show()
 
             }else {
@@ -142,6 +143,8 @@ class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>
                     hotelDaoSaved?.addHotel(hotel)
                 }
                 favoris[position] = true
+                Log.d("favorisPB", "Adapter = ${favoris}")
+
                 Toast.makeText(context, "L'hôtel a bien été ajoutée aux favoris", Toast.LENGTH_SHORT).show()
             }
         }

@@ -13,8 +13,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity (tableName = "allhotels")
 data class Hotel(
-    @PrimaryKey(autoGenerate = true) val id: Int,
-    val hotelId: Int,
+    @PrimaryKey val hotelId: Int,
     val hotelName: String,
     val hotelDescription: String?,
     val rate: Int?,
@@ -31,7 +30,6 @@ data class Hotel(
     companion object {
         val all = (1..20).map {
             Hotel(
-                it,
                 it,
                 "Name$it",
                 "Description$it",

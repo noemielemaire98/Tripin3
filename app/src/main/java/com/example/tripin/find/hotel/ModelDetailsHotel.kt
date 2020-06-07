@@ -195,7 +195,7 @@ object ModelDetailsHotel {
         val name: String,
         val images: List<Image> ?,
         val bedChoices: BedChoices,
-        val maxOccupancy: MaxOccupancy,
+        val maxOccupancy: MaxOccupancy?,
         val additionalInfo: AdditionalInfo,
         val ratePlans: List<RatePlan>
     )

@@ -23,7 +23,7 @@
     android:layout_gravity="center_vertical"
     android:layout_marginTop="10dp"
     android:gravity="center"
-    android:text="Aucune activité ajoutée"
+    android:text="Aucune activité enregistrée"
     android:textSize="26sp"
     android:textStyle="bold" />
 

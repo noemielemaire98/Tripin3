@@ -62,6 +62,7 @@ class SavedHotelFragment : Fragment() {
                 list_favoris.add(true)
             }
 
+
             if(!hotels.isNullOrEmpty()){
                 layout_nohotel.visibility = View.GONE
                rv.adapter =
@@ -75,6 +76,37 @@ class SavedHotelFragment : Fragment() {
         }
 
         return root
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+
+     val databasesaved =
+            Room.databaseBuilder(requireActivity().baseContext, AppDatabase::class.java, "savedDatabase")
+                .build()
+
+
+
+        hotelDaoSaved = databasesaved.getHotelDao()
+        runBlocking {
+            val hotels = hotelDaoSaved?.getHotels()
+            hotels?.map {
+                list_favoris.add(true)
+            }
+
+
+            if(!hotels.isNullOrEmpty()){
+                layoutNoSavedHotel.visibility = View.GONE
+                hotels_saved_recyclerview.adapter =
+                    HotelsAdapter(hotels!!, list_favoris,mutableListOf(),"","")
+
+            }else{
+                layoutNoSavedHotel.visibility = View.VISIBLE
+                layoutRecyclerView_HotelsSaved.visibility = View.GONE
+            }
+
+        }
     }
 
 }

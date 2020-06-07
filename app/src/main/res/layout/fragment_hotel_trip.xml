@@ -34,6 +34,7 @@
             android:layout_below="@id/noSavedHotelAvailable"
             android:layout_marginTop="10dp"
             android:layout_gravity="center"
+            android:gravity="center_horizontal"
             android:layout_centerInParent="true"
             android:text="@string/noSavedFlights"
             android:textSize="18sp" />

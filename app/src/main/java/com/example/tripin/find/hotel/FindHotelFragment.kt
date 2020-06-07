@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import android.text.SpannableStringBuilder
 import android.util.DisplayMetrics
 import android.util.Log
@@ -47,20 +48,20 @@ class FindHotelFragment : Fragment() {
     private var hotelDaoSaved: HotelDao? = null
     private var citydao: CityDao? = null
     private var cityCode: Int= 0
-    val listCitiesFormatted = mutableListOf<List<String>>()
-    val listEquipementFormatted = mutableListOf<List<String>>()
+    private var mBundleRecyclerViewState: Bundle? = null
+    private var mListState: Parcelable? = null
     private var cal: Calendar = Calendar.getInstance()
     var rooms_number: Int = 1
     private var dateArrivee: String = ""
     private var dateDepart: String= ""
     var priceMinFixed: Int = 0
-    var priceMaxFixed: Int = 5000
+    var priceMaxFixed: Int = 2000
     var priceMinChosen: Int = priceMinFixed
     var priceMaxChosen: Int = priceMaxFixed
     var list_favoris  = arrayListOf<Boolean>()
     var list_cities_name = arrayListOf<String>()
     private val service = retrofitHotel().create(HotelAPI::class.java)
-    private val hotelKey = "e510fb173emsh2748fdaccbfd76dp19ee52jsnc2bda03d8b6d"
+    private val hotelKey = "5f672e716bmsh702ca7444dd484cp121785jsn039c3a4937f8"
     private var sortBy : String = ""
     var adultsList : ArrayList<String> ?= arrayListOf()
     private var animatedHide = false
@@ -188,7 +189,7 @@ class FindHotelFragment : Fragment() {
         hotelDaoSaved = databasesaved.getHotelDao()
         citydao = databasesaved.getCityDao()
         hotelDaoSearch = databasesearch.getHotelDao()
-
+        list_favoris.clear()
 
         //Initialisation du nombre de filtres de recherche
         val listButtons = listOf<Button>(bt_best_seller,bt_highest_first,bt_lowest_first,bt_price_sort,bt_highest_price)
@@ -215,6 +216,7 @@ class FindHotelFragment : Fragment() {
         roomNumber.text = adultsList?.size.toString()
         increaseButton.setOnClickListener {
             val intent= Intent(it.context, RoomsGestion::class.java)
+            intent.putExtra("adultsList", adultsList)
             startActivityForResult(intent, 1)
         }
 
@@ -299,9 +301,28 @@ class FindHotelFragment : Fragment() {
                 }
 
 
-                if (dateArrivee == "" || dateDepart == "") {
-                    Toast.makeText(requireContext(), "Dates invalides", Toast.LENGTH_SHORT).show()
-                } else {
+                if (cityCode == 0){
+                        runOnUiThread {
+                            Toast.makeText(requireContext(), "Destination invalide", Toast.LENGTH_SHORT)
+                                .show()
+                            layoutNoHotelAvailable.visibility = View.VISIBLE
+                            loadingPanel.visibility = View.GONE
+                        }
+                }
+                else if
+                    (dateArrivee == "" || dateDepart == "") {
+                        runOnUiThread {
+                            Toast.makeText(requireContext(), "Dates invalides", Toast.LENGTH_SHORT).show()
+                            layoutNoHotelAvailable.visibility = View.VISIBLE
+                            loadingPanel.visibility = View.GONE
+                        }
+                    }else if (adultsList?.size == 0){
+                    runOnUiThread {
+                Toast.makeText(requireContext(), "Veuillez ajouter des chambres", Toast.LENGTH_SHORT).show()
+                        layoutNoHotelAvailable.visibility = View.VISIBLE
+                        loadingPanel.visibility = View.GONE
+            }}
+                else {
 
                     //Lancement de la recherche
 
@@ -425,12 +446,11 @@ class FindHotelFragment : Fragment() {
                                     }
                                 }
                                 if (!match_bdd) {
-                                    list_favoris.add(false)
-                                }
+                                list_favoris.add(false)
+                            }
 
 
                                 val hotel = Hotel(
-                                    0,
                                     it.id.toInt(),
                                     it.name,
                                     null,
@@ -502,10 +522,10 @@ class FindHotelFragment : Fragment() {
             val list_hotels_bdd = hotelDaoSaved?.getHotels()
 
             hotels?.map {
-                val id = it.id
+                val id = it.hotelId
                 var match_bdd = false
                 list_hotels_bdd?.forEach {
-                    if (it.id == id) {
+                    if (it.hotelId == id) {
                         list_favoris.add(true)
                         match_bdd = true
                     }
@@ -514,7 +534,7 @@ class FindHotelFragment : Fragment() {
                     list_favoris.add(false)
                 }
                 hotels_recyclerview.adapter =
-                    HotelsAdapter(hotels ?: emptyList(), list_favoris, adultsList!!, dateArrivee, dateDepart)
+                    HotelsAdapter(hotels, list_favoris, adultsList!!, dateArrivee, dateDepart)
             }
 
 
@@ -522,21 +542,23 @@ class FindHotelFragment : Fragment() {
 
     }
 
-
-
      @SuppressLint("RestrictedApi")
      override fun  onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
+                adultsList!!.clear()
                 var result = data?.getStringExtra("listAdults")
-                Log.d("TestLists", result)
-                initializeAdultsList(result)
-               if(adultsList!!.isEmpty()){
+                var listEmpty = data?.getBooleanExtra("listEmpty", false)
+
+                if (listEmpty!!){
                     view?.findViewById<TextView>(R.id.room_number)?.text = "0"
-                }else{
-                   view?.findViewById<TextView>(R.id.room_number)?.text = adultsList?.size.toString()
+                    adultsList!!.clear()
+                } else{
+                    initializeAdultsList(result)
+                    view?.findViewById<TextView>(R.id.room_number)?.text = adultsList?.size.toString()
                 }
+
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 Log.d("ERREUR", "erreur")

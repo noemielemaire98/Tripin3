@@ -1417,7 +1417,6 @@ class FindVoyage : Fragment() {
 
 
                 val hotel = Hotel(
-                    0,
                     it.id.toInt(),
                     it.name,
                     null,
