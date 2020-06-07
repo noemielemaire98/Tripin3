@@ -64,7 +64,7 @@ class DetailsHotel : AppCompatActivity() {
     private var budget = ""
     var image = ""
     private val service = retrofitHotel().create(HotelAPI::class.java)
-    private val hotelKey = "e510fb173emsh2748fdaccbfd76dp19ee52jsnc2bda03d8b6d"
+    private val hotelKey = "5f672e716bmsh702ca7444dd484cp121785jsn039c3a4937f8"
     private var listEquipements : MutableList<Equipement> = mutableListOf()
     private var drawableNameList : MutableList<String> = mutableListOf()
     private var listProche : String = ""

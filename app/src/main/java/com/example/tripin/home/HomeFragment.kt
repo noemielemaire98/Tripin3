@@ -22,6 +22,7 @@ import com.example.tripin.find.activity.ActivityAdapterGlobalFormatted
 import com.example.tripin.find.activity.ActivitybyCity
 import com.example.tripin.find.hotel.HotelAPI
 import com.example.tripin.find.hotel.HotelsAdapter
+import com.example.tripin.find.hotel.HotelsResizedAdapter
 import com.example.tripin.find.hotel.ModelRapid
 import com.example.tripin.model.Activity
 import com.example.tripin.model.City
@@ -43,7 +44,7 @@ class HomeFragment : Fragment() {
 
     private var hotelDaoSearch: HotelDao? = null
     private var hotelDaoSaved: HotelDao? = null
-    private val hotelKey = "e510fb173emsh2748fdaccbfd76dp19ee52jsnc2bda03d8b6d"
+    private val hotelKey = "5f672e716bmsh702ca7444dd484cp121785jsn039c3a4937f8"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -102,11 +103,8 @@ class HomeFragment : Fragment() {
         val service = retrofit().create(ActivitybyCity::class.java)
         runBlocking {
             val city = citydao?.getCity(city_name)
-            Log.d("tyui", "$city")
             if (city != null) {
-            Log.d("tyui", "ca marche ")
                 var result = service.listActivitybyCity(city.id, "relevance", "", lang, monnaie)
-                Log.d("tyui", "$result")
                 noActivity_home.visibility = View.GONE
 
                 val list_activities_bdd = activityDaoSaved?.getActivity()
@@ -371,12 +369,10 @@ class HomeFragment : Fragment() {
                         it.starRating.toInt(), // TODO : PB with long ? NewYork
                         it.thumbnailUrl,
                         adresse,
-                        null,
                         it.coordinate.lat,
                         it.coordinate.lon,
                         it.ratePlan.price.current,
                         null
-
                     )
 
                     hotelDaoSearch?.addHotel(hotel)
@@ -393,17 +389,12 @@ class HomeFragment : Fragment() {
 //                loadingPanel.visibility = View.GONE
 //                hotelsLayout.visibility = View.VISIBLE
                 recyclerview_hotel.adapter =
-                    HotelsAdapter(hotels_search_bdd ?: emptyList(), list_favoris, adultsList!!)
+                    HotelsResizedAdapter(hotels_search_bdd ?: emptyList(), list_favoris, adultsList!!, dateArrivee, dateDepart)
             }
 //            else {
 //                layoutNoHotelAvailable.visibility = View.VISIBLE
 //            }
         }
-
-
-
-
-
         return root
     }
 

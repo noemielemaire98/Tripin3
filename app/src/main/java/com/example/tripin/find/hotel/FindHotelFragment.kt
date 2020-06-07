@@ -351,10 +351,10 @@ class FindHotelFragment : Fragment() {
 
 
                         Log.d("Hotel", "Début de la récupération des données")
-                        var result: ModelRapid.Hotels? = null
+                        var resultss: ModelRapid.Hotels? = null
                         when (adultsList?.size) {
                             1 -> {
-                                result = service.getHotelsList(
+                                resultss = service.getHotelsList(
                                     cityCode,
                                     1,
                                     dateArrivee,
@@ -373,7 +373,7 @@ class FindHotelFragment : Fragment() {
                                 )
                             }
                             2 -> {
-                                result = service.getHotelsList(
+                                resultss = service.getHotelsList(
                                     cityCode,
                                     1,
                                     dateArrivee,
@@ -392,7 +392,7 @@ class FindHotelFragment : Fragment() {
                                 )
                             }
                             3 -> {
-                                result = service.getHotelsList(
+                                resultss = service.getHotelsList(
                                     cityCode,
                                     1,
                                     dateArrivee,
@@ -411,7 +411,7 @@ class FindHotelFragment : Fragment() {
                                 )
                             }
                             4 -> {
-                                result = service.getHotelsList(
+                                resultss = service.getHotelsList(
                                     cityCode,
                                     1,
                                     dateArrivee,
@@ -442,9 +442,9 @@ class FindHotelFragment : Fragment() {
 
 
 
-                        if (result != null) {
+                        if (resultss != null) {
 
-                            result.data.body.searchResults.results.map {
+                            resultss.data.body.searchResults.results.map {
                                 var idHotel = it.id.toString()
                                 var adresse: MutableList<String> = mutableListOf()
                                 adresse.add(it.address.streetAddress)
