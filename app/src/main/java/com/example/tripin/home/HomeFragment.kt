@@ -362,11 +362,10 @@ class HomeFragment : Fragment() {
 
 
                     val hotel = Hotel(
-                        0,
                         it.id.toInt(),
                         it.name,
                         null,
-                        it.starRating.toInt(), // TODO : PB with long ? NewYork
+                        it.starRating.toInt(),
                         it.thumbnailUrl,
                         adresse,
                         it.coordinate.lat,

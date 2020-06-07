@@ -131,7 +131,7 @@ class HotelsResizedAdapter (val hotels : List<Hotel> , val favoris : ArrayList<B
             if(favoris[position] == true){
                 holder.hotelView.fab_favActivity.setImageResource(R.drawable.ic_favorite_border_black_24dp)
                 runBlocking {
-                    hotelDaoSaved?.deleteHotel(hotel.id)
+                    hotelDaoSaved?.deleteHotel(hotel.hotelId)
                 }
                 favoris[position] = false
                 Toast.makeText(context, "L'hôtel a bien été supprimé des favoris", Toast.LENGTH_SHORT).show()
