@@ -36,6 +36,7 @@ class HomeFragment : Fragment() {
     private lateinit var citydao: CityDao
     var list_destination : List<City> = emptyList()
     var list_favoris = arrayListOf<Boolean>()
+    var budgetPref: Int = 100
 
     private var hotelDaoSearch: HotelDao? = null
     private var hotelDaoSaved: HotelDao? = null
@@ -88,6 +89,8 @@ class HomeFragment : Fragment() {
             list_favoris.clear()
             Log.d("KLM", "${city_pref?.destination}")
             city_query = city_pref?.destination ?: "Madrid"
+            budgetPref = city_pref?.budget ?: 100
+            Log.d("KLM", "$budgetPref")
             val envie = city_pref?.envie ?: "Au soleil"
             Log.d("tyui", "$envie")
             list_destination = citydao.getCityByDestination(envie)
@@ -250,7 +253,7 @@ class HomeFragment : Fragment() {
         var cityCode: Int= 0
         //var adultsList : ArrayList<String> ?= arrayListOf()
         val priceMinChosen = 10
-        val priceMaxChosen = 100
+        val priceMaxChosen = budgetPref
         var adultsList = 1
 
         sortBy =

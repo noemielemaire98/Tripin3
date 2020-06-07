@@ -42,6 +42,7 @@ class ProfilFragment : Fragment() {
         val username : TextView = root.findViewById(R.id.username_profil)
         val noProfilLayout : RelativeLayout = root.findViewById(R.id.noProfil_layout)
         val connexionButton : Button = root.findViewById(R.id.connexion_button)
+        val inscriptionTxt : TextView = root.findViewById(R.id.inscription_button)
 
         if(uid != null){
             noProfilLayout.visibility = View.GONE
@@ -80,6 +81,11 @@ class ProfilFragment : Fragment() {
 
         connexionButton.setOnClickListener {
             val intent = Intent(this.context, LoginActivity::class.java)
+            startActivity(intent)
+        }
+
+        inscriptionTxt.setOnClickListener {
+            val intent = Intent(this.context, RegistrationActivity::class.java)
             startActivity(intent)
         }
 

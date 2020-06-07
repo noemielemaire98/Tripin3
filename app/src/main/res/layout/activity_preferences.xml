@@ -28,24 +28,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:orientation="horizontal">-->
 
-            <TextView
-                android:layout_width="120dp"
-                android:layout_height="30dp"
-                android:text="Votre ville : "
-                android:textStyle="bold"/>
+<!--            <TextView-->
+<!--                android:layout_width="120dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:text="Votre ville : "-->
+<!--                android:textStyle="bold"/>-->
 
-            <EditText
-                android:id="@+id/ville_edit_preferences"
-                android:layout_width="120dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="5dp"
-                />
-        </LinearLayout>
+<!--            <EditText-->
+<!--                android:id="@+id/ville_edit_preferences"-->
+<!--                android:layout_width="120dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_marginStart="5dp"-->
+<!--                />-->
+<!--        </LinearLayout>-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -82,12 +82,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_gravity="center_vertical">
+
             <TextView
                 android:layout_width="120dp"
                 android:layout_height="30dp"
                 android:text="Votre envie :"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
+
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="120dp"
@@ -98,6 +101,37 @@
 
                 <AutoCompleteTextView
                     android:id="@+id/destination_categorie"
+                    android:layout_width="120dp"
+                    android:layout_height="50dp"
+                    android:background="@null"
+                    android:focusable="false"
+                    android:inputType="none"
+                    android:text="Veuillez sélectionner votre choix"
+                    android:textSize="12sp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:text="Votre souhait :"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="120dp"
+                android:layout_marginStart="5dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="20dp"
+                app:boxBackgroundColor="@color/colorBackground">
+
+                <AutoCompleteTextView
+                    android:id="@+id/activity_categorie"
                     android:layout_width="120dp"
                     android:layout_height="50dp"
                     android:background="@null"

@@ -64,6 +64,15 @@
         <item>Pour visiter</item>
     </string-array>
 
+    <string-array name="catActivity">
+        <item>Musée et art</item>
+        <item>Sport et aventure</item>
+        <item>Vin et gastronomie</item>
+        <item>Vie nocture</item>
+        <item>Divertissement</item>
+        <item>Activités et visites</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="connexion_facebook">Connectez-vous à facebook</string>
