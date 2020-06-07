@@ -13,9 +13,11 @@ import com.example.tripin.model.Equipement
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import kotlinx.android.synthetic.main.equipement_view.view.*
 import kotlinx.coroutines.runBlocking
+import java.io.InputStream
 
 
-class EquipementAdapter(val equipements: List<Equipement>, context: Context): RecyclerView.Adapter<EquipementAdapter.EquipementViewHolder>() {
+class EquipementAdapter(val equipements: List<Equipement>, val drawableNameList: MutableList<String>, context: Context): RecyclerView.Adapter<EquipementAdapter.EquipementViewHolder>() {
+
 
     class EquipementViewHolder(val equipementView : View): RecyclerView.ViewHolder(equipementView)
 
@@ -28,26 +30,16 @@ class EquipementAdapter(val equipements: List<Equipement>, context: Context): Re
         val layoutInflater : LayoutInflater = LayoutInflater.from(parent.context)
         val view: View = layoutInflater.inflate(R.layout.equipement_view, parent, false)
         context = parent.context
-        return EquipementViewHolder(view)
+          return EquipementViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: EquipementViewHolder, position: Int) {
 
         val equipement = equipements[position]
         Items = ""
-         /*   var drawableName = ""
-            listEquipementFormatted.forEach {
-                if (equipement == it.get(0)){
-                    drawableName = (it.get(1))
-                    Log.d("DrawableName",it.get(1))
-                } else{}
-            }
-
-
-            var resources:Resources = context.resources
-            val id: Int =
-                resources.getIdentifier(drawableName, "drawable", context.packageName)
-                    holder.equipementView.equiment_imageview.setImageResource(id)*/
+        val drawableName = drawableNameList[position]
+            val id: Int = context.resources.getIdentifier(drawableName, "drawable", context.packageName)
+                    holder.equipementView.equiment_imageview.setImageResource(id)
                     holder.equipementView.header_textview.text = equipement.heading
 
 

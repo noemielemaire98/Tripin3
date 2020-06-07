@@ -3,21 +3,19 @@ package com.example.tripin.trip
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tripin.MainActivity
 import com.example.tripin.R
 import com.example.tripin.find.flight.FlightsAdapterTrip
 import com.example.tripin.model.Flight
-import com.example.tripin.model.Voyage
 import com.example.tripin.saved.DetailVoyageSave
-import com.google.android.gms.maps.model.Marker
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -33,14 +31,8 @@ class FlightTripFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        val fragment = arguments?.getString("fragment")
-
-        val voyage: Voyage?
-
-        voyage = if(fragment == "DetailVoyage2") {
-
+        val voyage = if (activity is DetailVoyage2) {
             (activity as? DetailVoyage2)!!.voyage
-
         } else {
             (activity as? DetailVoyageSave)!!.voyage
         }

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Parcelable
+import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,11 +22,9 @@ import com.aminography.primedatepicker.picker.PrimeDatePicker
 import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
 import com.example.tripin.MainActivity
 import com.example.tripin.R
-import com.example.tripin.data.ActivityDao
-import com.example.tripin.data.AppDatabase
-import com.example.tripin.data.CityDao
-import com.example.tripin.data.retrofit
+import com.example.tripin.data.*
 import com.example.tripin.model.Activity
+import com.example.tripin.model.Voyage
 import com.xw.repo.BubbleSeekBar
 import kotlinx.android.synthetic.main.activity_find_activites.activities_recyclerview
 import kotlinx.android.synthetic.main.fragment_find_activity2.*
@@ -57,6 +56,10 @@ class FindActivityFragment : Fragment()  {
     var retour_date= ""
 
 
+    var voyage: Voyage?=null
+    var voyageDao : VoyageDao? = null
+
+
     @SuppressLint("ResourceAsColor")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,6 +80,27 @@ class FindActivityFragment : Fragment()  {
         val bt_price = view.findViewById<ImageButton>(R.id.bt_price_filter)
         val bt_date = view.findViewById<ImageButton>(R.id.bt_date_filter)
 
+        //Si arriver depuis detailsvoyage
+        var id = arguments?.getInt("id")
+        Log.d("zzz", "id findvoyage =$id")
+
+        if (id != null) {
+            val database =
+                Room.databaseBuilder(requireContext(), AppDatabase::class.java, "savedDatabase")
+                    .build()
+            voyageDao = database.getVoyageDao()
+            runBlocking {
+                voyage = voyageDao!!.getVoyage(id)
+                Log.d("zzz", "voyage1 = $voyage")
+            }
+
+            if (voyage != null){
+                editText.text = SpannableStringBuilder(voyage!!.destination)
+                aller_date = voyage!!.date.toString()
+                retour_date = voyage!!.dateRetour.toString()
+            }
+
+        }
 
 
     // initialisation recyclerview activités
@@ -205,7 +229,7 @@ class FindActivityFragment : Fragment()  {
               //Traitement du résultat
               if (result.meta.count != 0L) {
                   layoutNoActivities_frag.visibility = View.GONE
-                  val list_activities_bdd = activityDaoSaved?.getActivity()
+                  var list_activities_bdd = activityDaoSaved?.getActivity()
                   result.data.map {
                       val titre = it.title
                       var match_bdd = false
@@ -248,6 +272,9 @@ class FindActivityFragment : Fragment()  {
                       ActivityAdapterGlobal(activities!!, list_favoris)
               } else {
                   layoutNoActivities_frag.visibility = View.VISIBLE
+//                  val activities = null
+//                  activities_recyclerview.adapter =
+//                      ActivityAdapterGlobal(activities!!, list_favoris)
               }
           }
       }

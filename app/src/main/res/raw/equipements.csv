@@ -1,12 +1,16 @@
 ﻿amenity_name,amenity_icon
-Service,
-Langues parlées,
-Faîtes-vous plaisir,
-Rafraîchissez-vous,
-Repas et boissons,
-Plus,
-Aménagements,
-Accessibilité,
-Tout confort,
-Dormez-bien,
-Restez connecté,
+Services,reservation
+Langues parlées,meeting
+Faîtes-vous plaisir,spa
+Rafraîchissez-vous,cocktail
+Repas et boissons,restaurant
+Plus...,plus_button
+Aménagements,elevator
+Accessibilité,handicape
+Tout confort,air_conditionne
+Dormez bien,pillow
+Restez connecté,wifi
+Vous partez avec vos enfants ?,kids
+Activités,fitness
+Affaires,business
+Détendez-vous,technology

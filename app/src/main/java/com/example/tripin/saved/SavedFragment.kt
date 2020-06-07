@@ -22,6 +22,7 @@ class SavedFragment : Fragment() {
 
     private lateinit var viewpager: ViewPager
     private lateinit var tabLayout: TabLayout
+    private var bundle = Bundle()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -51,7 +52,7 @@ class SavedFragment : Fragment() {
         val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
         scope.launch {
-            val adapter = FindTabAdapter(childFragmentManager)
+            val adapter = FindTabAdapter(childFragmentManager, bundle)
             adapter.addFragment(SavedVoyage(), "Voyage")
             adapter.addFragment(SavedFlightFragment(), "Vol")
             adapter.addFragment(SavedHotelFragment(), "Hotel")

@@ -3,11 +3,13 @@ package com.example.tripin.find.activity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
@@ -20,6 +22,7 @@ import com.bumptech.glide.Glide
 import com.example.tripin.R
 import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
+import com.example.tripin.data.CityDao
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Activity
 import com.example.tripin.model.Voyage
@@ -37,12 +40,15 @@ import kotlinx.android.synthetic.main.fragment_find_flight2.*
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.anko.find
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
-
 class DetailActivites : AppCompatActivity() {
 
+
+    private lateinit var citydao: CityDao
     private var activite: Activity? = null
     private var activityDaoSaved: ActivityDao? = null
     private var voyageDao: VoyageDao? = null
@@ -52,10 +58,11 @@ class DetailActivites : AppCompatActivity() {
     private lateinit var googleMap: GoogleMap
     var date_debut = ""
     var date_fin = ""
-    private var destination = ""
-    private var budget = ""
+    var destination = ""
+    private var budget = "1000"
     var image = ""
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -255,6 +262,10 @@ class DetailActivites : AppCompatActivity() {
                 val returnbutton = view.findViewById<Button>(R.id.bt_retour)
                 val editTitre = view.findViewById<EditText>(R.id.et_titre)
                 val editDate = view.findViewById<EditText>(R.id.et_date)
+
+                destination = activite!!.ville
+
+
                 createdialog.setView(view)
                 createdialog.setTitle("Créer")
                 val alert = createdialog.show()
@@ -262,6 +273,7 @@ class DetailActivites : AppCompatActivity() {
                     rangeDatePickerPrimeCalendar(editText)
                 }
                 okbutton.setOnClickListener {
+
                     var exist = false
                     list_voyage.map { itL ->
                         if (editTitre.text.toString() == itL) {
@@ -275,8 +287,29 @@ class DetailActivites : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                         editTitre.setText("")
-                    }
-                    else if (!editTitre.text.isEmpty() && !editDate.text.isEmpty()) {
+                    } else if (!editTitre.text.isEmpty() && !editDate.text.isEmpty()) {
+
+
+                        val database =
+                            Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
+                                .build()
+
+                        citydao = database.getCityDao()
+                        runBlocking {
+                            val citie = citydao.getCity(destination)
+                                image = citie.cover_image_url.toString()
+
+                        }
+
+                        var jourfin = LocalDate.parse(date_fin, DateTimeFormatter.ISO_DATE)
+                        var jourdebut = LocalDate.parse(date_debut, DateTimeFormatter.ISO_DATE)
+                        var jour = jourfin.compareTo(jourdebut) + 1
+                        Log.d("zzz", "jour =$jour ")
+                        var somme = view.et_nb_voyageur.selectedItem.toString().toInt() * 100 *jour
+                        Log.d("zzz", " somme =$somme")
+
+                        budget = somme.toString()
+
                         val voyage = Voyage(
                             0,
                             view.et_titre.text.toString(),
@@ -401,7 +434,6 @@ class DetailActivites : AppCompatActivity() {
             .build()
 
         datePickerT.show(supportFragmentManager, "PrimeDatePickerBottomSheet")
-
 
     }
 }

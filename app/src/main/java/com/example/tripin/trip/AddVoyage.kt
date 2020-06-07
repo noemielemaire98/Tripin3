@@ -44,7 +44,7 @@ class AddVoyage : AppCompatActivity() {
     private lateinit var citydao: CityDao
     private var voyageDao : VoyageDao? = null
     var list_cities_name = arrayListOf<String>()
-    var budget= "100"
+    var budget= "1000"
     var image =""
     var city :City? = null
 

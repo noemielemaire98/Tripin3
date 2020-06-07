@@ -74,12 +74,14 @@ class VoyageAdapter(val voyages: List<Voyage>) :
             holder.voyageView.setOnClickListener {
                 val intent = Intent(it.context, DetailVoyageSave::class.java)
                 intent.putExtra("id", voyage.id)
+
                 it.context.startActivity(intent)
             }
         } else {
             holder.voyageView.setOnClickListener {
                 val intent = Intent(it.context, DetailVoyage2::class.java)
                 intent.putExtra("id", voyage.id)
+
                 it.context.startActivity(intent)
             }
         }

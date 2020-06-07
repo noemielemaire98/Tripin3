@@ -12,12 +12,14 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import com.example.tripin.MainActivity
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.FlightDao
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Flight
 import com.example.tripin.model.Voyage
+import com.example.tripin.saved.DetailVoyageSave
 import com.example.tripin.saved.SavedFlight
 import com.example.tripin.trip.DetailVoyage2
 import kotlinx.android.synthetic.main.activity_saved_flight.*
@@ -49,8 +51,14 @@ class FlightsAdapterTrip(
 
         context = parent.context
 
-        val databaseSaved = Room.databaseBuilder(context, AppDatabase::class.java, "savedDatabase")
-            .build()
+        val databaseSaved = if (context is DetailVoyage2) {
+
+            Room.databaseBuilder(context, AppDatabase::class.java, "savedDatabase")
+                .build()
+        } else {
+            Room.databaseBuilder(context, AppDatabase::class.java, "savedVoyageDatabase")
+                .build()
+        }
 
         flightDaoSaved = databaseSaved.getFlightDao()
         voyageDaoSaved = databaseSaved.getVoyageDao()
@@ -216,11 +224,11 @@ class FlightsAdapterTrip(
                 }
             }
 
-            view.setOnClickListener { itView ->
-                val intent = Intent(itView.context, DetailFlights::class.java)
-                intent.putExtra("flights", flights.toTypedArray())
-                itView.context.startActivity(intent)
-            }
+//            view.setOnClickListener { itView ->
+//                val intent = Intent(itView.context, DetailFlights::class.java)
+//                intent.putExtra("flights", flights.toTypedArray())
+//                itView.context.startActivity(intent)
+//            }
 
             listFlightsBdd?.map { itList ->
 
@@ -334,8 +342,20 @@ class FlightsAdapterTrip(
                 notifyItemRemoved(position)
                 notifyItemRangeChanged(position, itemCount)
 
+                val fragmentFavorisViewPager = try {
+                    // https://stackoverflow.com/a/54829516/13289762
+                    (context as MainActivity).supportFragmentManager.fragments[0].childFragmentManager.fragments[0]?.childFragmentManager?.fragments
+                        ?.get(1)?.javaClass?.simpleName
+                } catch (ex: Exception) {
+                    ""
+                }
+
                 if (flightsList.isNullOrEmpty()) {
-                    (context as DetailVoyage2).layoutNoSavedFlight.visibility = View.VISIBLE
+                    if (context is DetailVoyage2) {
+                        (context as DetailVoyage2).layoutNoSavedFlight.visibility = View.VISIBLE
+                    } else {
+                        (context as DetailVoyageSave).layoutNoSavedFlight.visibility = View.VISIBLE
+                    }
                 }
             }
         }
