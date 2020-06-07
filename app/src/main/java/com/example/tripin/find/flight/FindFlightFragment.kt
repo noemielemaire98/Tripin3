@@ -125,7 +125,6 @@ class FindFlightFragment : Fragment() {
             if (voyage != null) {
                 allerDate.text = SpannableStringBuilder(voyage!!.date)
                 returnDate.text = SpannableStringBuilder(voyage!!.dateRetour)
-                autoTextViewRetour.text = SpannableStringBuilder(voyage!!.destination)
                 passengersNumberTextView.text =
                     SpannableStringBuilder(voyage!!.nb_voyageur.toString())
 
@@ -200,6 +199,13 @@ class FindFlightFragment : Fragment() {
 
             // Affiche uniquement les infos utiles des villes dans une liste
             listCities?.map { itMap ->
+                if (itMap.name == voyage?.destination) {
+                    var destination = itMap.name.toString() + " (" + itMap.iataCode.toUpperCase(Locale.ROOT) + ")"
+                    withContext(Dispatchers.Main) {
+                        autoTextViewRetour.text = SpannableStringBuilder(destination)
+                    }
+                }
+
                 listAirportsFormatted.add(
                     itMap.name.toString() + " (" + itMap.iataCode
                         .toUpperCase(

@@ -182,19 +182,16 @@ class FindVoyage : Fragment() {
             voyageDao = database.getVoyageDao()
             runBlocking {
                 voyage = voyageDao!!.getVoyage(id)
-
             }
 
             if (voyage != null) {
-//                var a = "${voyage!!.destination.toString()} (PAR)"
-//                Log.d("zzz", "a = $a ")
                 allerDate.text = SpannableStringBuilder(voyage!!.date)
                 returnDate.text = SpannableStringBuilder(voyage!!.dateRetour)
-                autoTextViewRetour.text = SpannableStringBuilder(voyage!!.destination)
+//                autoTextViewRetour.text = SpannableStringBuilder(voyage!!.destination)
+//                var a = "${voyage!!.destination.toString()} (PAR)"
+//                Log.d("zzz", "a = $a ")
 //                autoTextViewRetour.text = SpannableStringBuilder(a)
-                passengersNumberTextView.text =
-                    SpannableStringBuilder(voyage!!.nb_voyageur.toString())
-
+                passengersNumberTextView.text = SpannableStringBuilder(voyage!!.nb_voyageur.toString())
             }
         }
 
@@ -323,14 +320,26 @@ class FindVoyage : Fragment() {
             val listAirportsFormatted = mutableListOf<String>()
 
             // Affiche uniquement les infos utiles des villes dans une liste
+
             listCities?.map { itMap ->
-                listAirportsFormatted.add(
-                    itMap.name.toString() + " (" + itMap.iataCode
-                        .toUpperCase(
-                            Locale.ROOT
-                        ) + ")"
-                )
+                    if (itMap.name == voyage?.destination) {
+                        var destination = itMap.name.toString() + " (" + itMap.iataCode.toUpperCase(Locale.ROOT) + ")"
+                        withContext(Dispatchers.Main) {
+                            autoTextViewRetour.text = SpannableStringBuilder(destination)
+                        }
+                    }
+
+                    listAirportsFormatted.add(
+                        itMap.name.toString() + " (" + itMap.iataCode
+                            .toUpperCase(
+                                Locale.ROOT
+                            ) + ")"
+                    )
+
             }
+
+
+
             // Initialise la liste déroulante du lieu de départ
             val adapterLieuDepart = IgnoreAccentsArrayAdapter(
                 requireContext(),
@@ -477,7 +486,8 @@ class FindVoyage : Fragment() {
                     val strDepart = autoTextViewDepart.text.toString()
                     val keptDepartIata = strDepart.substringAfterLast("(")
                     lieuDepartIata = keptDepartIata.substringBeforeLast(")")
-                    val strRetour = autoTextViewRetour.text.toString()
+                    var strRetour = autoTextViewRetour.text.toString()
+
 
                     lieuRetourName = strRetour.substringBefore(" (")
                     val keptRetourIata = strRetour.substringAfterLast("(")

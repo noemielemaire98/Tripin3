@@ -9,7 +9,7 @@ import kotlinx.android.parcel.Parcelize
 data class City(
     @PrimaryKey
     val id: Int,
-    val name: String?,
+    var name: String?,
     val category: String,
     val show_in_popular: Boolean?,
     val iataCode: String,
