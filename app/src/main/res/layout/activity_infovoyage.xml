@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingHorizontal="15dp"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="30dp">
 
         <TextView
             android:id="@+id/voyage_title_textview"
@@ -18,8 +19,8 @@
             android:layout_height="match_parent"
             android:gravity="center"
             tools:text="Titre"
-            android:textSize="30dp"
-            android:textColor="@color/colorPrimary"/>
+            android:textSize="25dp"
+            android:textColor="@color/contrast_blue"/>
     </LinearLayout>
 
     <LinearLayout
@@ -34,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:textStyle="italic"
             tools:text="Date"/>
 
@@ -44,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints"
-        android:layout_marginVertical="15dp"
+        android:layout_marginTop="30dp"
         android:layout_marginHorizontal="20dp"
         android:orientation="vertical">
 
@@ -58,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="Destination :"
-            android:textSize="20dp"/>
+            android:textSize="16dp"/>
 
         <TextView
             android:id="@+id/voyage_destination_textview"
@@ -66,7 +67,7 @@
             android:layout_height="match_parent"
             android:gravity="right"
             tools:text="Paris"
-            android:textSize="20dp"/>
+            android:textSize="16dp"/>
     </LinearLayout>
 
         <LinearLayout
@@ -79,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="Voyageur(s) : "
-            android:textSize="20dp"/>
+            android:textSize="16dp"/>
 
         <TextView
             android:id="@+id/voyage_nb_voyageurs_textview"
@@ -87,7 +88,7 @@
             android:layout_height="match_parent"
             android:gravity="right"
             tools:text="3"
-            android:textSize="20dp"/>
+            android:textSize="16dp"/>
     </LinearLayout>
 
         <LinearLayout
@@ -100,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Budget : "
-                android:textSize="20dp"/>
+                android:textSize="16dp"/>
 
             <TextView
                 android:id="@+id/voyage_budget_textview"
@@ -108,7 +109,7 @@
                 android:layout_height="match_parent"
                 android:gravity="right"
                 tools:text="300"
-                android:textSize="20dp"/>
+                android:textSize="16dp"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -116,20 +117,21 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginHorizontal="20dp">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Détails"
-        android:textSize="25dp"
-        android:textColor="@color/colorPrimary"/>
+        android:textSize="18dp"
+        android:textColor="@color/contrast_blue"/>
         <View
             android:layout_width="match_parent"
-            android:layout_marginTop="20dp"
             android:layout_marginLeft="5dp"
+ android:layout_marginTop="15dp"
             android:layout_height="1dp"
-            android:background="@color/colorPrimary"/>
+            android:background="@color/contrast_blue"/>
     </LinearLayout>
 
     <LinearLayout
@@ -150,7 +152,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Hôtel(s) :"
-                android:textSize="20dp"/>
+                android:textSize="16dp"/>
 
             <TextView
                 android:id="@+id/voyage_hotel_textview"
@@ -158,7 +160,7 @@
                 android:layout_height="match_parent"
                 android:gravity="right"
                 tools:text="0"
-                android:textSize="20dp"/>
+                android:textSize="16dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -171,7 +173,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Vol(s) : "
-                android:textSize="20dp"/>
+                android:textSize="16dp"/>
 
             <TextView
                 android:id="@+id/voyage_flight_textview"
@@ -179,7 +181,7 @@
                 android:layout_height="match_parent"
                 android:gravity="right"
                 tools:text="3"
-                android:textSize="20dp"/>
+                android:textSize="16dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -192,7 +194,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Activité(s) : "
-                android:textSize="20dp"/>
+                android:textSize="16dp"/>
 
             <TextView
                 android:id="@+id/voyage_activite_textview"
@@ -200,15 +202,18 @@
                 android:layout_height="match_parent"
                 android:gravity="right"
                 tools:text="2"
-                android:textSize="20dp"/>
+                android:textSize="16dp"/>
         </LinearLayout>
 
     </LinearLayout>
+
     <Button
         android:id="@+id/generer_voyage"
-        android:layout_width="wrap_content"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="20dp"
         android:layout_gravity="center"
-        android:text="Générer un voyage"/>
+        android:layout_marginVertical="50dp"
+        app:backgroundTint="@color/contrast_blue"
+        android:text="Générer un voyage" />
 </LinearLayout>

@@ -49,13 +49,8 @@ class HotelAdapterTrip(val list_hotels: MutableList<Hotel>,  var voyage: Voyage,
         val hotel = list_hotels[position]
         var nom = "${hotel.hotelName}".toLowerCase()
         holder.hotelView.hotel_name_textview.setTypeface(null, Typeface.BOLD)
-        holder.hotelView.hotel_name_textview.text= nom
+        holder.hotelView.hotel_name_textview.text= formatNomHotel(nom)
 
-        hotel.adresse.forEach {
-            if (it == "null"){
-
-            }
-        }
 
         //Definition de l'adresse
 
@@ -121,6 +116,20 @@ class HotelAdapterTrip(val list_hotels: MutableList<Hotel>,  var voyage: Voyage,
 
 
 
+
+    }
+
+    fun formatNomHotel(nom:String): String {
+        var nomFormat:String = nom
+        val nomSplit = nom.split(" ")
+        for(item in nomSplit){
+            val mot = item.capitalize()
+            if(nomFormat == nom){
+                nomFormat = mot
+            }else{
+                nomFormat = "$nomFormat $mot"
+            }}
+        return nomFormat
 
     }
 

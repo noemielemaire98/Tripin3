@@ -133,8 +133,6 @@ class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>
                     hotelDaoSaved?.deleteHotel(hotel.hotelId)
                 }
                 favoris[position] = false
-                Log.d("favorisPB", "Adapter = ${favoris}")
-
                 Toast.makeText(context, "L'hôtel a bien été supprimé des favoris", Toast.LENGTH_SHORT).show()
 
             }else {
@@ -143,8 +141,6 @@ class HotelsAdapter (val hotels : List<Hotel> , val favoris : ArrayList<Boolean>
                     hotelDaoSaved?.addHotel(hotel)
                 }
                 favoris[position] = true
-                Log.d("favorisPB", "Adapter = ${favoris}")
-
                 Toast.makeText(context, "L'hôtel a bien été ajoutée aux favoris", Toast.LENGTH_SHORT).show()
             }
         }
