@@ -53,12 +53,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/connexion_button"
-            android:layout_marginTop="200dp"
+            android:layout_marginTop="20dp"
             android:text="Pas encore de compte ? Inscrivez-vous "
             android:textSize="14sp"
             android:textAlignment="center" />
     </RelativeLayout>
     <LinearLayout
+        android:id="@+id/linear_layout_profil"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="?attr/actionBarSize"
@@ -111,7 +112,7 @@
                 android:layout_marginTop="10dp"
                 android:textColor="@color/contrast_blue"
                 android:textSize="22sp"
-                android:text="Tata"
+                android:text=""
                 android:textStyle="bold" />
 
 

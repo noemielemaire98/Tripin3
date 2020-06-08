@@ -59,7 +59,7 @@ class FindHotelFragment : Fragment() {
     var list_favoris  = arrayListOf<Boolean>()
     var list_cities_name = arrayListOf<String>()
     private val service = retrofitHotel().create(HotelAPI::class.java)
-    private val hotelKey = "9a6f295efemsh9dd64f537c1e62bp194635jsn1c7a940b93ba"
+    private val hotelKey = "91ebc5f73emsh3e988c6d88395f9p15ab7fjsnb347a2c046b3"
     private var sortBy : String = ""
     var adultsList : ArrayList<String> ?= arrayListOf()
     private var animatedHide = false

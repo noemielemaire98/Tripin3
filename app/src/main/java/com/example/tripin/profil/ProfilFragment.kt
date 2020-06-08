@@ -6,10 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.RelativeLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.tripin.MainActivity
@@ -20,6 +17,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_profil.*
+import org.jetbrains.anko.find
 
 
 class ProfilFragment : Fragment() {
@@ -42,6 +40,7 @@ class ProfilFragment : Fragment() {
         val noProfilLayout : RelativeLayout = root.findViewById(R.id.noProfil_layout)
         val connexionButton : Button = root.findViewById(R.id.connexion_button)
         val inscriptionTxt : TextView = root.findViewById(R.id.inscription_button)
+        val profilLayout : LinearLayout = root.findViewById(R.id.linear_layout_profil)
 
         if(uid != null){
             noProfilLayout.visibility = View.GONE
@@ -77,6 +76,10 @@ class ProfilFragment : Fragment() {
             })
 
         }
+        if(uid == null){
+            noProfilLayout.visibility = View.VISIBLE
+            profilLayout.visibility = View.GONE
+        }
 
         connexionButton.setOnClickListener {
             val intent = Intent(this.context, LoginActivity::class.java)
@@ -110,6 +113,8 @@ class ProfilFragment : Fragment() {
                     "Vous êtes déconnecté",
                     Toast.LENGTH_SHORT)
                     .show()
+                val intent = Intent(this.context, MainActivity::class.java)
+                startActivity(intent)
             }
             if (uid == null) {
                 Toast.makeText(
