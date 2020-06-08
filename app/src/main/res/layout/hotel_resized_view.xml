@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="200dp"
     android:layout_height="260dp"
@@ -7,7 +8,6 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".find.FindFragment">
 
 
@@ -19,12 +19,12 @@
             android:id="@+id/fab_favActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fabSize="mini"
-            android:elevation="6dp"
-            app:layout_anchor="@id/hotels_imageview"
-            app:layout_anchorGravity="bottom|end"
             android:layout_marginEnd="15dp"
-            android:src="@drawable/ic_favorite_border_black_24dp"/>
+            android:elevation="6dp"
+            android:src="@drawable/ic_favorite_border_black_24dp"
+            app:fabSize="mini"
+            app:layout_anchor="@id/hotels_imageview"
+            app:layout_anchorGravity="bottom|end" />
 
 
         <LinearLayout
@@ -80,7 +80,7 @@
                         android:id="@+id/hotel_adresse1_textview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="5dp"
                         android:textSize="13dp" />
 

@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.example.tripin.MainActivity
 import com.example.tripin.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
@@ -65,7 +66,7 @@ class ProfilFragment : Fragment() {
                     if(p0.key == "profilImageUrl"){
                         //Log.d("toto", "$p0, $p1")
                         //Log.d("toto", "${p0.getValue(String::class.java)}")
-                        Glide.with(requireContext()).load("${p0.getValue(String::class.java)}").into(display_photo_circleview)
+                        Glide.with(context as MainActivity).load("${p0.getValue(String::class.java)}").into(display_photo_circleview)
                     }
                     if(p0.key == "username"){
                         //Log.d("toto", "${p0.getValue(String::class.java)}")

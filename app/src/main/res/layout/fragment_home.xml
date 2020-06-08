@@ -1,91 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context=".home.HomeFragment"
-android:orientation="vertical">
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="30dp"
-    android:text="Vos Recommendations"
-    android:gravity="center"
-    android:textStyle="bold"
-    android:textSize="17sp"
-    android:textColor="@color/contrast_blue"/>
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Vos activités préférées :"
-    android:layout_marginTop="15dp"
-    android:layout_marginLeft="20dp"
-    android:textStyle="bold"
-    android:textSize="15sp"
-    android:textColor="@color/black"/>
-<RelativeLayout
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/findTopLevel_scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="15dp"
     android:layout_marginBottom="?attr/actionBarSize"
-    android:id="@+id/layoutNoActivities_frag_home"
-    android:visibility="gone"
-    >
+    android:orientation="vertical"
+    tools:context=".home.HomeFragment">
 
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="70dp"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/nosavedflights"
-        android:id="@+id/iv_noactivityfind" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="Veuillez définir une destination valable dans les préférences utilisateurs"
-        android:layout_below="@+id/iv_noactivityfind"
-        android:layout_marginTop="10dp"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:gravity="center"
-        />
-
-</RelativeLayout>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:orientation="horizontal"
-        android:id="@+id/activities_recyclerview_home"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        tools:listitem="@layout/activities_view" />
-    <TextView
-        android:layout_below="@+id/activities_recyclerview_home"
-        android:id="@+id/txt_view_hotels"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp"
-        android:text="Vos hôtels préférés : "
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"/>
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@+id/txt_view_hotels"
-        android:id="@+id/hotels_recyclerview"
-        android:layout_marginHorizontal="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="?attr/actionBarSize"
-        tools:listitem="@layout/hotel_view"
-        android:nestedScrollingEnabled="false"/>
+        android:orientation="vertical">
 
-</RelativeLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="Vos Recommendations"
+            android:textColor="@color/contrast_blue"
+            android:textSize="17sp"
+            android:textStyle="bold" />
 
-</LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:text="Vos activités préférées :"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:id="@+id/layoutNoActivities_frag_home"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_noactivityfind"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="70dp"
+                android:src="@drawable/nosavedflights" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_noactivityfind"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="Veuillez définir une destination valable dans les préférences utilisateurs"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/activities_recyclerview_home"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:orientation="horizontal"
+                tools:listitem="@layout/activities_view" />
+
+            <TextView
+                android:id="@+id/txt_view_hotels"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/activities_recyclerview_home"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"
+                android:text="Vos hôtels préférés : "
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/hotels_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_view_hotels"
+                android:layout_marginHorizontal="10dp"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/hotel_view" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</ScrollView>
