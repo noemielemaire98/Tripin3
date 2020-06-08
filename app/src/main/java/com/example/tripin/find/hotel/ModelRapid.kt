@@ -1,6 +1,5 @@
 package com.example.tripin.find.hotel
 
-import com.google.gson.JsonObject
 import com.squareup.moshi.Json
 
 object ModelRapid {

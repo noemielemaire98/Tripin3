@@ -1,8 +1,8 @@
 package com.example.tripin.profil
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import com.example.tripin.R
 
 class FeedbackActivity : AppCompatActivity() {

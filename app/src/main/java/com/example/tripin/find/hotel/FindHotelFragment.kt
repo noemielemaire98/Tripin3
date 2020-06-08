@@ -11,20 +11,19 @@ import android.os.Parcelable
 import android.text.SpannableStringBuilder
 import android.util.DisplayMetrics
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.aminography.primecalendar.civil.CivilCalendar
 import com.aminography.primedatepicker.picker.PrimeDatePicker
 import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
-
 import com.example.tripin.R
 import com.example.tripin.data.*
 import com.example.tripin.model.Hotel
@@ -37,7 +36,6 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.anko.support.v4.runOnUiThread
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * A simple [Fragment] subclass.

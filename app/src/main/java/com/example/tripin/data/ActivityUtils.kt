@@ -2,11 +2,11 @@ package com.example.tripin.data
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.room.Room
+import com.facebook.stetho.okhttp3.StethoInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import com.facebook.stetho.okhttp3.StethoInterceptor
 
 // je rajoute la fonction clientDao à la classe AppcompactACtivity : retourne le DAO
 

@@ -2,14 +2,11 @@ package com.example.tripin.find.hotel
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Typeface
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tripin.R
-import com.example.tripin.model.Offer
 import com.example.tripin.model.Rooms
 import kotlinx.android.synthetic.main.offer_view.view.*
 

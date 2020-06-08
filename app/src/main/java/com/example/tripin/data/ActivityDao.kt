@@ -1,11 +1,9 @@
 package com.example.tripin.data
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.tripin.model.Activity
-import com.example.tripin.model.Voyage
 
 @Dao
 interface ActivityDao {

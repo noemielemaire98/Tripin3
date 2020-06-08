@@ -18,7 +18,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.RequiresApi
-import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.MergeAdapter
@@ -173,7 +172,7 @@ class FindVoyage : Fragment() {
         val btHighestPriceHot = view.findViewById<Button>(R.id.highest_price)
 
 
-        var id = arguments?.getInt("id")
+        val id = arguments?.getInt("id")
 
         if (id != null) {
             val database =
@@ -324,7 +323,7 @@ class FindVoyage : Fragment() {
 
             listCities?.map { itMap ->
                 if (itMap.name == voyage?.destination) {
-                    var destination =
+                    val destination =
                         itMap.name.toString() + " (" + itMap.iataCode.toUpperCase(Locale.ROOT) + ")"
                     withContext(Dispatchers.Main) {
                         autoTextViewRetour.text = SpannableStringBuilder(destination)
@@ -487,7 +486,7 @@ class FindVoyage : Fragment() {
                     val strDepart = autoTextViewDepart.text.toString()
                     val keptDepartIata = strDepart.substringAfterLast("(")
                     lieuDepartIata = keptDepartIata.substringBeforeLast(")")
-                    var strRetour = autoTextViewRetour.text.toString()
+                    val strRetour = autoTextViewRetour.text.toString()
 
 
                     lieuRetourName = strRetour.substringBefore(" (")
@@ -685,7 +684,7 @@ class FindVoyage : Fragment() {
                 }
 
 
-                var listVoyageSaved: ArrayList<String> = arrayListOf()
+                val listVoyageSaved: ArrayList<String> = arrayListOf()
 
                 flightsListSimple = flightDao?.getFlights()?.toMutableList()
                 activitiesList = activityDaoSearch?.getActivity()

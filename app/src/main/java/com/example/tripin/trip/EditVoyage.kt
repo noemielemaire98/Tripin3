@@ -1,8 +1,6 @@
 package com.example.tripin.trip
 
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.util.Log
@@ -12,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.aminography.primecalendar.civil.CivilCalendar
 import com.aminography.primedatepicker.picker.PrimeDatePicker
@@ -22,7 +21,6 @@ import com.example.tripin.data.CityDao
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.find.flight.IgnoreAccentsArrayAdapter
 import com.example.tripin.model.*
-import com.example.tripin.trip.DetailVoyage
 import kotlinx.android.synthetic.main.activity_edit_voyage.*
 import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
