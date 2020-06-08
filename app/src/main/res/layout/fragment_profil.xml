@@ -113,14 +113,16 @@
                 android:text="Tata"
                 android:textStyle="bold" />
 
-            <TextView
+
+            <Button
                 android:id="@+id/textview_app_feedback"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="100dp"
                 android:text="@string/app_preferences"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:visibility="visible" />
+                android:textColor="@color/white"
+                android:backgroundTint="@color/contrast_blue" />
         </LinearLayout>
 
         <RelativeLayout

@@ -122,7 +122,7 @@ class ProfilFragment : Fragment() {
         }
 
         val contact: TextView = root.findViewById(R.id.textview_app_contact)
-        val feedback: TextView = root.findViewById(R.id.textview_app_feedback)
+        val feedback: Button = root.findViewById(R.id.textview_app_feedback)
         val sharing: TextView = root.findViewById(R.id.textview_app_sharing)
         val stars: TextView = root.findViewById(R.id.textview_app_stars)
 
