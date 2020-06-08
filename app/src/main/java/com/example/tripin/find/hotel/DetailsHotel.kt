@@ -122,7 +122,7 @@ class DetailsHotel : AppCompatActivity() {
 
         runBlocking {
             val result = service.getHotelDetail(hotel!!.hotelId.toInt(),"2020-08-01","2020-08-03","fr_FR","EUR", hotelKey)
-Log.d("Test", result.toString())
+            Log.d("Test", result.toString())
 
             result.data.body.overview.overviewSections.forEach {
                 if (it.type == "HOTEL_FEATURE"){
@@ -378,6 +378,8 @@ Log.d("Test", result.toString())
                             voyage.list_hotels = nouvelle_liste
 
                             voyageDao?.updateVoyage(voyage)
+
+                            Log.d("zzz", "voyage = $voyage")
                         }
                         Toast.makeText(
                             this,
@@ -389,11 +391,16 @@ Log.d("Test", result.toString())
                         list_choix.remove(list_voyage[which])
                         runBlocking {
                             val voyage = voyageDao?.getVoyageByTitre(list_voyage[which])
+                            Log.d("zzz", "voyage = $voyage")
                             var ancienne_list2 = voyage?.list_hotels?.toMutableList()
+                            Log.d("zzz", "ancienne_list2 = $ancienne_list2")
                             ancienne_list2?.remove(hotel!!)
+                            Log.d("zzz", "ancienne_list2 2 = $ancienne_list2")
                             val nouvelle_liste = ancienne_list2?.toList()
+                            Log.d("zzz", "nouvelle_list = $nouvelle_liste")
                             voyage!!.list_hotels = nouvelle_liste
                             voyageDao?.updateVoyage(voyage!!)
+                            Log.d("zzz", "voyage 2 = $voyage")
                         }
                         Toast.makeText(
                             this,

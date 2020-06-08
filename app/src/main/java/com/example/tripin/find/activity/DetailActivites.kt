@@ -188,6 +188,7 @@ class DetailActivites : AppCompatActivity() {
             val selectedList = ArrayList<Int>()
             // je récupère la liste des titres des dossiers de voyage et si oui ou non l'activité appartient à ce voyage
             runBlocking {
+
                 val voyages = voyageDao?.getVoyage()
                 if (voyages != null) {
                     voyages.map {

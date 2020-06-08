@@ -33,7 +33,7 @@ class EditVoyage() : AppCompatActivity() {
 
     private lateinit var citydao: CityDao
     var list_cities_name = arrayListOf<String>()
-    private var voyage: Voyage ?= null
+    private var voyage1: Voyage ?= null
     private var id: Int = 0
     var titre: String = "a"
     var dateDepart: String ?= "000"
@@ -61,6 +61,13 @@ class EditVoyage() : AppCompatActivity() {
         destination = intent.getStringExtra("destination")
         budget = intent.getStringExtra("budget")
 
+        val databasevoyage =
+        Room.databaseBuilder(this, AppDatabase::class.java, "savedDatabase")
+            .build()
+        voyageDao = databasevoyage.getVoyageDao()
+        runBlocking {
+            voyage1 = voyageDao!!.getVoyage(id)
+        }
         Log.d("EPF"," $id, $titre, $dateDepart, $dateRetour, $nbvoyageur")
 
         editv_titre_editText.hint = titre
@@ -258,9 +265,9 @@ class EditVoyage() : AppCompatActivity() {
                         // finish dépile l'activité et revient à la page d'en dessous
 
                         Log.d("EPF", " $id, $titre, $dateDepart, $dateRetour, $nbvoyageur")
-                        val list_activities = listOf<Activity>()
-                        val list_flights = listOf<Flight>()
-                        val list_hotels = listOf<Hotel>()
+                        val list_activities = voyage1?.list_activity
+                        val list_flights = voyage1?.list_flights
+                        val list_hotels = voyage1?.list_hotels
                         val citie = citydao.getCity(destination.toString())
                         var image = citie.cover_image_url
 
