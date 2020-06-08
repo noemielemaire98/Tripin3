@@ -111,7 +111,6 @@
                 android:layout_marginTop="10dp"
                 android:textColor="@color/contrast_blue"
                 android:textSize="22sp"
-                android:text=""
                 android:textStyle="bold" />
 
             <androidx.cardview.widget.CardView

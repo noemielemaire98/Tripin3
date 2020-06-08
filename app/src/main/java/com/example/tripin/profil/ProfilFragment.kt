@@ -46,8 +46,8 @@ class ProfilFragment : Fragment() {
     var au_soleil = listOf<String>("Madrid","Marrakech","Johannesburg","Buenos Aires")
     var pour_visiter = listOf<String>("Budapest","Venise","San Francisco","Berlin")
     var exotique = listOf<String>("Bangkok","Honolulu","Rio de Janeiro","Sydney")
-    var decouvrir = listOf<String>("Cap Town","Chicago","Rome","Shanghai")
-    var nature = listOf<String>("Cap Town","Honolulu")
+    var decouvrir = listOf<String>("Chicago","Cape Town","Rome","Shanghai")
+    var nature = listOf<String>("Honolulu","Cape Town")
     private lateinit var destinationCat  : AutoCompleteTextView
     private lateinit var edit_budget : EditText
     private lateinit var activityCat : AutoCompleteTextView
@@ -181,6 +181,13 @@ class ProfilFragment : Fragment() {
 //        }
 
         signoutbutton.setOnClickListener {
+            if (uid == null) {
+                Toast.makeText(
+                    this.context,
+                    "Vous ne pouvez pas vous déconnecter, vous n'êtes pas connecté",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
             if (uid != null) {
                 FirebaseAuth.getInstance().signOut()
                 uid = null
@@ -192,13 +199,6 @@ class ProfilFragment : Fragment() {
                 val intent = Intent(this.context, MainActivity::class.java)
                 intent.putExtra("login", "login")
                 startActivity(intent)
-            }
-            if (uid == null) {
-//                Toast.makeText(
-//                    this.context,
-//                    "Vous ne pouvez pas vous déconnectez, vous n'êtes pas connecté",
-//                    Toast.LENGTH_SHORT
-//                ).show()
             }
         }
 
