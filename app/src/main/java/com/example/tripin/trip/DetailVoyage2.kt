@@ -1,23 +1,18 @@
 package com.example.tripin.trip
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.FragmentManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
-import com.example.tripin.find.voyage.FindVoyage
 import com.example.tripin.model.Activity
 import com.example.tripin.model.Hotel
 import com.example.tripin.model.Voyage

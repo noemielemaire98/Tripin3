@@ -10,13 +10,10 @@ import androidx.room.Room
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.CityDao
 import com.example.tripin.data.retrofit
-import com.example.tripin.data.retrofitHotel
 import com.example.tripin.find.activity.ActivitybyCity
-import com.example.tripin.find.hotel.HotelAPI
 import com.example.tripin.model.City
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import kotlinx.coroutines.runBlocking
-import java.io.FileWriter
 import java.io.IOException
 import java.io.OutputStreamWriter
 
@@ -61,7 +58,7 @@ class SplashActivity : AppCompatActivity() {
                     }
                 }
                 var dest = "Au soleil"
-                if(it.name == "Paris" || it.name == "Amsterdam" || it.name == "Rome" || it.name == "New York" || it.name == "Londres" || it.name == "Chicago" || it.name == "Denver" || it.name == "Seattle" || it.name == "Shanghai" || it.name == "Singapour" || it.name == "Bangkok" || it.name == "Washington DC"){
+                if(it.name == "Paris" || it.name == "Amsterdam" || it.name == "Rome" || it.name == "New York" || it.name == "Singapour" || it.name == "Bangkok"){
                     dest = "Pour visiter"
                 }
                 if(it.name == "La Grand île - Hawaii" || it.name == "Honolulu" || it.name == "Oahu" || it.name == "Buenos Aires" || it.name == "Abu dhabi" || it.name == "Medina" || it.name == "Denver" || it.name == "Seattle" || it.name == "Chiang Mai"){

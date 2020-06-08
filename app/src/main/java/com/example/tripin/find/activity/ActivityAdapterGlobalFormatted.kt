@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.bumptech.glide.Glide
@@ -77,7 +76,7 @@ class ActivityAdapterGlobalFormatted(val list_activity: MutableList<Activity>, v
         //holder.activtyView.activity_category_textview.text = "${activity.category}"
 
 
-        if(attribut_favoris[position] == true){
+        if(attribut_favoris[position]){
             holder.activtyFormattedView.fab_favActivity.setImageResource(R.drawable.ic_favorite_black_24dp)
 
         }
@@ -92,16 +91,12 @@ class ActivityAdapterGlobalFormatted(val list_activity: MutableList<Activity>, v
         // Listener sur les favoris
 
         holder.activtyFormattedView.fab_favActivity.setOnClickListener {
-            if(attribut_favoris[position] == true){
+            if(attribut_favoris[position]){
                 holder.activtyFormattedView.fab_favActivity.setImageResource(R.drawable.ic_favorite_border_black_24dp)
                 runBlocking {
                     activityDaoSaved?.deleteActivity(activity.uuid)
                 }
                 attribut_favoris[position] = false
-                list_activity.removeAt(position)
-                notifyItemRemoved(position)
-                notifyItemRangeChanged(position,list_activity.size)
-
                 Toast.makeText(context, "L'activité a bien été supprimé des favoris", Toast.LENGTH_SHORT).show()
 
             }else {

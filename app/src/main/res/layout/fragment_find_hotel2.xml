@@ -126,7 +126,7 @@ tools:context=".find.hotel.FindHotelFragment">
                         android:layout_height="wrap_content"
                         android:text="0"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginRight="100dp"
+                        android:layout_marginRight="75dp"
                         android:textSize="18dp"
                         android:textStyle="bold" />
 
@@ -184,6 +184,7 @@ tools:context=".find.hotel.FindHotelFragment">
                 android:id="@+id/slider_layout"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -197,15 +198,13 @@ tools:context=".find.hotel.FindHotelFragment">
 
                 <io.apptik.widget.MultiSlider
                     android:id="@+id/price_range_slider"
-                    android:layout_width="300dp"
+                    android:layout_width="275dp"
                     android:layout_height="wrap_content"
                     android:scrollbarSize="100dp"
                     app:layout_constraintLeft_toRightOf="@+id/min_fixed_textview"
                     app:layout_constraintRight_toLeftOf="@+id/max_fixed_textview"
                     app:layout_constraintTop_toTopOf="@id/slider_layout"
                     app:layout_constraintBottom_toBottomOf="@id/slider_layout"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     app:thumbNumber="2"
                     app:stepsThumbsApart="10"
                     app:drawThumbsApart="true"/>

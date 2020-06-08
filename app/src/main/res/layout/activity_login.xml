@@ -3,54 +3,89 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/global_layout"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/mail_edittext_login"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginTop="115dp"
-        android:ems="10"
-        android:autofillHints="@string/mail_edit"
-        android:hint="@string/mail_edit"
-        android:inputType="textEmailAddress"
-        android:background="@drawable/rounded_edit"
-        android:textColor="@color/colorBackground"
-        android:textStyle="bold"
-        android:paddingStart="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.cardview.widget.CardView
+        android:layout_width="350dp"
+        android:layout_height="300dp"
+        android:id="@+id/card_layout"
+        app:cardCornerRadius="5dp"
+        android:backgroundTint="@color/contrast_blue"
+        app:layout_constraintBottom_toBottomOf="@id/global_layout"
+        app:layout_constraintTop_toTopOf="@id/global_layout"
+        app:layout_constraintLeft_toLeftOf="@id/global_layout"
+        app:layout_constraintRight_toRightOf="@id/global_layout">
 
-    <EditText
-        android:id="@+id/password_edittext_login"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:autofillHints="@string/password_edit"
-        android:hint="@string/password_edit"
-        android:background="@drawable/rounded_edit"
-        android:textColor="@color/colorBackground"
-        android:textStyle="bold"
-        android:paddingStart="10dp"
-        android:inputType="textPassword"
-        app:layout_constraintStart_toStartOf="@+id/mail_edittext_login"
-        app:layout_constraintTop_toBottomOf="@+id/mail_edittext_login" />
 
-    <Button
-        android:id="@+id/signin_button_login"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginTop="28dp"
-        android:text="@string/signin_button"
-        android:textColor="@color/colorBackground"
-        android:textStyle="bold"
-        android:padding="5dp"
-        android:background="@drawable/rounded_button"
-        app:layout_constraintEnd_toEndOf="@+id/password_edittext_login"
-        app:layout_constraintStart_toStartOf="@+id/password_edittext_login"
-        app:layout_constraintTop_toBottomOf="@+id/password_edittext_login" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="30dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:text="Adresse mail : "/>
+
+            <EditText
+                android:id="@+id/mail_edittext_login"
+                android:layout_width="match_parent"
+
+                android:layout_height="50dp"
+                android:autofillHints="@string/mail_edit"
+                android:hint="Entrez votre e-mail"
+                android:inputType="textEmailAddress"
+                android:textSize="16sp"
+                android:background="@drawable/rounded_edit"
+                android:textStyle="bold"
+                android:paddingStart="10dp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:text="Mot de passe : "/>
+
+            <EditText
+                android:id="@+id/password_edittext_login"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:autofillHints="@string/mail_edit"
+                android:hint="Entrez votre mot de passe"
+                android:inputType="textPassword"
+                android:textSize="16sp"
+                android:background="@drawable/rounded_edit"
+                android:textStyle="bold"
+                android:paddingStart="10dp" />
+
+
+            <Button
+                android:id="@+id/signin_button_login"
+                android:layout_width="200dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="40dp"
+                android:layout_marginTop="28dp"
+                android:backgroundTint="@color/colorAccent"
+                android:text="@string/signin_button"
+                android:textColor="@color/colorBackground"
+                android:textStyle="bold"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
+
+
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/back_account_text_login"
@@ -59,7 +94,11 @@
         android:layout_marginTop="20dp"
         android:text="@string/create_account_button"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/signin_button_login"
-        app:layout_constraintStart_toStartOf="@+id/signin_button_login"
-        app:layout_constraintTop_toBottomOf="@+id/signin_button_login" />
+        app:layout_constraintEnd_toEndOf="@id/global_layout"
+        app:layout_constraintStart_toStartOf="@id/global_layout"
+        app:layout_constraintTop_toBottomOf="@+id/card_layout" />
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

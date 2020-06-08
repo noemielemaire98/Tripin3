@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.example.tripin.R
 import com.example.tripin.model.Rooms

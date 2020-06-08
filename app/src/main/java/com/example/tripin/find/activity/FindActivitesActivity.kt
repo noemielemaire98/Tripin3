@@ -12,12 +12,9 @@ import androidx.room.Room
 import com.example.tripin.R
 import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
-import com.example.tripin.model.Activity
 import com.example.tripin.data.retrofit
+import com.example.tripin.model.Activity
 import kotlinx.android.synthetic.main.activity_find_activites.*
-import kotlinx.android.synthetic.main.activity_find_activites.activities_recyclerview
-import kotlinx.android.synthetic.main.activity_find_activites.bt_recherche_activity
-import kotlinx.android.synthetic.main.activity_find_activites.search_activity_bar
 import kotlinx.coroutines.runBlocking
 
 class FindActivitesActivity : AppCompatActivity() {

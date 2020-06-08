@@ -1,20 +1,17 @@
 package com.example.tripin.saved
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.example.tripin.MainActivity
-import com.example.tripin.find.hotel.HotelsAdapter
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.HotelDao
-import com.example.tripin.find.hotel.FindHotelActivity
-import com.example.tripin.find.hotel.FindHotelFragment
+import com.example.tripin.find.hotel.HotelsAdapter
 import kotlinx.android.synthetic.main.activity_saved_hotel.*
 import kotlinx.coroutines.runBlocking
 

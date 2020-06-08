@@ -104,9 +104,16 @@ class RegistrationActivity : AppCompatActivity() {
         ref.setValue(user)
             .addOnSuccessListener {
                 Toast.makeText(this, "Vous êtes bien inscrit", Toast.LENGTH_SHORT).show()
+//                val intent = Intent(this, MainActivity::class.java)
+//                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                startActivity(intent)
+
                 val intent = Intent(this, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                finish()
+                overridePendingTransition(0, 0)
                 startActivity(intent)
+                overridePendingTransition(0, 0)
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Le compte n'a pu être crée", Toast.LENGTH_SHORT).show()

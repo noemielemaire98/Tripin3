@@ -2,12 +2,12 @@ package com.example.tripin.profil
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.tripin.R
 import kotlinx.android.synthetic.main.activity_contact.*
-import java.lang.Exception
 
 class ContactActivity : AppCompatActivity() {
 
@@ -38,6 +38,16 @@ class ContactActivity : AppCompatActivity() {
             startActivity(Intent.createChooser(intent, "Selectionner l'application de votre choix"))
         }catch (e: Exception){
             Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

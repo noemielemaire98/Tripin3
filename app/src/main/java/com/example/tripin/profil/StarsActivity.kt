@@ -1,11 +1,12 @@
 package com.example.tripin.profil
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.RatingBar
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.tripin.R
 
 class StarsActivity : AppCompatActivity() {
@@ -24,5 +25,15 @@ class StarsActivity : AppCompatActivity() {
     fun click (view: View){
         val valeur = rb.rating
         Toast.makeText(this, " La note est de : " + valeur, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

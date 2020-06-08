@@ -2,25 +2,20 @@ package com.example.tripin.find
 
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
-import com.example.tripin.*
+import com.example.tripin.R
+import com.example.tripin.data.VoyageDao
 import com.example.tripin.find.activity.FindActivityFragment
 import com.example.tripin.find.flight.FindFlightFragment
 import com.example.tripin.find.hotel.FindHotelFragment
 import com.example.tripin.find.voyage.FindVoyage
+import com.example.tripin.model.Voyage
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.*
-import android.content.Intent
-import androidx.room.Room
-import com.example.tripin.data.AppDatabase
-import com.example.tripin.data.VoyageDao
-import com.example.tripin.model.Voyage
-import org.jetbrains.anko.support.v4.intentFor
 
 /**
  * A simple [Fragment] subclass.

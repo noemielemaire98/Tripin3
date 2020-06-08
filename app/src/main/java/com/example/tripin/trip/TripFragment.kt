@@ -4,11 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
@@ -16,18 +18,35 @@ import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
 import com.example.tripin.model.Voyage
+import com.example.tripin.saved.VoyagesDiffUtilCallback
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.jakewharton.rxbinding2.widget.textChanges
+import io.reactivex.Completable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_trip.*
 import kotlinx.coroutines.runBlocking
-import java.util.*
+import java.text.Normalizer
+import java.util.concurrent.TimeUnit
 
 class TripFragment : Fragment() {
+
+    private val regexUnaccent = "\\p{InCombiningDiacriticalMarks}+".toRegex()
 
     private var voyageDao: VoyageDao? = null
     private var mBundleRecyclerViewState: Bundle? = null
     private var mListState: Parcelable? = null
-    var list_voyage_title = arrayListOf<String>()
-    var voyages = arrayListOf<Voyage>()
+    private var listVoyageTitle = arrayListOf<String>()
+
+    private val filteredPosts: MutableList<Voyage> = mutableListOf()
+    private val oldFilteredPosts: MutableList<Voyage> = mutableListOf()
+
+    private var adapter: VoyageAdapter? = null
+
+    private val disposable = CompositeDisposable()
+    private var listVoyage: MutableList<Voyage>? = null
 
 
     private var destination = ""
@@ -42,14 +61,11 @@ class TripFragment : Fragment() {
 
 
         val root: View = inflater.inflate(R.layout.fragment_trip, container, false)
-        var voyage_recyclerview = root.findViewById<View>(R.id.voyage_recyclerview) as RecyclerView
-        voyage_recyclerview.layoutManager = LinearLayoutManager(this.context)
+        val voyageRecyclerview = root.findViewById<View>(R.id.voyage_recyclerview) as RecyclerView
+        voyageRecyclerview.layoutManager = LinearLayoutManager(this.context)
 
-        val bt_search = root.findViewById<Button>(R.id.bt_recherche)
         val searchText = root.findViewById<AutoCompleteTextView>(R.id.search_voyage)
         val fab: FloatingActionButton = root.findViewById(R.id.fab_add)
-//        val searchText2 = root.findViewById<SearchView>(R.id.searchtext)
-
 
 
         fab.setOnClickListener {
@@ -66,89 +82,35 @@ class TripFragment : Fragment() {
                 .build()
 
         voyageDao = database.getVoyageDao()
-        //voyage_recyclerview.adapter = VoyageAdapter(Voyage.all)
-
-        var list_voyage : List<Voyage> ?
 
         runBlocking {
-            list_voyage = voyageDao?.getVoyage()
-            list_voyage?.map {
-                list_voyage_title.add(it.titre)
-//                list_voyage_title.add(it.destination)
-
+            listVoyage = voyageDao?.getVoyage()?.toMutableList()
+            listVoyage?.map {
+                listVoyageTitle.add(it.titre)
             }
+            listVoyage?.let { oldFilteredPosts.addAll(it) }
+            adapter = VoyageAdapter(oldFilteredPosts)
+            voyageRecyclerview.adapter = adapter
         }
 
+        searchText
+            .textChanges()
+            .debounce(200, TimeUnit.MILLISECONDS)
+            .subscribe {
+                searchVoyages(it.toString())
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        val diffResult = DiffUtil.calculateDiff(
+                            VoyagesDiffUtilCallback(oldFilteredPosts, filteredPosts)
+                        )
+                        oldFilteredPosts.clear()
+                        oldFilteredPosts.addAll(filteredPosts)
+                        adapter?.let { it1 -> diffResult.dispatchUpdatesTo(it1) }
+                        voyageRecyclerview.adapter = adapter
+                    }.addTo(disposable)
+            }.addTo(disposable)
 
-
-//         resultat.addAll(list)
-//
-//                   resultat.a
-//
-//        searchview.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                return true
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                if (newText!!.isNotEmpty()){
-//                    val search = newText.toLowerCase(Locale.getDefault() )
-//                }
-//                return true
-//            }
-//
-//        })
-
-        Log.d("epf", "$list_voyage_title")
-        val adapter: ArrayAdapter<String> =
-            ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, list_voyage_title)
-        Log.d("epf", "aaaaaa")
-
-
-        searchText.setAdapter(adapter)
-
-
-        bt_search.setOnClickListener {
-            voyages.clear()
-            hideKeyboard()
-            if (search_voyage.text.isNotEmpty()){
-                runBlocking {
-                    val voyage = voyageDao?.getVoyageByTitre(search_voyage.text.toString())
-                    if (voyage != null) {
-                        voyages.add(voyage)
-                        voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
-                        voyage_recyclerview.layoutManager =
-                            LinearLayoutManager(requireContext())
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "Voyage introuvable",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }else if(search_voyage.text.isEmpty()){
-                runBlocking {
-                    val voyages = voyageDao!!.getVoyage()
-                    voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
-                }
-
-            }
-            search_voyage.text = null
-
-        }
-
-//        searchText2.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                return false
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                adapter.filter.filter(newText)
-//                return false
-//            }
-//
-//        })
         return root
     }
 
@@ -158,21 +120,7 @@ class TripFragment : Fragment() {
         runBlocking {
             val voyages = voyageDao?.getVoyage()
             voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
-//            val list_activities = listOf<Activity>()
-//            val list_flights = listOf<Flight>()
-//            val list_hotels = listOf<Hotel>()
-//            val voyage =Voyage(0,"titre","debut","fin",R.drawable.destination1,0,list_activities, list_flights, list_hotels, destination, budget)
         }
-//        runBlocking {
-//            val voyage = voyageDao?.getVoyageByTitre(search_voyage.text.toString())
-//            if (voyage != null) {
-//                voyages.add(voyage)
-//                voyage_recyclerview.adapter = VoyageAdapter(voyages ?: emptyList())
-//                voyage_recyclerview.layoutManager =
-//                    LinearLayoutManager(requireContext())
-//            }
-//        }
-
     }
 
 
@@ -196,17 +144,23 @@ class TripFragment : Fragment() {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    private fun searchVoyages(query: String): Completable = Completable.create {
+        val wanted = listVoyage?.filter { itVoyage ->
+            itVoyage.titre.unAccent().contains(query.unAccent(), true)
+        }?.toList()
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        setHasOptionsMenu(true)
-//        super.onCreate(savedInstanceState)
-//    }
-//
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater){
-//        inflater.inflate(R.menu.menu_tripfragment, menu)
-//        super.onCreateOptionsMenu(menu, inflater)
-////        menuInflater.inflate(R.menu.menu_tripfragment, menu)
-//    }
+        filteredPosts.clear()
+        if (!wanted.isNullOrEmpty()) {
+            filteredPosts.addAll(wanted)
+        }
+        it.onComplete()
+    }
+
+    // Pour ignorer les accents dans l'input
+    private fun CharSequence.unAccent(): String {
+        val temp = Normalizer.normalize(this, Normalizer.Form.NFD)
+        return regexUnaccent.replace(temp, "")
+    }
 
 
 }

@@ -4,114 +4,214 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".profil.PreferencesActivity"
+    android:layout_margin="5dp"
     android:orientation="vertical"
-    android:layout_margin="5dp">
+    tools:context=".profil.PreferencesActivity">
+
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
         android:text="Mes préférences : "
-        android:textStyle="bold"
-        android:textSize="19sp"/>
+        android:textColor="@color/contrast_blue"
+        android:textSize="20dp" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
         android:layout_marginTop="5dp"
-        android:text="Veuillez saisir vos préférences pour vos recommandations"
-        android:textStyle="bold"
-        android:textSize="15sp"/>
+        android:text="Veuillez saisir vos préférences pour vos recommandations."
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
-    <LinearLayout
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
+        <!--        <LinearLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="50dp"-->
+        <!--            android:orientation="horizontal">-->
 
-            <TextView
-                android:layout_width="120dp"
-                android:layout_height="30dp"
-                android:text="Votre ville : "
-                android:textStyle="bold"/>
+        <!--            <TextView-->
+        <!--                android:layout_width="120dp"-->
+        <!--                android:layout_height="30dp"-->
+        <!--                android:text="Votre ville : "-->
+        <!--                android:textStyle="bold"/>-->
 
-            <EditText
-                android:id="@+id/ville_edit_preferences"
-                android:layout_width="120dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="5dp"
-                />
-        </LinearLayout>
+        <!--            <EditText-->
+        <!--                android:id="@+id/ville_edit_preferences"-->
+        <!--                android:layout_width="120dp"-->
+        <!--                android:layout_height="50dp"-->
+        <!--                android:layout_marginStart="5dp"-->
+        <!--                />-->
+        <!--        </LinearLayout>-->
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="120dp"
-                android:layout_height="30dp"
-                android:text="Votre Destination : "
-                android:textStyle="bold"/>
-            <EditText
-                android:id="@+id/destination_edit_preferences"
-                android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!--        <LinearLayout-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="50dp"-->
+            <!--            android:orientation="horizontal">-->
+
+            <!--            <TextView-->
+            <!--                android:layout_width="120dp"-->
+            <!--                android:layout_height="30dp"-->
+            <!--                android:text="Votre ville : "-->
+            <!--                android:textStyle="bold"/>-->
+
+            <!--            <EditText-->
+            <!--                android:id="@+id/ville_edit_preferences"-->
+            <!--                android:layout_width="120dp"-->
+            <!--                android:layout_height="50dp"-->
+            <!--                android:layout_marginStart="5dp"-->
+            <!--                />-->
+            <!--        </LinearLayout>-->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="5dp"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="120dp"
-                android:layout_height="30dp"
-                android:text="Votre budget : "
-                android:textStyle="bold"/>
-            <EditText
-                android:id="@+id/budget_edit_preferences"
-                android:layout_width="120dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="5dp"
-                android:inputType="numberSigned"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="120dp"
-                android:layout_height="30dp"
-                android:text="Votre envie :"
-                android:textStyle="bold"/>
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-                android:layout_width="120dp"
-                android:layout_marginStart="5dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="20dp"
-                app:boxBackgroundColor="@color/colorBackground">
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:gravity="bottom"
+                    android:text="Votre Destination : "
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
 
                 <AutoCompleteTextView
-                    android:id="@+id/destination_categorie"
+                    android:id="@+id/destination_edit_preferences"
+                    android:layout_width="250dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="5dp"
+                    android:completionThreshold="1"
+                    android:focusable="true"
+                    android:inputType="textCapSentences"
+                    android:foregroundTint="@color/colorAccent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:gravity="bottom"
+                    android:text="Votre budget : "
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/budget_edit_preferences"
+                    android:layout_width="250dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="5dp"
+                    android:inputType="numberSigned" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:orientation="horizontal">
+
+                <TextView
                     android:layout_width="120dp"
                     android:layout_height="50dp"
-                    android:background="@null"
-                    android:focusable="false"
-                    android:inputType="none"
-                    android:text="Veuillez sélectionner votre choix"
-                    android:textSize="12sp"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_gravity="center"
+                    android:gravity="bottom"
+                    android:text="Votre envie :"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="20dp"
+                    app:boxBackgroundColor="@color/colorBackground">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/destination_categorie"
+                        android:layout_width="250dp"
+                        android:layout_height="60dp"
+                        android:background="@null"
+                        android:focusable="false"
+                        android:inputType="none"
+                        android:text="Veuillez sélectionner votre choix"
+                        android:textSize="12sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:gravity="bottom"
+                    android:text="Votre souhait :"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    android:layout_width="250dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="20dp"
+                    app:boxBackgroundColor="@color/colorBackground">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/activity_categorie"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="@null"
+                        android:focusable="false"
+                        android:inputType="none"
+                        android:text="Veuillez sélectionner votre choix"
+                        android:textSize="12sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
 
     <Button
         android:id="@+id/button_save"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sauvegarder" />
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="28dp"
+        android:backgroundTint="@color/contrast_blue"
+        android:padding="5dp"
+        android:text="Sauvegarder"
+        android:textColor="@color/colorBackground" />
+
 </LinearLayout>

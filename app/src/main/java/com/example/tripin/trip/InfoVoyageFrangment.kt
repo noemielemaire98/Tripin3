@@ -5,25 +5,20 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.room.Room
 import androidx.viewpager.widget.ViewPager
 import com.example.tripin.MainActivity
 import com.example.tripin.R
-import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.VoyageDao
-import com.example.tripin.find.FindFragment
-import com.example.tripin.find.voyage.FindVoyage
 import com.example.tripin.model.Voyage
 import com.example.tripin.saved.DetailVoyageSave
 import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.activity_detail_voyage.*
-import kotlinx.coroutines.runBlocking
 
 class InfoVoyageFrangment : Fragment() {
     private var voyage: Voyage? = null

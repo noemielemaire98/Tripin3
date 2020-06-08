@@ -16,28 +16,25 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
-import com.amadeus.Amadeus
-import com.amadeus.Params
-import com.amadeus.shopping.HotelOffersByHotel
 import com.aminography.primecalendar.civil.CivilCalendar
 import com.aminography.primedatepicker.picker.PrimeDatePicker
 import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
 import com.bumptech.glide.Glide
 import com.example.tripin.R
 import com.example.tripin.data.*
-import com.example.tripin.model.*
+import com.example.tripin.model.Equipement
+import com.example.tripin.model.Hotel
+import com.example.tripin.model.Rooms
+import com.example.tripin.model.Voyage
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
-import kotlinx.android.synthetic.main.activity_details_hotel.*
-import kotlinx.coroutines.runBlocking
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.android.synthetic.main.activity_details_hotel.*
 import kotlinx.android.synthetic.main.createvoyage_popup.view.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.nio.file.Path
+import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -61,7 +58,7 @@ class DetailsHotel : AppCompatActivity() {
     private var budget = ""
     var image = ""
     private val service = retrofitHotel().create(HotelAPI::class.java)
-    private val hotelKey = "5f672e716bmsh702ca7444dd484cp121785jsn039c3a4937f8"
+    private val hotelKey = "9a6f295efemsh9dd64f537c1e62bp194635jsn1c7a940b93ba"
     private var listEquipements : MutableList<Equipement> = mutableListOf()
     private var drawableNameList : MutableList<String> = mutableListOf()
     private var listProche : String = ""

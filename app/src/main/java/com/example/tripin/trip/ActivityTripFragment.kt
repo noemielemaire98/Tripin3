@@ -1,15 +1,12 @@
 package com.example.tripin.trip
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,17 +14,14 @@ import com.example.tripin.MainActivity
 import com.example.tripin.R
 import com.example.tripin.find.activity.ActivityAdapterTrip
 import com.example.tripin.model.Activity
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.example.tripin.model.Voyage
+import com.example.tripin.saved.DetailVoyageSave
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.example.tripin.model.Voyage
-import com.example.tripin.saved.DetailVoyageSave
 import kotlinx.coroutines.runBlocking
 
 

@@ -2,7 +2,6 @@ package com.example.tripin.find.hotel
 
 import android.app.Activity
 import android.content.Context
-import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -13,22 +12,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.amadeus.Amadeus
-import com.amadeus.Params
 import com.aminography.primecalendar.civil.CivilCalendar
 import com.aminography.primedatepicker.picker.PrimeDatePicker
 import com.aminography.primedatepicker.picker.callback.RangeDaysPickCallback
 import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.HotelDao
-import com.example.tripin.model.Hotel
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import io.apptik.widget.MultiSlider
 import io.apptik.widget.MultiSlider.SimpleChangeListener
 import kotlinx.android.synthetic.main.activity_find_hotel.*
-import kotlinx.android.synthetic.main.activity_find_hotel.btn_search
-import kotlinx.android.synthetic.main.activity_find_hotel.loadingPanel
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*

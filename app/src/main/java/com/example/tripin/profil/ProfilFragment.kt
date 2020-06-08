@@ -1,6 +1,5 @@
 package com.example.tripin.profil
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.example.tripin.MainActivity
 import com.example.tripin.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
@@ -20,7 +20,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_profil.*
-import java.lang.RuntimeException
 
 
 class ProfilFragment : Fragment() {
@@ -42,6 +41,7 @@ class ProfilFragment : Fragment() {
         val username : TextView = root.findViewById(R.id.username_profil)
         val noProfilLayout : RelativeLayout = root.findViewById(R.id.noProfil_layout)
         val connexionButton : Button = root.findViewById(R.id.connexion_button)
+        val inscriptionTxt : TextView = root.findViewById(R.id.inscription_button)
 
         if(uid != null){
             noProfilLayout.visibility = View.GONE
@@ -64,7 +64,7 @@ class ProfilFragment : Fragment() {
                     if(p0.key == "profilImageUrl"){
                         //Log.d("toto", "$p0, $p1")
                         //Log.d("toto", "${p0.getValue(String::class.java)}")
-                        Glide.with(requireContext()).load("${p0.getValue(String::class.java)}").into(display_photo_circleview)
+                        Glide.with(context as MainActivity).load("${p0.getValue(String::class.java)}").into(display_photo_circleview)
                     }
                     if(p0.key == "username"){
                         //Log.d("toto", "${p0.getValue(String::class.java)}")
@@ -80,6 +80,11 @@ class ProfilFragment : Fragment() {
 
         connexionButton.setOnClickListener {
             val intent = Intent(this.context, LoginActivity::class.java)
+            startActivity(intent)
+        }
+
+        inscriptionTxt.setOnClickListener {
+            val intent = Intent(this.context, RegistrationActivity::class.java)
             startActivity(intent)
         }
 
@@ -116,7 +121,7 @@ class ProfilFragment : Fragment() {
         }
 
         val contact: TextView = root.findViewById(R.id.textview_app_contact)
-        val feedback: TextView = root.findViewById(R.id.textview_app_feedback)
+        val feedback: Button = root.findViewById(R.id.textview_app_feedback)
         val sharing: TextView = root.findViewById(R.id.textview_app_sharing)
         val stars: TextView = root.findViewById(R.id.textview_app_stars)
 

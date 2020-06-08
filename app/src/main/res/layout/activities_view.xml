@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     android:layout_margin="8dp"
     tools:context=".find.FindFragment">
 
@@ -92,6 +94,7 @@
                android:orientation="horizontal"
                android:layout_marginTop="10dp"
                android:layout_marginStart="8dp"
+               android:layout_marginEnd="8dp"
                android:id="@+id/rv_categorie"/>
 
             <TextView
@@ -99,8 +102,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="30dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
                 android:textSize="15dp"
                 android:layout_gravity="end"
                 tools:text="A partir de  " />
