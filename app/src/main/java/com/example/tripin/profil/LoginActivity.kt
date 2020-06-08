@@ -44,6 +44,7 @@ class LoginActivity : AppCompatActivity(){
                 if (!it.isSuccessful) return@addOnCompleteListener
                 Toast.makeText(this, "Vous êtes à présent connecté", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("login", "login")
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }

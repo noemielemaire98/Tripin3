@@ -32,6 +32,13 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_profil
             )
         )
+
+        val login = intent.getStringExtra("login")
+
+        if(login == "login") {
+            navController.navigate(R.id.navigation_profil)
+        }
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
