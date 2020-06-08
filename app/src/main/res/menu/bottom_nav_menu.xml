@@ -8,17 +8,17 @@
     <item
         android:id="@+id/navigation_find"
         android:icon="@drawable/ic_action_find"
-        android:title="Find" />
+        android:title="Recherche" />
 
     <item
         android:id="@+id/navigation_trip"
         android:icon="@drawable/ic_action_trip"
-        android:title="Trip" />
+        android:title="Voyage" />
 
     <item
         android:id="@+id/navigation_saved"
         android:icon="@drawable/ic_action_saved"
-        android:title="Saved" />
+        android:title="Favoris" />
 
     <item
         android:id="@+id/navigation_profil"
