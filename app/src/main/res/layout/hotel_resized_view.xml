@@ -72,15 +72,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:textSize="15dp"
-                        android:textStyle="bold" />
+                        android:minLines="2"
+                        android:text="TITRE"
+                        android:textSize="13dp"
+                        android:textStyle="bold"
+                        android:layout_gravity="top"/>
 
 
                     <TextView
                         android:id="@+id/hotel_adresse1_textview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
                         android:layout_marginTop="5dp"
                         android:textSize="13dp" />
 
@@ -88,7 +90,6 @@
                         android:id="@+id/hotel_adresse2_textview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
                         android:textSize="13dp" />
 
 

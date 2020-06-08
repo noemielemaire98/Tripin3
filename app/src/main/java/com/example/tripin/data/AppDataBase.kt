@@ -45,7 +45,7 @@ class ListActivityConverter {
         val arrayList = arrayListOf<String>()
         listActivity.map {
             val string =
-                "${it.uuid};${it.title};${it.cover_image_url};${it.ville};${it.formatted_iso_value};${it.operational_days};${it.reviews_avg};${it.category};${it.url};${it.top_seller};${it.must_see};${it.description};${it.about};${it.latitude};${it.longitude}"
+                "${it.uuid};${it.title};${it.ville};${it.cover_image_url};${it.formatted_iso_value};${it.operational_days};${it.reviews_avg};${it.category};${it.url};${it.top_seller};${it.must_see};${it.description};${it.about};${it.latitude};${it.longitude}"
             arrayList.add(string)
         }
 
