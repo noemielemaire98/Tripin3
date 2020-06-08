@@ -4,80 +4,83 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home.HomeFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".home.HomeFragment">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Vos Recommendations"
-        android:textStyle="bold"
+        android:textColor="@color/black"
         android:textSize="17sp"
-        android:textColor="@color/black"/>
+        android:textStyle="bold" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Vos Activités :"
         android:layout_marginTop="15dp"
-        android:textStyle="bold"
+        android:text="Vos Activités :"
+        android:textColor="@color/black"
         android:textSize="15sp"
-        android:textColor="@color/black"/>
+        android:textStyle="bold" />
+
     <RelativeLayout
+        android:id="@+id/layoutNoActivities_frag_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="15dp"
         android:layout_marginBottom="?attr/actionBarSize"
-        android:id="@+id/layoutNoActivities_frag_home"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <ImageView
+            android:id="@+id/iv_noactivityfind"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:layout_marginTop="70dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/nosavedflights"
-            android:id="@+id/iv_noactivityfind" />
+            android:layout_marginTop="70dp"
+            android:src="@drawable/nosavedflights" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="Veuillez définir une destination valable dans les préférences utilisateurs"
             android:layout_below="@+id/iv_noactivityfind"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:textSize="20dp"
             android:gravity="center"
-            android:textStyle="bold"
-            />
+            android:text="Veuillez définir une destination valable dans les préférences utilisateurs"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:orientation="horizontal"
             android:id="@+id/activities_recyclerview_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             tools:listitem="@layout/activities_view" />
+
         <TextView
-            android:layout_below="@+id/activities_recyclerview_home"
             android:id="@+id/txt_view_hotels"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/activities_recyclerview_home"
             android:text="Vos Hôtels : "
-            android:textStyle="bold"
+            android:textColor="@color/black"
             android:textSize="15sp"
-            android:textColor="@color/black"/>
+            android:textStyle="bold" />
+
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_below="@+id/txt_view_hotels"
             android:id="@+id/hotels_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="?attr/actionBarSize"
-            tools:listitem="@layout/hotel_view"
-            android:nestedScrollingEnabled="false"/>
+            android:layout_below="@+id/txt_view_hotels"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/hotel_view" />
 
     </RelativeLayout>
 

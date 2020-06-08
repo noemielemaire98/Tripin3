@@ -55,12 +55,16 @@
                 android:layout_height="30dp"
                 android:text="Votre Destination : "
                 android:textStyle="bold"/>
-            <EditText
+
+            <AutoCompleteTextView
                 android:id="@+id/destination_edit_preferences"
                 android:layout_width="120dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="5dp"
+                android:focusable="true"
+                android:completionThreshold="1"
                 />
+
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

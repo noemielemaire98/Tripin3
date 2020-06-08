@@ -3,17 +3,14 @@ package com.example.tripin.profil
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.room.Room
 import com.example.tripin.MainActivity
 import com.example.tripin.R
-import com.example.tripin.data.AppDatabase
-import com.example.tripin.data.PreferenceDao
+import com.example.tripin.data.*
 import com.example.tripin.find.IgnoreAccentsArrayAdapter
 import com.example.tripin.model.Preference
 import kotlinx.android.synthetic.main.activity_preferences.*
@@ -22,9 +19,14 @@ import kotlinx.coroutines.runBlocking
 class PreferencesActivity : AppCompatActivity() {
 
     private var preferenceDao: PreferenceDao? = null
+    private var hotelDao: HotelDao? = null
+    private var activityDao: ActivityDao? = null
     var ville = ""
     var destination = ""
     var budget = 100
+    private lateinit var citydao: CityDao
+    var list_cities_name = arrayListOf<String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_preferences)
@@ -57,7 +59,37 @@ class PreferencesActivity : AppCompatActivity() {
             "allpreferences"
         ).build()
 
+        val databaseHome = Room.databaseBuilder(
+            this.baseContext,
+            AppDatabase::class.java,
+            "homeDatabase"
+        ).build()
+
+        val databasesaved =
+            Room.databaseBuilder(this.baseContext, AppDatabase::class.java, "savedDatabase")
+                .build()
+
         preferenceDao = database.getPreferenceDao()
+        hotelDao = databaseHome.getHotelDao()
+        activityDao = databaseHome.getActivityDao()
+
+
+        // récupération des villes possibles
+        citydao = databasesaved.getCityDao()
+
+        // ajout dans l'auto complétion texte
+        runBlocking {
+            val list_cities_bdd = citydao.getCity()
+            list_cities_bdd.map {
+                list_cities_name.add(it.name!!)
+            }
+        }
+        val adapter: ArrayAdapter<String> =
+            ArrayAdapter(this, android.R.layout.simple_list_item_1, list_cities_name)
+
+        clearFocusAutoTextView(destination_edit_preferences)
+
+        destination_edit_preferences.setAdapter(adapter)
 
         bsave.setOnClickListener {
             //ville = edit_ville.text.toString()
@@ -74,6 +106,10 @@ class PreferencesActivity : AppCompatActivity() {
             } else {
                 runBlocking {
                     preferenceDao?.deletePreferences()
+
+                    hotelDao?.deleteHotels()
+                    activityDao?.deleteActivity()
+
                     val pref = Preference(
                         "",
                         destination,
@@ -86,6 +122,24 @@ class PreferencesActivity : AppCompatActivity() {
                 val intent = Intent(this, MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
+            }
+        }
+    }
+
+    // vide textView si non choisi dans la liste
+    private fun clearFocusAutoTextView(autoCompleteTextView: AutoCompleteTextView) {
+        autoCompleteTextView.onFocusChangeListener = View.OnFocusChangeListener { _, b ->
+            if (!b) {
+                // on focus off
+                val str: String = autoCompleteTextView.text.toString()
+                val listAdapter: ListAdapter = autoCompleteTextView.adapter
+                for (i in 0 until listAdapter.count) {
+                    val temp: String = listAdapter.getItem(i).toString()
+                    if (str.compareTo(temp) == 0) {
+                        return@OnFocusChangeListener
+                    }
+                }
+                autoCompleteTextView.setText("")
             }
         }
     }
