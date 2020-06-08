@@ -58,9 +58,8 @@
     <string-array name="catDestination">
         <item>Exotique</item>
         <item>Au soleil</item>
-        <item>Pour skier</item>
-        <item>Pour découvrir</item>
-        <item>A la plage</item>
+        <item>Nature</item>
+        <item>A découvrir</item>
         <item>Pour visiter</item>
     </string-array>
 
@@ -69,7 +68,6 @@
         <item>Sport et aventure</item>
         <item>Vin et gastronomie</item>
         <item>Vie nocture</item>
-        <item>Divertissement</item>
         <item>Activités et visites</item>
     </string-array>
 

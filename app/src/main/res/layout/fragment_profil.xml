@@ -92,7 +92,6 @@
             android:id="@+id/second_linear_layout_profil_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:orientation="vertical">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -112,8 +111,121 @@
                 android:layout_marginTop="10dp"
                 android:textColor="@color/contrast_blue"
                 android:textSize="22sp"
-                android:text=""
+                android:text="TATA"
                 android:textStyle="bold" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="10dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_margin="5dp">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center"
+                            android:gravity="bottom"
+                            android:text="Votre budget : "
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/budget_edit_preferences"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="5dp"
+                            android:inputType="numberSigned" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            android:gravity="bottom"
+                            android:text="Type de destination"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                            android:layout_width="250dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginEnd="20dp"
+                            app:boxBackgroundColor="@color/colorBackground">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/destination_categorie"
+                                android:layout_width="250dp"
+                                android:layout_height="60dp"
+                                android:background="@null"
+                                android:focusable="false"
+                                android:inputType="none"
+                                android:text="Sélectionner un item"
+                                android:textSize="12sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginBottom="20dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            android:gravity="bottom"
+                            android:text="Type d'activité"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                            android:layout_width="250dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginEnd="20dp"
+                            app:boxBackgroundColor="@color/colorBackground">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/activity_categorie"
+                                android:layout_width="match_parent"
+                                android:layout_height="60dp"
+                                android:background="@null"
+                                android:focusable="false"
+                                android:inputType="none"
+                                android:text="Sélectionner un item"
+                                android:textSize="12sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
 
 
             <Button
@@ -121,20 +233,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="100dp"
-                android:text="@string/app_preferences"
+                android:layout_marginTop="10dp"
+                android:text="Sauvegarder vos préférences"
                 android:textColor="@color/white"
                 android:backgroundTint="@color/contrast_blue" />
         </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="#ECF4FC">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+                android:layout_marginTop="25dp"
                 android:layout_marginBottom="70dp"
                 android:orientation="horizontal">
 

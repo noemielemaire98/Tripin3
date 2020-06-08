@@ -35,72 +35,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <!--        <LinearLayout-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="50dp"-->
-        <!--            android:orientation="horizontal">-->
 
-        <!--            <TextView-->
-        <!--                android:layout_width="120dp"-->
-        <!--                android:layout_height="30dp"-->
-        <!--                android:text="Votre ville : "-->
-        <!--                android:textStyle="bold"/>-->
-
-        <!--            <EditText-->
-        <!--                android:id="@+id/ville_edit_preferences"-->
-        <!--                android:layout_width="120dp"-->
-        <!--                android:layout_height="50dp"-->
-        <!--                android:layout_marginStart="5dp"-->
-        <!--                />-->
-        <!--        </LinearLayout>-->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <!--        <LinearLayout-->
-            <!--            android:layout_width="match_parent"-->
-            <!--            android:layout_height="50dp"-->
-            <!--            android:orientation="horizontal">-->
 
-            <!--            <TextView-->
-            <!--                android:layout_width="120dp"-->
-            <!--                android:layout_height="30dp"-->
-            <!--                android:text="Votre ville : "-->
-            <!--                android:textStyle="bold"/>-->
-
-            <!--            <EditText-->
-            <!--                android:id="@+id/ville_edit_preferences"-->
-            <!--                android:layout_width="120dp"-->
-            <!--                android:layout_height="50dp"-->
-            <!--                android:layout_marginStart="5dp"-->
-            <!--                />-->
-            <!--        </LinearLayout>-->
-<!--            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="120dp"
-                    android:layout_height="35dp"
-                    android:layout_gravity="center"
-                    android:gravity="bottom"
-                    android:text="Votre Destination : "
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <AutoCompleteTextView
-                    android:id="@+id/destination_edit_preferences"
-                    android:layout_width="250dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="5dp"
-                    android:completionThreshold="1"
-                    android:focusable="true"
-                    android:inputType="textCapSentences"
-                    android:foregroundTint="@color/colorAccent" />
-            </LinearLayout>-->
 
             <LinearLayout
                 android:layout_width="match_parent"

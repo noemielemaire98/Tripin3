@@ -44,11 +44,6 @@ class PreferencesActivity : AppCompatActivity() {
        // val edit_destination = findViewById<EditText>(R.id.destination_edit_preferences)
         val edit_budget = findViewById<EditText>(R.id.budget_edit_preferences)
         val bsave = findViewById<Button>(R.id.button_save)
-
-//        Log.d("KLM", "${edit_budget.text.toString().toInt()}")
-
-        //budget = edit_budget.text.toString().toInt()
-
         val destinationCat = findViewById<AutoCompleteTextView>(R.id.destination_categorie)
         val listCatDestination = resources.getStringArray(R.array.catDestination)
         val adapterListCatDestination =
