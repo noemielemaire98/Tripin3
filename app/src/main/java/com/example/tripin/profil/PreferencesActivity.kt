@@ -29,19 +29,13 @@ class PreferencesActivity : AppCompatActivity() {
     var budget = 100
     private lateinit var citydao: CityDao
     var list_cities_name = arrayListOf<String>()
-    var au_soleil = listOf<String>("Madrid","Marrakech","Johannesburg","Buenos Aires")
-    var pour_visiter = listOf<String>("Budapest","Venise","San Francisco","Berlin")
-    var exotique = listOf<String>("Bangkok","Honolulu","Rio de Janeiro","Sydney")
-    var decouvrir = listOf<String>("Cap Town","Chicago","Rome","Shanghai")
-    var nature = listOf<String>("Cap Town","Honolulu")
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_preferences)
 
         //val edit_ville = findViewById<EditText>(R.id.ville_edit_preferences)
-       // val edit_destination = findViewById<EditText>(R.id.destination_edit_preferences)
+        val edit_destination = findViewById<EditText>(R.id.destination_edit_preferences)
         val edit_budget = findViewById<EditText>(R.id.budget_edit_preferences)
         val bsave = findViewById<Button>(R.id.button_save)
 
@@ -60,7 +54,6 @@ class PreferencesActivity : AppCompatActivity() {
         val adapterListCatActivity =
             IgnoreAccentsArrayAdapter(this, android.R.layout.simple_list_item_1, listCatActivity)
         activityCat.setAdapter(adapterListCatActivity)
-
 
 
         val database = Room.databaseBuilder(
@@ -97,22 +90,20 @@ class PreferencesActivity : AppCompatActivity() {
         val adapter: ArrayAdapter<String> =
             ArrayAdapter(this, android.R.layout.simple_list_item_1, list_cities_name)
 
-        //clearFocusAutoTextView(destination_edit_preferences)
+        clearFocusAutoTextView(destination_edit_preferences)
 
-        //destination_edit_preferences.setAdapter(adapter)
+        destination_edit_preferences.setAdapter(adapter)
 
         bsave.setOnClickListener {
-
-            //destination = edit_destination.text.toString()
-            random_destination()
-
+            //ville = edit_ville.text.toString()
+            destination = edit_destination.text.toString()
             budget = edit_budget.text.toString().toInt()
             val destinationCatVal = destination_categorie.text
             val activityCatVal = activity_categorie.text
             Log.d("KLM", "choix envie : $destinationCatVal")
             Log.d("KLM", "destination $destination")
             Log.d("KLM", "budget $budget")
-            if (activityCatVal.toString() == "" || edit_budget.text.toString() == "" || budget == null) {
+            if (destination == "" || destinationCatVal.toString() == "" || activityCatVal.toString() == "" || edit_budget.text.toString() == "" || budget == null) {
                 Toast.makeText(this, "Veuillez compléter tous les champs", Toast.LENGTH_SHORT)
                     .show()
             } else {
@@ -176,22 +167,5 @@ class PreferencesActivity : AppCompatActivity() {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-  private fun random_destination() {
-      if(destination_categorie.text.toString() == "Exotique"){
-          exotique = exotique.shuffled()
-          destination = exotique[0]
-      }else if(destination_categorie.text.toString() == "Au soleil"){
-          au_soleil = au_soleil.shuffled()
-          destination = au_soleil[0]
-      }else if(destination_categorie.text.toString() == "Nature"){
-          nature = nature.shuffled()
-          destination = nature[0]
-      }else if(destination_categorie.text.toString() == "A découvrir"){
-          decouvrir = decouvrir.shuffled()
-          destination = decouvrir[0]
-      }else if(destination_categorie.text.toString() == "Pour visiter"){
-          pour_visiter = pour_visiter.shuffled()
-          destination = pour_visiter[0]
-      }
-  }
+
 }

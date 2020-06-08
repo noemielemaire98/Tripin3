@@ -8,7 +8,7 @@
     tools:context=".profil.ProfilFragment"
     android:background="#ECF4FC">
 
-       <RelativeLayout
+    <RelativeLayout
         android:id="@+id/noProfil_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
