@@ -17,7 +17,7 @@
         android:layout_marginTop="30dp"
         android:layout_marginBottom="20dp"
         android:gravity="center"
-        android:text="Mes préférences : "
+        android:text="Mon profil voyageur "
         android:textColor="@color/contrast_blue"
         android:textSize="20dp" />
 
@@ -27,7 +27,7 @@
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="5dp"
         android:text="Veuillez saisir vos préférences pour vos recommandations."
-        android:textSize="15sp"
+        android:textSize="14sp"
         android:textStyle="bold" />
 
 
@@ -76,7 +76,7 @@
             <!--                android:layout_marginStart="5dp"-->
             <!--                />-->
             <!--        </LinearLayout>-->
-            <LinearLayout
+<!--            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="5dp"
@@ -100,7 +100,7 @@
                     android:focusable="true"
                     android:inputType="textCapSentences"
                     android:foregroundTint="@color/colorAccent" />
-            </LinearLayout>
+            </LinearLayout>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -137,7 +137,7 @@
                     android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:gravity="bottom"
-                    android:text="Votre envie :"
+                    android:text="Type de destination"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
@@ -174,7 +174,7 @@
                     android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:gravity="bottom"
-                    android:text="Votre souhait :"
+                    android:text="Type d'activité"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 

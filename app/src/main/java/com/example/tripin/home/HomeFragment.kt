@@ -46,10 +46,10 @@ class HomeFragment : Fragment() {
     private var listFavorisAct = arrayListOf<Boolean>()
     private var budgetPref: Int = 100
     private var cityPref: Preference? = null
-
+    private var catactivite : String? = ""
     private var hotelDaoSearch: HotelDao? = null
     private var hotelDaoSaved: HotelDao? = null
-    private val hotelKey = "9a6f295efemsh9dd64f537c1e62bp194635jsn1c7a940b93ba"
+    private val hotelKey = "91ebc5f73emsh3e988c6d88395f9p15ab7fjsnb347a2c046b3"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -105,6 +105,8 @@ class HomeFragment : Fragment() {
                 cityQuery = cityPref?.destination ?: "Madrid"
                 budgetPref = cityPref?.budget ?: 100
                 val envie = cityPref?.envie ?: "Au soleil"
+                catactivite = cityPref?.souhait
+                if(catactivite.isNullOrEmpty()){catactivite =""}
                 listDestination = citydao.getCityByDestination(envie)
             }
             // récupère la ville saisie
@@ -121,7 +123,7 @@ class HomeFragment : Fragment() {
                 val service = retrofit().create(ActivitybyCity::class.java)
                 runBlocking {
                     val city = citydao.getCity(cityName)
-                    val result = service.listActivitybyCity(city.id, "relevance", "", lang, monnaie)
+                    val result = service.listActivitybyCity(city.id, "relevance", catactivite!!, lang, monnaie)
                     noActivityHome.visibility = View.GONE
 
                     val listActivitiesBdd = activityDaoSaved?.getActivity()
