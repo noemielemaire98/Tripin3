@@ -1,11 +1,13 @@
 package com.example.tripin.profil
 
-import android.app.Activity
+import android.app.Activity as Act
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
@@ -32,8 +34,8 @@ class PreferencesActivity : AppCompatActivity() {
     var au_soleil = listOf<String>("Madrid","Marrakech","Johannesburg","Buenos Aires")
     var pour_visiter = listOf<String>("Budapest","Venise","San Francisco","Berlin")
     var exotique = listOf<String>("Bangkok","Honolulu","Rio de Janeiro","Sydney")
-    var decouvrir = listOf<String>("Cap Town","Chicago","Rome","Shanghai")
-    var nature = listOf<String>("Cap Town","Honolulu")
+    var decouvrir = listOf<String>("Chicago","Cape Town","Rome","Shanghai")
+    var nature = listOf<String>("Honolulu","Cape Town")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -161,16 +163,6 @@ class PreferencesActivity : AppCompatActivity() {
         }
     }
 
-        private fun Activity.hideKeyboard() {
-        hideKeyboard(currentFocus ?: View(this))
-    }
-
-    private fun Context.hideKeyboard(view: View) {
-        val inputMethodManager =
-            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
   private fun random_destination() {
       if(destination_categorie.text.toString() == "Exotique"){
           exotique = exotique.shuffled()
@@ -189,4 +181,31 @@ class PreferencesActivity : AppCompatActivity() {
           destination = pour_visiter[0]
       }
   }
+
+    // Clear focus et hide keyboard automatiquement en quittant un input
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            val v: View? = currentFocus
+            if (v is AutoCompleteTextView || v is EditText) {
+                val outRect = Rect()
+                v.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                    hideKeyboard()
+                    v.clearFocus()
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event)
+    }
+    // Pour cacher le keyboard d'une activité
+    private fun Act.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+    // Pour cacher le keyboard avec uniquement un context
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager =
+            getSystemService(Act.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
 }

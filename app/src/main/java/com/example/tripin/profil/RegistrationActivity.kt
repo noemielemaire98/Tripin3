@@ -57,9 +57,14 @@ class RegistrationActivity : AppCompatActivity() {
     private fun performRegister(){
         val email = mail_edit_registration.text.toString()
         val password = password_edit_registration.text.toString()
-        if(email.isEmpty() || password.isEmpty()){
+        val pseudo = pseudo_edit_registration.text.toString()
+        if(email.isEmpty() || password.isEmpty() || pseudo.isEmpty()){
             //return@setOnClickListener
-            Toast.makeText(this, "Veuillez renseignez tous les champs", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Veuillez renseigner tous les champs", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if(selectedPhotoUri == null) {
+            Toast.makeText(this, "Veuillez choisir une photo", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -69,7 +74,7 @@ class RegistrationActivity : AppCompatActivity() {
                 uploadImageToFirebaseStorage()
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Le compte n'a pas pu être crée", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Le compte n'a pas pu être créé", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -87,7 +92,7 @@ class RegistrationActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(this, "La photo n'a pas pu être sélectionné", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "La photo n'a pas pu être sélectionnée", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -110,13 +115,14 @@ class RegistrationActivity : AppCompatActivity() {
 
                 val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                intent.putExtra("login", "login")
                 finish()
                 overridePendingTransition(0, 0)
                 startActivity(intent)
                 overridePendingTransition(0, 0)
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Le compte n'a pu être crée", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Le compte n'a pas pu être créé", Toast.LENGTH_SHORT).show()
             }
     }
 

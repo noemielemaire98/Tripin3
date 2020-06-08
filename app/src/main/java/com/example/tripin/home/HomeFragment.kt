@@ -46,7 +46,7 @@ class HomeFragment : Fragment() {
     private var listFavorisAct = arrayListOf<Boolean>()
     private var budgetPref: Int = 100
     private var cityPref: Preference? = null
-    private var catactivite : String? = ""
+    private var catactivite: String? = ""
     private var hotelDaoSearch: HotelDao? = null
     private var hotelDaoSaved: HotelDao? = null
     private val hotelKey = "91ebc5f73emsh3e988c6d88395f9p15ab7fjsnb347a2c046b3"
@@ -102,18 +102,30 @@ class HomeFragment : Fragment() {
 
             runBlocking {
                 cityPref = preferenceDao?.getPreference()
-                cityQuery = cityPref?.destination ?: "Madrid"
+                cityQuery = cityPref?.destination ?: "Barcelone"
                 budgetPref = cityPref?.budget ?: 100
                 val envie = cityPref?.envie ?: "Au soleil"
                 catactivite = cityPref?.souhait
-                if(catactivite.isNullOrEmpty()){catactivite =""}
+                if (catactivite.isNullOrEmpty()) {
+                    catactivite = ""
+                }
                 listDestination = citydao.getCityByDestination(envie)
             }
             // récupère la ville saisie
-            val cityName = cityQuery
             var activitySearch: List<Activity>? = emptyList()
+            var listCitiesTotal: List<City> = emptyList()
             runBlocking {
                 activitySearch = activityDaoSearch?.getActivity()
+                listCitiesTotal = citydao.getCity()
+            }
+
+            if (cityQuery.isEmpty()) {
+                val listCities = mutableListOf<String>()
+
+                listCitiesTotal.map {
+                    it.name?.let { it1 -> listCities.add(it1) }
+                }
+                cityQuery = listCities.shuffled()[0]
             }
 
             if (activitySearch.isNullOrEmpty()) {
@@ -122,8 +134,16 @@ class HomeFragment : Fragment() {
 
                 val service = retrofit().create(ActivitybyCity::class.java)
                 runBlocking {
-                    val city = citydao.getCity(cityName)
-                    val result = service.listActivitybyCity(city.id, "relevance", catactivite!!, lang, monnaie)
+
+                    val city = citydao.getCity(cityQuery)
+                    val result = service.listActivitybyCity(
+                        city.id,
+                        "relevance",
+                        catactivite!!,
+                        lang,
+                        monnaie
+                    )
+
                     noActivityHome.visibility = View.GONE
 
                     val listActivitiesBdd = activityDaoSaved?.getActivity()
@@ -221,159 +241,218 @@ class HomeFragment : Fragment() {
             val dateDepart = "2020-06-25"
 
             //Récupération du filtre de recherche
-            val sortBy: String
+            var sortBy: String
             var cityCode = 0
             val priceMinChosen = 10
             val priceMaxChosen = budgetPref
             val adultsList = 1
+            var po = false
+            var nb = 0
 
             if (topo.isNullOrEmpty()) {
+                while (!po) {
+                    nb += 1
+                    if (nb == 2) cityQuery = "Barcelone"
+                    try {
+                        val serviceBis = retrofitHotel().create(HotelAPI::class.java)
 
-                val serviceBis = retrofitHotel().create(HotelAPI::class.java)
+                        sortBy =
+                            listeCatActive("", "", "bt_lowest_first", "", "")
 
-                sortBy =
-                    listeCatActive("", "", "bt_lowest_first", "", "")
+                        //Recuperation du code de la ville de l'API
+                        runBlocking {
+                            hotelDaoSearch?.deleteHotels()
 
-                //Recuperation du code de la ville de l'API
-                runBlocking {
-                    hotelDaoSearch?.deleteHotels()
-                    val city = citydao.getCity(cityName)
-                    val searchCity = city.name ?: "Paris"
-
-
-                    val result = serviceBis.getLocation("fr_FR", searchCity.toLowerCase(Locale.ROOT), hotelKey)
-
-                    result.suggestions.map {
-                        if (it.group == "CITY_GROUP") {
-                            cityCode = it.entities[0].destinationId.toInt()
-                        }
-                    }
-                }
-
-                //Lancement de la recherche
-                runBlocking {
-                    hotelDaoSearch?.deleteHotels()
-                    val hotelsSavedBdd = hotelDaoSaved?.getHotels()
-                    listFavorishotel.clear()
-
-
-                    Log.d("Hotel", "Début de la récupération des données")
-                    var resultH: ModelRapid.Hotels? = null
-
-                    //Récupération des hôtels favoris
-                    when (adultsList) {
-                        1 -> {
-                            resultH = serviceBis.getHotelsList(
-                                cityCode, 1, dateArrivee, dateDepart, 10,
-                                1, null, null, null,
-                                sortBy, priceMinChosen, priceMaxChosen, "fr_FR", "EUR", hotelKey
+                            val result = serviceBis.getLocation(
+                                "fr_FR",
+                                cityQuery.toLowerCase(Locale.ROOT),
+                                hotelKey
                             )
-                        }
-                        2 -> {
-                            resultH = serviceBis.getHotelsList(
-                                cityCode, 1, dateArrivee, dateDepart, 10,
-                                1, 2, null, null,
-                                sortBy, priceMinChosen, priceMaxChosen, "fr_FR", "EUR", hotelKey
-                            )
-                        }
-                        3 -> {
-                            resultH = serviceBis.getHotelsList(
-                                cityCode, 1, dateArrivee, dateDepart, 10,
-                                1, 2, 3, null,
-                                sortBy, priceMinChosen, priceMaxChosen, "fr_FR", "EUR", hotelKey
-                            )
-                        }
-                        4 -> {
-                            resultH = serviceBis.getHotelsList(
-                                cityCode, 1, dateArrivee, dateDepart, 10,
-                                1, 2, 3, 4,
-                                sortBy, priceMinChosen, priceMaxChosen, "fr_FR", "EUR", hotelKey
-                            )
-                        }
-                    }
 
-                    Log.d("Hotel", "Récupération des données terminée")
-
-
-
-                    resultH?.data?.body?.searchResults?.results?.map {
-                        val idHotel = it.id.toString()
-                        val adresse: MutableList<String> = mutableListOf()
-                        val geocoder = Geocoder(activity)
-                        val adresseList = geocoder.getFromLocation(
-                            it.coordinate.lat,
-                            it.coordinate.lon,
-                            1
-                        )
-
-
-                        //Gestion de l'adresse
-                        adresseList.map { itH ->
-                            adresse.add(itH.featureName)
-                            if (itH.thoroughfare == null) {
-                                adresse.add("null")
-                            } else {
-                                adresse.add(itH.thoroughfare)
-                            }
-
-                            adresse.add(itH.postalCode)
-                            if (itH.locality == null) {
-                                adresse.add("null")
-                            } else {
-                                adresse.add(itH.locality)
-                            }
-
-                            adresse.add(itH.countryName)
-                        }
-
-
-                        //Récupération des hôtels favoris
-                        var matchBdd = false
-                        hotelsSavedBdd?.forEach { itH ->
-                            if (itH.hotelId == idHotel.toInt()) {
-                                listFavorishotel.add(true)
-                                matchBdd = true
+                            result.suggestions.map {
+                                if (it.group == "CITY_GROUP") {
+                                    cityCode = it.entities[0].destinationId.toInt()
+                                }
                             }
                         }
-                        if (!matchBdd) {
-                            listFavorishotel.add(false)
-                        }
+
+                        //Lancement de la recherche
+                        runBlocking {
+                            hotelDaoSearch?.deleteHotels()
+                            val hotelsSavedBdd = hotelDaoSaved?.getHotels()
+                            listFavorishotel.clear()
 
 
-                        val hotel = Hotel(
-                            it.id.toInt(),
-                            it.name,
-                            null,
-                            it.starRating.toInt(),
-                            it.thumbnailUrl,
-                            adresse,
-                            it.coordinate.lat,
-                            it.coordinate.lon,
-                            it.ratePlan.price.current,
-                            null
-                        )
+                            Log.d("Hotel", "Début de la récupération des données")
+                            var resultH: ModelRapid.Hotels? = null
 
-                        hotelDaoSearch?.addHotel(hotel)
-                        Log.d("Hotel", hotel.toString())
+                            //Récupération des hôtels favoris
+                            when (adultsList) {
+                                1 -> {
+                                    resultH = serviceBis.getHotelsList(
+                                        cityCode,
+                                        1,
+                                        dateArrivee,
+                                        dateDepart,
+                                        10,
+                                        1,
+                                        null,
+                                        null,
+                                        null,
+                                        sortBy,
+                                        priceMinChosen,
+                                        priceMaxChosen,
+                                        "fr_FR",
+                                        "EUR",
+                                        hotelKey
+                                    )
+                                }
+                                2 -> {
+                                    resultH = serviceBis.getHotelsList(
+                                        cityCode,
+                                        1,
+                                        dateArrivee,
+                                        dateDepart,
+                                        10,
+                                        1,
+                                        2,
+                                        null,
+                                        null,
+                                        sortBy,
+                                        priceMinChosen,
+                                        priceMaxChosen,
+                                        "fr_FR",
+                                        "EUR",
+                                        hotelKey
+                                    )
+                                }
+                                3 -> {
+                                    resultH = serviceBis.getHotelsList(
+                                        cityCode,
+                                        1,
+                                        dateArrivee,
+                                        dateDepart,
+                                        10,
+                                        1,
+                                        2,
+                                        3,
+                                        null,
+                                        sortBy,
+                                        priceMinChosen,
+                                        priceMaxChosen,
+                                        "fr_FR",
+                                        "EUR",
+                                        hotelKey
+                                    )
+                                }
+                                4 -> {
+                                    resultH = serviceBis.getHotelsList(
+                                        cityCode,
+                                        1,
+                                        dateArrivee,
+                                        dateDepart,
+                                        10,
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        sortBy,
+                                        priceMinChosen,
+                                        priceMaxChosen,
+                                        "fr_FR",
+                                        "EUR",
+                                        hotelKey
+                                    )
+                                }
+                            }
 
-                    }
-                    val listH = hotelDaoSearch?.getHotels()
+                            Log.d("Hotel", "Récupération des données terminée")
 
-                    val adultsListE: ArrayList<String>? = arrayListOf()
-                    withContext(Dispatchers.Main) {
 
-                        recyclerviewHotel.adapter =
-                            HotelsResizedAdapter(
-                                listH ?: emptyList(),
-                                listFavorishotel,
-                                adultsListE!!,
-                                dateArrivee,
-                                dateDepart
-                            )
 
-                        animateView(progressOverlay, View.GONE, 0f, 200)
+                            resultH?.data?.body?.searchResults?.results?.map {
+                                val idHotel = it.id.toString()
+                                val adresse: MutableList<String> = mutableListOf()
+                                val geocoder = Geocoder(activity)
+                                val adresseList = geocoder.getFromLocation(
+                                    it.coordinate.lat,
+                                    it.coordinate.lon,
+                                    1
+                                )
+
+
+                                //Gestion de l'adresse
+                                adresseList.map { itH ->
+                                    adresse.add(itH.featureName)
+                                    if (itH.thoroughfare == null) {
+                                        adresse.add("null")
+                                    } else {
+                                        adresse.add(itH.thoroughfare)
+                                    }
+
+                                    adresse.add(itH.postalCode)
+                                    if (itH.locality == null) {
+                                        adresse.add("null")
+                                    } else {
+                                        adresse.add(itH.locality)
+                                    }
+
+                                    adresse.add(itH.countryName)
+                                }
+
+
+                                //Récupération des hôtels favoris
+                                var matchBdd = false
+                                hotelsSavedBdd?.forEach { itH ->
+                                    if (itH.hotelId == idHotel.toInt()) {
+                                        listFavorishotel.add(true)
+                                        matchBdd = true
+                                    }
+                                }
+                                if (!matchBdd) {
+                                    listFavorishotel.add(false)
+                                }
+
+
+                                val hotel = Hotel(
+                                    it.id.toInt(),
+                                    it.name,
+                                    null,
+                                    it.starRating.toInt(),
+                                    it.thumbnailUrl,
+                                    adresse,
+                                    it.coordinate.lat,
+                                    it.coordinate.lon,
+                                    it.ratePlan.price.current,
+                                    null
+                                )
+
+                                hotelDaoSearch?.addHotel(hotel)
+                                Log.d("Hotel", hotel.toString())
+
+                            }
+                            val listH = hotelDaoSearch?.getHotels()
+
+                            val adultsListE: ArrayList<String>? = arrayListOf()
+                            withContext(Dispatchers.Main) {
+
+                                recyclerviewHotel.adapter =
+                                    HotelsResizedAdapter(
+                                        listH ?: emptyList(),
+                                        listFavorishotel,
+                                        adultsListE!!,
+                                        dateArrivee,
+                                        dateDepart
+                                    )
+
+                                animateView(progressOverlay, View.GONE, 0f, 200)
 //                        root.layout_recyclerView.visibility = View.VISIBLE
 
+                            }
+                        }
+                        po = true
+                    } catch (e: Exception) {
+                        po = false
                     }
                 }
 

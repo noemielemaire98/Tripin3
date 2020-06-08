@@ -1,6 +1,14 @@
 package com.example.tripin
 
+import android.app.Activity
+import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.AutoCompleteTextView
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
@@ -50,6 +58,32 @@ class MainActivity : AppCompatActivity() {
 
             navController.navigate(R.id.navigation_find, bundle)
         }
+    }
+
+    // Clear focus et hide keyboard automatiquement en quittant un input
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            val v: View? = currentFocus
+            if (v is AutoCompleteTextView || v is EditText) {
+                val outRect = Rect()
+                v.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                    hideKeyboard()
+                    v.clearFocus()
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event)
+    }
+    // Pour cacher le keyboard d'une activité
+    private fun Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+    // Pour cacher le keyboard avec uniquement un context
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }
 
