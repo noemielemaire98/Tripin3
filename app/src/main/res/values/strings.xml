@@ -4,7 +4,7 @@
 
     <string name="app_contact">Contactez-nous</string>
     <string name="app_sharing">Partagez notre application</string>
-    <string name="app_stars">Notez notre application</string>
+    <string name="app_stars">Notez-nous</string>
     <string name="app_preferences">Choisissez vos préférences</string>
     <string name="connexion_button_profil">Profil</string>
     <string name="pseudo_edit">Pseudo</string>
@@ -13,9 +13,9 @@
     <string name="register_button">Se connecter</string>
     <string name="account_text">J\'ai déjà un compte ?</string>
     <string name="signin_button">Se connecter</string>
-    <string name="signout_button">Déconnexion</string>
+    <string name="signout_button">Se deconnecter</string>
     <string name="signup_button">S\'inscrire</string>
-    <string name="create_account_button">Créer un compte ?</string>
+    <string name="create_account_button">Vous n\'avez pas encore de compte ? Créez-en un !</string>
     <string name="photo_profil_button">Photo</string>
     <string name="voyage_delete_confirm_title">Confirmation Supression</string>
     <string name="voyage_delete_confirm_message">Voulez-vous vraiment supprimer %1$s ?</string>

@@ -425,8 +425,7 @@
                 android:layout_marginHorizontal="4dp"
                 android:layout_marginVertical="10dp"
                 android:layout_marginBottom="2dp"
-                android:backgroundTint="#5E396482"
-                android:background="#5E396482"
+                android:backgroundTint="@color/contrast_blue"
                 android:visibility="gone"
                 app:cardCornerRadius="5dp"
                 app:cardElevation="4dp"
@@ -441,6 +440,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/button_layout"
                         android:layout_width="match_parent"
+                        android:layout_marginTop="5dp"
                         android:layout_height="50dp"
                         android:layout_gravity="end"
                         android:layout_marginBottom="5dp">

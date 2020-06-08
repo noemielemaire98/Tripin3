@@ -12,38 +12,55 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
+        android:visibility="gone"
         android:gravity="center">
+
 
         <ImageView
             android:id="@+id/img_worried_profil"
-            android:layout_width="200dp"
+            android:layout_width="230dp"
             android:layout_height="200dp"
+            android:tint="@color/contrast_blue"
             android:src="@drawable/worried" />
+
+        <TextView
+            android:id="@+id/back_account_text"
+            android:layout_width="230dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/img_worried_profil"
+            android:layout_marginTop="20dp"
+            android:text="Connectez-vous pour accéder aux options"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/card_layout" />
+
 
         <Button
             android:id="@+id/connexion_button"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/img_worried_profil"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/rounded_button"
-            android:text="Veuillez vous connectez pour accéder aux options"
-            android:textAlignment="center" />
+            android:layout_width="230dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/back_account_text"
+            android:backgroundTint="@color/colorAccent"
+            android:text="@string/signin_button"
+            android:textColor="@color/colorBackground"
+            android:padding="5dp" />
 
         <TextView
             android:id="@+id/inscription_button"
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/img_worried_profil"
-            android:layout_marginTop="75dp"
-            android:text="S'incrire"
-            android:textSize="15sp"
-            android:textStyle="bold"
+            android:layout_below="@+id/connexion_button"
+            android:layout_marginTop="200dp"
+            android:text="Pas encore de compte ? Inscrivez-vous "
+            android:textSize="14sp"
             android:textAlignment="center" />
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize"
         android:orientation="vertical">
 
         <LinearLayout
@@ -55,11 +72,17 @@
 
             <Button
                 android:id="@+id/signout_button_profil"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
                 android:layout_gravity="end"
-                android:background="@drawable/rounded_button"
-                android:text="@string/signout_button" />
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="15dp"
+                android:layout_below="@+id/back_account_text"
+                android:background="@drawable/power"
+                android:backgroundTint="@color/colorAccent"
+                android:padding="5dp" />
+
+
 
         </LinearLayout>
 
@@ -67,25 +90,37 @@
             android:id="@+id/second_linear_layout_profil_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             android:orientation="vertical">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/display_photo_circleview"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
+                android:elevation="5dp"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/ic_person_black_24dp"
-                app:civ_border_color="@color/black"
-                app:civ_border_width="4dp" />
+                app:civ_border_width="2dp" />
 
             <TextView
                 android:id="@+id/username_profil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text=""
+                android:layout_marginTop="10dp"
+                android:textColor="@color/contrast_blue"
+                android:textSize="22sp"
+                android:text="Tata"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textview_app_feedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_preferences"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
         </LinearLayout>
 
         <RelativeLayout
@@ -93,43 +128,49 @@
             android:layout_height="match_parent">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginStart="20dp"
-                android:layout_marginBottom="70dp"
-                android:orientation="vertical">
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/textview_app_contact"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/app_contact"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/textview_app_feedback"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/app_preferences"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                <View
+                    android:layout_width="0.1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="7dp"
+                    android:background="@android:color/darker_gray" />
+
+
 
                 <TextView
                     android:id="@+id/textview_app_stars"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/app_stars"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
+
+                <View
+                    android:layout_width="0.1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="7dp"
+                    android:background="@android:color/darker_gray" />
 
                 <TextView
                     android:id="@+id/textview_app_sharing"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/app_sharing"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </RelativeLayout>

@@ -278,9 +278,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:visibility="gone"
+                            android:visibility="visible"
                             android:gravity="center"
-                            android:text="..."
+                            android:text="Voir plus..."
                             app:backgroundTint="@color/contrast_blue" />
                     </LinearLayout>
 
@@ -294,7 +294,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Carte"
+                        android:text="Où ? Voici la carte : "
                         android:layout_marginLeft="20dp"
                         android:layout_marginBottom="10dp"
                         android:textSize="16dp"
@@ -348,13 +348,13 @@
                     <Button
                         android:id="@+id/button_proche"
                         style="@style/Widget.MaterialComponents.Button"
-                        android:layout_width="300dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
                         android:gravity="center"
-                        android:text="Lire plus"
+                        android:text="Lire plus..."
                         app:backgroundTint="@color/contrast_blue" />
 
                     <View
@@ -368,7 +368,13 @@
 
                 </LinearLayout>
 
-
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Chambres disponibles"
+                    android:layout_marginStart="20dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/contrast_blue"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"

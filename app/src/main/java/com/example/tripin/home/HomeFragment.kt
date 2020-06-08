@@ -83,7 +83,7 @@ class HomeFragment : Fragment() {
         citydao = databasesaved.getCityDao()
 
 
-        runBlocking {
+       runBlocking {
             val city_pref = preferenceDao?.getPreference()
             activityDaoSearch?.deleteActivity()
             list_favoris.clear()
