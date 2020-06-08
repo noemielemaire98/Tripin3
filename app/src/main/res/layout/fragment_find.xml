@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".find.FindFragment">
+    tools:context=".find.FindFragment"
+    android:background="#ECF4FC">
 
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"

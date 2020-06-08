@@ -5,7 +5,8 @@
     android:id="@+id/fragment_savedVoyage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".saved.SavedVoyage">
+    tools:context=".saved.SavedVoyage"
+    android:background="#ECF4FC">
 
 
     <LinearLayout

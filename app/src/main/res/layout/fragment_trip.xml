@@ -5,7 +5,8 @@
     android:id="@+id/fragment_trip"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".trip.TripFragment">
+    tools:context=".trip.TripFragment"
+    android:background="#ECF4FC">
 
 
     <LinearLayout
