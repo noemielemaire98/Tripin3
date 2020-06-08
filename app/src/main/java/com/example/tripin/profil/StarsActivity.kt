@@ -1,12 +1,12 @@
 package com.example.tripin.profil
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.RatingBar
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.tripin.R
 
 class StarsActivity : AppCompatActivity() {

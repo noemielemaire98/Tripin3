@@ -1,6 +1,5 @@
 package com.example.tripin.model
 
-import android.text.Editable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable

@@ -10,13 +10,10 @@ import androidx.room.Room
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.CityDao
 import com.example.tripin.data.retrofit
-import com.example.tripin.data.retrofitHotel
 import com.example.tripin.find.activity.ActivitybyCity
-import com.example.tripin.find.hotel.HotelAPI
 import com.example.tripin.model.City
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import kotlinx.coroutines.runBlocking
-import java.io.FileWriter
 import java.io.IOException
 import java.io.OutputStreamWriter
 

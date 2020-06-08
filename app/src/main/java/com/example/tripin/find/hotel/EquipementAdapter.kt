@@ -3,17 +3,13 @@ package com.example.tripin.find.hotel
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tripin.R
 import com.example.tripin.model.Equipement
-import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import kotlinx.android.synthetic.main.equipement_view.view.*
-import kotlinx.coroutines.runBlocking
-import java.io.InputStream
 
 
 class EquipementAdapter(val equipements: List<Equipement>, val drawableNameList: MutableList<String>, context: Context): RecyclerView.Adapter<EquipementAdapter.EquipementViewHolder>() {

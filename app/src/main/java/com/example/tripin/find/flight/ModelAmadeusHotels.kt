@@ -1,7 +1,5 @@
 package com.example.tripin.ui.find
 
-import androidx.annotation.Nullable
-
 
 object ModelAmadeusHotels {
     data class Result(

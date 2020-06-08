@@ -1,10 +1,10 @@
 package com.example.tripin.saved
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
@@ -15,7 +15,6 @@ import com.example.tripin.data.FlightDao
 import com.example.tripin.find.flight.FlightsAdapter
 import com.example.tripin.model.Flight
 import kotlinx.android.synthetic.main.activity_saved_flight.*
-import kotlinx.android.synthetic.main.activity_saved_flight.noFlightsImage
 import kotlinx.coroutines.runBlocking
 
 class SavedFlight : AppCompatActivity() {

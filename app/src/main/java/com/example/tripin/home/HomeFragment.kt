@@ -1,11 +1,15 @@
 package com.example.tripin.home
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.location.Geocoder
+import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +26,10 @@ import com.example.tripin.model.Activity
 import com.example.tripin.model.City
 import com.example.tripin.model.Hotel
 import com.example.tripin.model.Preference
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import java.util.*
 
 
 class HomeFragment : Fragment() {
@@ -30,15 +37,15 @@ class HomeFragment : Fragment() {
     private var activityDaoSearch: ActivityDao? = null
     private var activityDaoSaved: ActivityDao? = null
     private var preferenceDao: PreferenceDao? = null
-    val lang: String = "fr-FR"
-    val monnaie: String = "EUR"
-    var city_query: String = "Madrid"
+    private val lang: String = "fr-FR"
+    private val monnaie: String = "EUR"
+    private var cityQuery: String = "Madrid"
     private lateinit var citydao: CityDao
-    var list_destination: List<City> = emptyList()
-    var list_favorisHotel = arrayListOf<Boolean>()
-    var listFavorisAct = arrayListOf<Boolean>()
-    var budgetPref: Int = 100
-    private var city_pref: Preference? = null
+    private var listDestination: List<City> = emptyList()
+    private var listFavorishotel = arrayListOf<Boolean>()
+    private var listFavorisAct = arrayListOf<Boolean>()
+    private var budgetPref: Int = 100
+    private var cityPref: Preference? = null
 
     private var hotelDaoSearch: HotelDao? = null
     private var hotelDaoSaved: HotelDao? = null
@@ -51,10 +58,18 @@ class HomeFragment : Fragment() {
     ): View? {
 
         val root = inflater.inflate(R.layout.fragment_home, container, false)
-        var recyclerview_home = root.findViewById(R.id.activities_recyclerview_home) as RecyclerView
-        recyclerview_home.layoutManager =
+
+        val progressOverlay = root.findViewById<FrameLayout>(R.id.progress_overlay)
+        animateView(progressOverlay, View.VISIBLE, 0.4f, 200)
+
+
+        val recyclerviewHome = root.findViewById(R.id.activities_recyclerview_home) as RecyclerView
+        recyclerviewHome.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        var noActivity_home = root.findViewById(R.id.layoutNoActivities_frag_home) as RelativeLayout
+        val noActivityHome = root.findViewById(R.id.layoutNoActivities_frag_home) as RelativeLayout
+        val recyclerviewHotel = root.findViewById(R.id.hotels_recyclerview) as RecyclerView
+        recyclerviewHotel.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
 
         val databaseSearch =
@@ -77,338 +92,328 @@ class HomeFragment : Fragment() {
             "allpreferences"
         ).build()
 
-        preferenceDao = database.getPreferenceDao()
-        activityDaoSearch = databaseSearch.getActivityDao()
-        activityDaoSaved = databaseSaved.getActivityDao()
-        citydao = databaseSaved.getCityDao()
+        AsyncTask.execute {
+
+            preferenceDao = database.getPreferenceDao()
+            activityDaoSearch = databaseSearch.getActivityDao()
+            activityDaoSaved = databaseSaved.getActivityDao()
+            citydao = databaseSaved.getCityDao()
 
 
-        runBlocking {
-            city_pref = preferenceDao?.getPreference()
-            Log.d("KLM", "${city_pref?.destination}")
-            city_query = city_pref?.destination ?: "Madrid"
-            budgetPref = city_pref?.budget ?: 100
-            Log.d("KLM", "$budgetPref")
-            val envie = city_pref?.envie ?: "Au soleil"
-            Log.d("tyui", "$envie")
-            list_destination = citydao.getCityByDestination(envie)
-        }
-        // récupère la ville saisie
-        val city_name = city_query
-        Log.d("tyui", "$city_query")
-        var activitySearch: List<Activity>? = emptyList()
-        runBlocking {
-            activitySearch = activityDaoSearch?.getActivity()
-        }
-
-        if (activitySearch.isNullOrEmpty()) {
-
-            listFavorisAct.clear()
-
-            val service = retrofit().create(ActivitybyCity::class.java)
             runBlocking {
-                val city = citydao.getCity(city_name)
-                val result = service.listActivitybyCity(city.id, "relevance", "", lang, monnaie)
-                noActivity_home.visibility = View.GONE
-
-                val list_activities_bdd = activityDaoSaved?.getActivity()
-                result.data.map {
-                    val titre = it.title
-                    var match_bdd = false
-                    // vérification pour le bouton favoris
-                    list_activities_bdd?.forEach {
-                        if (it.title == titre) {
-                            listFavorisAct.add(true)
-                            match_bdd = true
-                        }
-                    }
-                    if (!match_bdd) {
-                        listFavorisAct.add(false)
-                    }
-
-
-                    val list_cat = it.categories.map {
-                        it.name
-                    }
-
-
-                    val activity = Activity(
-                        it.uuid,
-                        it.title,
-                        it.city.name,
-                        it.cover_image_url,
-                        it.retail_price.formatted_iso_value,
-                        it.operational_days,
-                        it.reviews_avg,
-                        list_cat,
-                        it.url,
-                        it.top_seller,
-                        it.must_see,
-                        it.description,
-                        it.about,
-                        it.latitude,
-                        it.longitude
-                    )
-                    activityDaoSearch?.addActivity(activity)
-
-                }
-                val activities = activityDaoSearch?.getActivity()
-                recyclerview_home.adapter =
-                    ActivityAdapterGlobalFormatted(activities!!.toMutableList(), listFavorisAct)
-
+                cityPref = preferenceDao?.getPreference()
+                cityQuery = cityPref?.destination ?: "Madrid"
+                budgetPref = cityPref?.budget ?: 100
+                val envie = cityPref?.envie ?: "Au soleil"
+                listDestination = citydao.getCityByDestination(envie)
             }
-        } else {
-
+            // récupère la ville saisie
+            val cityName = cityQuery
+            var activitySearch: List<Activity>? = emptyList()
             runBlocking {
-                val list_activities_bdd = activityDaoSaved?.getActivity()
+                activitySearch = activityDaoSearch?.getActivity()
+            }
 
+            if (activitySearch.isNullOrEmpty()) {
 
-                activitySearch?.map {
-                    val titre = it.title
-                    var match_bdd = false
-                    // vérification pour le bouton favoris
-                    list_activities_bdd?.forEach {
-                        if (it.title == titre) {
-                            listFavorisAct.add(true)
-                            match_bdd = true
+                listFavorisAct.clear()
+
+                val service = retrofit().create(ActivitybyCity::class.java)
+                runBlocking {
+                    val city = citydao.getCity(cityName)
+                    val result = service.listActivitybyCity(city.id, "relevance", "", lang, monnaie)
+                    noActivityHome.visibility = View.GONE
+
+                    val listActivitiesBdd = activityDaoSaved?.getActivity()
+                    result.data.map {
+                        val titre = it.title
+                        var matchBdd = false
+                        // vérification pour le bouton favoris
+                        listActivitiesBdd?.forEach { itL ->
+                            if (itL.title == titre) {
+                                listFavorisAct.add(true)
+                                matchBdd = true
+                            }
                         }
-                    }
-                    if (!match_bdd) {
-                        listFavorisAct.add(false)
-                    }
+                        if (!matchBdd) {
+                            listFavorisAct.add(false)
+                        }
 
-                    recyclerview_home.adapter =
-                        ActivityAdapterGlobalFormatted(
-                            activitySearch!!.toMutableList(),
-                            listFavorisAct
+                        val listCat = it.categories.map { itC ->
+                            itC.name
+                        }
+
+                        val activity = Activity(
+                            it.uuid,
+                            it.title,
+                            it.city.name,
+                            it.cover_image_url,
+                            it.retail_price.formatted_iso_value,
+                            it.operational_days,
+                            it.reviews_avg,
+                            listCat,
+                            it.url,
+                            it.top_seller,
+                            it.must_see,
+                            it.description,
+                            it.about,
+                            it.latitude,
+                            it.longitude
                         )
+                        activityDaoSearch?.addActivity(activity)
+
+                    }
+                    val activities = activityDaoSearch?.getActivity()
+                    withContext(Dispatchers.Main) {
+                        recyclerviewHome.adapter =
+                            ActivityAdapterGlobalFormatted(
+                                activities!!.toMutableList(),
+                                listFavorisAct
+                            )
+                    }
                 }
-            }
-        }
+            } else {
 
-        var recyclerview_hotel = root.findViewById(R.id.hotels_recyclerview) as RecyclerView
-        recyclerview_hotel.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                runBlocking {
+                    val listActivitiesBdd = activityDaoSaved?.getActivity()
 
+                    activitySearch?.map {
+                        val titre = it.title
+                        var matchBdd = false
+                        // vérification pour le bouton favoris
+                        listActivitiesBdd?.forEach { itA ->
+                            if (itA.title == titre) {
+                                listFavorisAct.add(true)
+                                matchBdd = true
+                            }
+                        }
+                        if (!matchBdd) {
+                            listFavorisAct.add(false)
+                        }
 
-        hotelDaoSaved = databaseSaved.getHotelDao()
-        hotelDaoSearch = databaseSearch.getHotelDao()
+                        withContext(Dispatchers.Main) {
 
-        var topo: List<Hotel>? = emptyList()
-
-        runBlocking {
-            topo = hotelDaoSearch?.getHotels()
-        }
-
-        val dateArrivee = "2020-06-18"
-        val dateDepart = "2020-06-25"
-
-        //Récupération du filtre de recherche
-        var sortBy: String = ""
-        var cityCode: Int = 0
-        //var adultsList : ArrayList<String> ?= arrayListOf()
-        val priceMinChosen = 10
-        val priceMaxChosen = budgetPref
-        val adultsList = 1
-
-        if (topo.isNullOrEmpty()) {
-
-            val serviceBis = retrofitHotel().create(HotelAPI::class.java)
-
-            sortBy =
-                liste_cat_active("", "", "bt_lowest_first", "", "")
-
-            //Recuperation du code de la ville de l'API
-            runBlocking {
-                hotelDaoSearch?.deleteHotels()
-                val city = citydao.getCity(city_name)
-                val searchCity = city.name ?: "Paris"
-
-
-                var result = serviceBis.getLocation("fr_FR", searchCity.toLowerCase(), hotelKey)
-
-                result.suggestions.map {
-                    if (it.group == "CITY_GROUP") {
-                        cityCode = it.entities[0].destinationId.toInt()
+                            recyclerviewHome.adapter =
+                                ActivityAdapterGlobalFormatted(
+                                    activitySearch!!.toMutableList(),
+                                    listFavorisAct
+                                )
+                        }
                     }
                 }
             }
 
-            //Lancement de la recherche
+
+
+
+            hotelDaoSaved = databaseSaved.getHotelDao()
+            hotelDaoSearch = databaseSearch.getHotelDao()
+
+            var topo: List<Hotel>? = emptyList()
+
             runBlocking {
-                hotelDaoSearch?.deleteHotels()
-                val hotels_saved_bdd = hotelDaoSaved?.getHotels()
-                list_favorisHotel.clear()
+                topo = hotelDaoSearch?.getHotels()
+            }
+
+            val dateArrivee = "2020-06-18"
+            val dateDepart = "2020-06-25"
+
+            //Récupération du filtre de recherche
+            val sortBy: String
+            var cityCode = 0
+            val priceMinChosen = 10
+            val priceMaxChosen = budgetPref
+            val adultsList = 1
+
+            if (topo.isNullOrEmpty()) {
+
+                val serviceBis = retrofitHotel().create(HotelAPI::class.java)
+
+                sortBy =
+                    listeCatActive("", "", "bt_lowest_first", "", "")
+
+                //Recuperation du code de la ville de l'API
+                runBlocking {
+                    hotelDaoSearch?.deleteHotels()
+                    val city = citydao.getCity(cityName)
+                    val searchCity = city.name ?: "Paris"
 
 
-                Log.d("Hotel", "Début de la récupération des données")
-                var resultH: ModelRapid.Hotels? = null
-//            when (adultsList?.size) {
-                //Gestion de l'adresse
+                    val result = serviceBis.getLocation("fr_FR", searchCity.toLowerCase(Locale.ROOT), hotelKey)
 
-
-                //Récupération des hôtels favoris
-                when (adultsList) {
-                    1 -> {
-                        resultH = serviceBis.getHotelsList(
-                            cityCode, 1, dateArrivee, dateDepart, 10,
-                            1, null, null, null,
-                            sortBy, priceMinChosen, priceMaxChosen, "fr_FR", "EUR", hotelKey
-                        )
-                    }
-                    2 -> {
-                        resultH = serviceBis.getHotelsList(
-                            cityCode, 1, dateArrivee, dateDepart, 10,
-                            1, 2, null, null,
-                            sortBy, priceMinChosen, priceMaxChosen, "fr_FR", "EUR", hotelKey
-                        )
-                    }
-                    3 -> {
-                        resultH = serviceBis.getHotelsList(
-                            cityCode, 1, dateArrivee, dateDepart, 10,
-                            1, 2, 3, null,
-                            sortBy, priceMinChosen, priceMaxChosen, "fr_FR", "EUR", hotelKey
-                        )
-                    }
-                    4 -> {
-                        resultH = serviceBis.getHotelsList(
-                            cityCode, 1, dateArrivee, dateDepart, 10,
-                            1, 2, 3, 4,
-                            sortBy, priceMinChosen, priceMaxChosen, "fr_FR", "EUR", hotelKey
-                        )
+                    result.suggestions.map {
+                        if (it.group == "CITY_GROUP") {
+                            cityCode = it.entities[0].destinationId.toInt()
+                        }
                     }
                 }
 
-                Log.d("Hotel", "Récupération des données terminée")
+                //Lancement de la recherche
+                runBlocking {
+                    hotelDaoSearch?.deleteHotels()
+                    val hotelsSavedBdd = hotelDaoSaved?.getHotels()
+                    listFavorishotel.clear()
 
 
-
-                resultH?.data?.body?.searchResults?.results?.map {
-                    var idHotel = it.id.toString()
-                    var adresse: MutableList<String> = mutableListOf()
-                    val geocoder = Geocoder(activity)
-                    val adresseList = geocoder.getFromLocation(
-                        it.coordinate.lat,
-                        it.coordinate.lon,
-                        1
-                    )
-
-
-                    //Gestion de l'adresse
-                    adresseList.map { itH ->
-                        adresse.add(itH.featureName)
-                        if (itH.thoroughfare == null) {
-                            adresse.add("null")
-                        } else {
-                            adresse.add(itH.thoroughfare)
-                        }
-
-                        adresse.add(itH.postalCode)
-                        if (itH.locality == null) {
-                            adresse.add("null")
-                        } else {
-                            adresse.add(itH.locality)
-                        }
-
-                        adresse.add(itH.countryName)
-                    }
-
+                    Log.d("Hotel", "Début de la récupération des données")
+                    var resultH: ModelRapid.Hotels? = null
 
                     //Récupération des hôtels favoris
-                    var match_bdd = false
-                    var favori = false
-                    hotels_saved_bdd?.forEach {
-                        if (it.hotelId == idHotel.toInt()) {
-                            list_favorisHotel.add(true)
-                            match_bdd = true
-                            favori = true
+                    when (adultsList) {
+                        1 -> {
+                            resultH = serviceBis.getHotelsList(
+                                cityCode, 1, dateArrivee, dateDepart, 10,
+                                1, null, null, null,
+                                sortBy, priceMinChosen, priceMaxChosen, "fr_FR", "EUR", hotelKey
+                            )
+                        }
+                        2 -> {
+                            resultH = serviceBis.getHotelsList(
+                                cityCode, 1, dateArrivee, dateDepart, 10,
+                                1, 2, null, null,
+                                sortBy, priceMinChosen, priceMaxChosen, "fr_FR", "EUR", hotelKey
+                            )
+                        }
+                        3 -> {
+                            resultH = serviceBis.getHotelsList(
+                                cityCode, 1, dateArrivee, dateDepart, 10,
+                                1, 2, 3, null,
+                                sortBy, priceMinChosen, priceMaxChosen, "fr_FR", "EUR", hotelKey
+                            )
+                        }
+                        4 -> {
+                            resultH = serviceBis.getHotelsList(
+                                cityCode, 1, dateArrivee, dateDepart, 10,
+                                1, 2, 3, 4,
+                                sortBy, priceMinChosen, priceMaxChosen, "fr_FR", "EUR", hotelKey
+                            )
                         }
                     }
-                    if (!match_bdd) {
-                        list_favorisHotel.add(false)
+
+                    Log.d("Hotel", "Récupération des données terminée")
+
+
+
+                    resultH?.data?.body?.searchResults?.results?.map {
+                        val idHotel = it.id.toString()
+                        val adresse: MutableList<String> = mutableListOf()
+                        val geocoder = Geocoder(activity)
+                        val adresseList = geocoder.getFromLocation(
+                            it.coordinate.lat,
+                            it.coordinate.lon,
+                            1
+                        )
+
+
+                        //Gestion de l'adresse
+                        adresseList.map { itH ->
+                            adresse.add(itH.featureName)
+                            if (itH.thoroughfare == null) {
+                                adresse.add("null")
+                            } else {
+                                adresse.add(itH.thoroughfare)
+                            }
+
+                            adresse.add(itH.postalCode)
+                            if (itH.locality == null) {
+                                adresse.add("null")
+                            } else {
+                                adresse.add(itH.locality)
+                            }
+
+                            adresse.add(itH.countryName)
+                        }
+
+
+                        //Récupération des hôtels favoris
+                        var matchBdd = false
+                        hotelsSavedBdd?.forEach { itH ->
+                            if (itH.hotelId == idHotel.toInt()) {
+                                listFavorishotel.add(true)
+                                matchBdd = true
+                            }
+                        }
+                        if (!matchBdd) {
+                            listFavorishotel.add(false)
+                        }
+
+
+                        val hotel = Hotel(
+                            it.id.toInt(),
+                            it.name,
+                            null,
+                            it.starRating.toInt(),
+                            it.thumbnailUrl,
+                            adresse,
+                            it.coordinate.lat,
+                            it.coordinate.lon,
+                            it.ratePlan.price.current,
+                            null
+                        )
+
+                        hotelDaoSearch?.addHotel(hotel)
+                        Log.d("Hotel", hotel.toString())
+
                     }
+                    val listH = hotelDaoSearch?.getHotels()
 
+                    val adultsListE: ArrayList<String>? = arrayListOf()
+                    withContext(Dispatchers.Main) {
 
-                    val hotel = Hotel(
-                        it.id.toInt(),
-                        it.name,
-                        null,
-                        it.starRating.toInt(),
-                        it.thumbnailUrl,
-                        adresse,
-                        it.coordinate.lat,
-                        it.coordinate.lon,
-                        it.ratePlan.price.current,
-                        null
-                    )
+                        recyclerviewHotel.adapter =
+                            HotelsResizedAdapter(
+                                listH ?: emptyList(),
+                                listFavorishotel,
+                                adultsListE!!,
+                                dateArrivee,
+                                dateDepart
+                            )
 
-                    hotelDaoSearch?.addHotel(hotel)
-                    Log.d("Hotel", hotel.toString())
+                        animateView(progressOverlay, View.GONE, 0f, 200)
+//                        root.layout_recyclerView.visibility = View.VISIBLE
 
+                    }
                 }
-                val listH = hotelDaoSearch?.getHotels()
 
-                val adultsList: ArrayList<String>? = arrayListOf()
-                recyclerview_hotel.adapter =
-                    HotelsResizedAdapter(
-                        listH ?: emptyList(),
-                        list_favorisHotel,
-                        adultsList!!,
-                        dateArrivee,
-                        dateDepart
-                    )
-            }
-
-        } else {
-            runBlocking {
-                topo?.map {
-                    val hotels_saved_bdd = hotelDaoSaved?.getHotels()
-                    //Récupération des hôtels favoris
-                    var match_bdd = false
-                    hotels_saved_bdd?.forEach { itH ->
-                        if (it.hotelId == itH.hotelId) {
-                            list_favorisHotel.add(true)
-                            match_bdd = true
+            } else {
+                runBlocking {
+                    topo?.map {
+                        val hotelsSavedBdd = hotelDaoSaved?.getHotels()
+                        //Récupération des hôtels favoris
+                        var matchBdd = false
+                        hotelsSavedBdd?.forEach { itH ->
+                            if (it.hotelId == itH.hotelId) {
+                                listFavorishotel.add(true)
+                                matchBdd = true
+                            }
+                        }
+                        if (!matchBdd) {
+                            listFavorishotel.add(false)
                         }
                     }
-                    if (!match_bdd) {
-                        list_favorisHotel.add(false)
+                    val adultsListE: ArrayList<String>? = arrayListOf()
+                    withContext(Dispatchers.Main) {
+
+                        recyclerviewHotel.adapter =
+                            HotelsResizedAdapter(
+                                topo ?: emptyList(),
+                                listFavorishotel,
+                                adultsListE!!,
+                                dateArrivee,
+                                dateDepart
+                            )
+                        animateView(progressOverlay, View.GONE, 0f, 200)
+//                        root.layout_recyclerView.visibility = View.VISIBLE
                     }
                 }
-                val adultsList: ArrayList<String>? = arrayListOf()
-                recyclerview_hotel.adapter =
-                    HotelsResizedAdapter(
-                        topo ?: emptyList(),
-                        list_favorisHotel,
-                        adultsList!!,
-                        dateArrivee,
-                        dateDepart
-                    )
             }
+
         }
 
-        runBlocking {
-            val adultsList: ArrayList<String>? = arrayListOf()
-            if (!topo.isNullOrEmpty()) {
-//                loadingPanel.visibility = View.GONE
-//                hotelsLayout.visibility = View.VISIBLE
-                recyclerview_hotel.adapter =
-                    HotelsResizedAdapter(
-                        topo ?: emptyList(),
-                        list_favorisHotel,
-                        adultsList!!,
-                        dateArrivee,
-                        dateDepart
-                    )
-            }
-//            else {
-//                layoutNoHotelAvailable.visibility = View.VISIBLE
-//            }
-        }
         return root
     }
 
-    private fun liste_cat_active(
+    private fun listeCatActive(
         bt_best_seller: String,
         bt_highest_first: String,
         bt_lowest_first: String,
@@ -436,6 +441,27 @@ class HomeFragment : Fragment() {
         }
 
         return string
+    }
+
+    private fun animateView(
+        view: View,
+        toVisibility: Int,
+        toAlpha: Float,
+        duration: Int
+    ) {
+        val show = toVisibility == View.VISIBLE
+        if (show) {
+            view.alpha = 0f
+        }
+        view.visibility = View.VISIBLE
+        view.animate()
+            .setDuration(duration.toLong())
+            .alpha(if (show) toAlpha else 0f)
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    view.visibility = toVisibility
+                }
+            })
     }
 }
 

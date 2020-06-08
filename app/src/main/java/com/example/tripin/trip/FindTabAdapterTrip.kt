@@ -1,9 +1,8 @@
 package com.example.tripin.trip
 
-import android.view.View
+import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter

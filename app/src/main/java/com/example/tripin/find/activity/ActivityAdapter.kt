@@ -3,7 +3,6 @@ package com.example.tripin.find.activity
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,11 +14,8 @@ import com.example.tripin.R
 import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.model.Activity
-import com.example.tripin.saved.SavedActivites
 import kotlinx.android.synthetic.main.activities_view.view.*
-import kotlinx.android.synthetic.main.activity_detail_activites.*
 import kotlinx.coroutines.runBlocking
-import org.jetbrains.anko.matchParent
 
 class ActivityAdapter(val list_activity: List<Activity>, val attribut_favoris : ArrayList<Boolean>) : RecyclerView.Adapter<ActivityAdapter.ActivityViewHolder>() {
 

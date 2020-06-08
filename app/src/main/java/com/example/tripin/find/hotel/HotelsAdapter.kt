@@ -1,7 +1,7 @@
 package com.example.tripin.find.hotel
 
 
-import  android.content.Context
+import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
 import android.util.Log
@@ -17,7 +17,6 @@ import com.example.tripin.R
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.data.HotelDao
 import com.example.tripin.model.Hotel
-import com.example.tripin.saved.SavedActivitiesFragment
 import com.example.tripin.saved.SavedHotelFragment
 import kotlinx.android.synthetic.main.hotel_view.view.*
 import kotlinx.coroutines.runBlocking

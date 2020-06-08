@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tripin.R
-import kotlinx.android.synthetic.main.activity_gestion_rooms.*
 import kotlinx.android.synthetic.main.add_room_view.view.*
 
 class AddRoomAdapter(var listAdults: MutableList<String>?): RecyclerView.Adapter<AddRoomAdapter.AddRoomViewHolder>() {

@@ -1,9 +1,9 @@
 package com.example.tripin.saved
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
@@ -12,7 +12,6 @@ import com.example.tripin.R
 import com.example.tripin.data.ActivityDao
 import com.example.tripin.data.AppDatabase
 import com.example.tripin.find.activity.ActivityAdapterGlobal
-import com.example.tripin.find.activity.FindActivitesActivity
 import kotlinx.android.synthetic.main.activity_saved_activites.*
 import kotlinx.coroutines.runBlocking
 
