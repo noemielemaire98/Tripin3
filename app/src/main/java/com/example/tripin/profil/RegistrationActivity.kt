@@ -109,6 +109,7 @@ class RegistrationActivity : AppCompatActivity() {
 //                startActivity(intent)
 
                 val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("login", "login")
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 finish()
                 overridePendingTransition(0, 0)
@@ -116,7 +117,7 @@ class RegistrationActivity : AppCompatActivity() {
                 overridePendingTransition(0, 0)
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Le compte n'a pu être crée", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this, "Le compte n'a pu être crée", Toast.LENGTH_SHORT).show()
             }
     }
 

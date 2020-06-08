@@ -188,15 +188,17 @@ class ProfilFragment : Fragment() {
                     "Vous êtes déconnecté",
                     Toast.LENGTH_SHORT)
                     .show()
+
                 val intent = Intent(this.context, MainActivity::class.java)
+                intent.putExtra("login", "login")
                 startActivity(intent)
             }
             if (uid == null) {
-                Toast.makeText(
-                    this.context,
-                    "Vous ne pouvez pas vous déconnectez, vous n'êtes pas connecté",
-                    Toast.LENGTH_SHORT
-                ).show()
+//                Toast.makeText(
+//                    this.context,
+//                    "Vous ne pouvez pas vous déconnectez, vous n'êtes pas connecté",
+//                    Toast.LENGTH_SHORT
+//                ).show()
             }
         }
 
